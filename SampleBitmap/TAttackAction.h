@@ -1,5 +1,5 @@
 #pragma once
-#include "TEnemyState.h"
+#include "TEnemy.h"
 
 class TAttackAction : public TEnemyState
 {

@@ -1,5 +1,6 @@
 #pragma once
 #include "TBitmapMgr.h"
+#include "TCollision.h"
 
 #define LR_ROTATION 0x01
 #define TB_ROTATION 0x02
@@ -31,6 +32,8 @@ public:
 public:
 	float	m_fDir[2];
 	float	m_fSpeed;
+	float	m_fAttackRadius;
+	RECT	m_rtAttackRect;
 public:
 	//비트맵 회전과 관련된 변수들.
 	HBITMAP				m_hColorRotateBitmap;

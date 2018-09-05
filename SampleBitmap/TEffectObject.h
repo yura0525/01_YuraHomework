@@ -43,3 +43,5 @@ public:
 	TEffectMgr();
 	~TEffectMgr();
 };
+
+#define I_EffectMgr TEffectMgr::GetInstance()

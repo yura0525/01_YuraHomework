@@ -1,5 +1,5 @@
 #pragma once
-#include "TEnemyState.h"
+#include "TEnemy.h"
 
 class TMoveAction : public TEnemyState
 {

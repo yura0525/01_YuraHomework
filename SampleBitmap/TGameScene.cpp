@@ -31,7 +31,9 @@ bool TGameScene::Init()
 		m_NPCList[iNPC].SetPosition(0 + (m_NPCGap * iNPC), 0, 46, 62, 68, 82);
 		
 		m_NPCList[iNPC].SetHP(1);
-		m_NPCList[iNPC].Load(L"../../data/bitmap1.bmp", L"../../data/bitmap2.bmp");
+		m_NPCList[iNPC].Load(L"../../data/bitmap1.bmp", L"../../data/bitmap2.bmp");	
+		m_NPCList[iNPC].m_fAttackRadius = 30 + rand() % 100;
+		m_NPCList[iNPC].SetDirectionSpeed(0.0f, 1.0f, 50.0f);
 	}
 
 	m_iSpriteIndex = 0;
@@ -52,57 +54,48 @@ bool TGameScene::Frame()
 	m_Hero.Frame();
 
 	
-	//for (int iNPC = 0; iNPC < m_iMaxNPCCount; iNPC++)
-	//{
-	//	//NPC가 Hero의 총알에 맞는 처리
-	//	for (int iObj = 0; iObj < m_HeroBulletList.size(); iObj++)
-	//	{
-	//		if (TCollision::RectInRect(m_NPCList[iNPC].m_rtCollision, m_HeroBulletList[iObj].m_rtCollision))
-	//			m_NPCList[iNPC].ProcessDamage(-1);
+	for (int iNPC = 0; iNPC < m_iMaxNPCCount; iNPC++)
+	{
+		//NPC가 Hero의 총알에 맞는 처리
+		if (I_EffectMgr.IsCollision(m_NPCList[iNPC].m_rtCollision))
+		{
+			m_NPCList[iNPC].ProcessDamage(-1);
+		}
 
-	//		m_HeroBulletList[iObj].Frame();
-	//	}
-	//	if (!m_NPCList[iNPC].m_bDead)
-	//		m_NPCList[iNPC].Frame();
+		if (!m_NPCList[iNPC].m_bDead)
+			m_NPCList[iNPC].Frame();
 
-	//	//Hero가 NPC에 맞는거 처리.
-	//	if (TCollision::RectInRect(m_Hero.m_rtCollision, m_NPCList[iNPC].m_rtCollision))
-	//		m_Hero.ProcessDamage(-1);
-	//}
+		//Hero가 NPC에 맞는거 처리.
+		if (TCollision::RectInRect(m_Hero.m_rtCollision, m_NPCList[iNPC].m_rtCollision))
+			m_Hero.ProcessDamage(-1);
+	}
 
 	m_EffectMgr.Frame();
 	
-	/*bool isChangeScene = true;
+	bool isChangeScene = true;
 	for (int iNPC = 0; iNPC < m_iMaxNPCCount; iNPC++)
 	{
-		if ( I_Input.Key(VK_LBUTTON) &&
-			TCollision::RectInPoint(m_NPCList[iNPC].m_rtCollision, I_Input.m_MousePos))
+		/*if ( I_Input.Key(VK_LBUTTON) &&
+			TCollision::RectInPoint(m_NPCList[iNPC].m_rtCollision, g_pHeroPos))
 		{
 			m_NPCList[iNPC].m_bDead = true;
 		}
-		
+		*/
 		if( !m_NPCList[iNPC].m_bDead )
 			isChangeScene = false;
 	}
 
 	if (isChangeScene)
 	{
-		m_bNextSceneStart = true;
-	}*/
-
-	if (I_Input.Key(VK_LBUTTON) == KEY_PUSH)
-	{
-		static float fAddTime = 0.0f;
-		fAddTime += g_fSecPerFrame;
-
-		if (fAddTime >= 0.003f)
+		//몹 재생성.
+		for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
 		{
-			POINT pos;
-			pos.x = m_Hero.m_pos.x;
-			pos.x = m_Hero.m_pos.y;
+			m_NPCList[iNPC].Init();
+			m_NPCList[iNPC].SetPosition(0 + (m_NPCGap * iNPC), 0, 46, 62, 68, 82);
 
-			AddBullet(eHeroBullet, pos, 0.0f, 1.0f, 100.0f);
-			fAddTime -= 0.003f;
+			m_NPCList[iNPC].SetHP(1);
+			m_NPCList[iNPC].m_fAttackRadius = 30 + rand() % 100;
+			m_NPCList[iNPC].SetDirectionSpeed(0.0f, 1.0f, 50.0f);
 		}
 	}
 

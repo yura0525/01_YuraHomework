@@ -45,7 +45,7 @@ bool THeroObject::Render()
 	}*/
 
 	g_pHeroPos.x = m_pos.x;
-	g_pHeroPos.y = m_pos.x;
+	g_pHeroPos.y = m_pos.y;
 	return true;
 }
 bool THeroObject::FadeOut()

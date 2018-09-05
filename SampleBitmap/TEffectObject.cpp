@@ -131,7 +131,7 @@ bool TEffectMgr::Frame()
 
 		if (fAddTime >= 0.1f)
 		{
-			AddEffect(I_Input.m_MousePos);
+			AddEffect(g_pHeroPos);
 			fAddTime -= 0.1f;
 		}
 	}
