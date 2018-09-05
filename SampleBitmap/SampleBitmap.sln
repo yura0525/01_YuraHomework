@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "34_SampleBitmap", "SampleBitmap.vcxproj", "{93D5D471-0B33-4285-A291-4926AE36EFCA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCoreLib", "..\TCoreLib\TCoreLib.vcxproj", "{61BE907E-9C4B-4A88-8ECF-8EA6D68D5E9A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -23,14 +21,6 @@ Global
 		{93D5D471-0B33-4285-A291-4926AE36EFCA}.Release|x64.Build.0 = Release|x64
 		{93D5D471-0B33-4285-A291-4926AE36EFCA}.Release|x86.ActiveCfg = Release|Win32
 		{93D5D471-0B33-4285-A291-4926AE36EFCA}.Release|x86.Build.0 = Release|Win32
-		{61BE907E-9C4B-4A88-8ECF-8EA6D68D5E9A}.Debug|x64.ActiveCfg = Debug|x64
-		{61BE907E-9C4B-4A88-8ECF-8EA6D68D5E9A}.Debug|x64.Build.0 = Debug|x64
-		{61BE907E-9C4B-4A88-8ECF-8EA6D68D5E9A}.Debug|x86.ActiveCfg = Debug|Win32
-		{61BE907E-9C4B-4A88-8ECF-8EA6D68D5E9A}.Debug|x86.Build.0 = Debug|Win32
-		{61BE907E-9C4B-4A88-8ECF-8EA6D68D5E9A}.Release|x64.ActiveCfg = Release|x64
-		{61BE907E-9C4B-4A88-8ECF-8EA6D68D5E9A}.Release|x64.Build.0 = Release|x64
-		{61BE907E-9C4B-4A88-8ECF-8EA6D68D5E9A}.Release|x86.ActiveCfg = Release|Win32
-		{61BE907E-9C4B-4A88-8ECF-8EA6D68D5E9A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

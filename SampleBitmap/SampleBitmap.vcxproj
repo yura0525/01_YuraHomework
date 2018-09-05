@@ -94,12 +94,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../include;../../fmod/inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>../lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../lib;../../fmod/lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -153,6 +153,61 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TAttackAction.cpp" />
+    <ClCompile Include="TBitmap.cpp" />
+    <ClCompile Include="TBitmapMgr.cpp" />
+    <ClCompile Include="TBKObject.cpp" />
+    <ClCompile Include="TButton.cpp" />
+    <ClCompile Include="TCollision.cpp" />
+    <ClCompile Include="TCore.cpp" />
+    <ClCompile Include="TEffectObject.cpp" />
+    <ClCompile Include="TEndScene.cpp" />
+    <ClCompile Include="TEnemy.cpp" />
+    <ClCompile Include="TEnemyState.cpp" />
+    <ClCompile Include="TFiniteStateMachine.cpp" />
+    <ClCompile Include="TFSMMgr.cpp" />
+    <ClCompile Include="TGameScene.cpp" />
+    <ClCompile Include="THeroObject.cpp" />
+    <ClCompile Include="TInput.cpp" />
+    <ClCompile Include="TLobbyScene.cpp" />
+    <ClCompile Include="TMoveAction.cpp" />
+    <ClCompile Include="TNPCObject.cpp" />
+    <ClCompile Include="TObject.cpp" />
+    <ClCompile Include="TPCObject.cpp" />
+    <ClCompile Include="TScene.cpp" />
+    <ClCompile Include="TSound.cpp" />
+    <ClCompile Include="TStandAction.cpp" />
+    <ClCompile Include="TTimer.cpp" />
+    <ClCompile Include="TWindow.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TAttackAction.h" />
+    <ClInclude Include="TBitmap.h" />
+    <ClInclude Include="TBitmapMgr.h" />
+    <ClInclude Include="TBKObject.h" />
+    <ClInclude Include="TButton.h" />
+    <ClInclude Include="TCollision.h" />
+    <ClInclude Include="TCore.h" />
+    <ClInclude Include="TEffectObject.h" />
+    <ClInclude Include="TEndScene.h" />
+    <ClInclude Include="TEnemy.h" />
+    <ClInclude Include="TEnemyState.h" />
+    <ClInclude Include="TFiniteStateMachine.h" />
+    <ClInclude Include="TFSMMgr.h" />
+    <ClInclude Include="TGameScene.h" />
+    <ClInclude Include="THeroObject.h" />
+    <ClInclude Include="TInput.h" />
+    <ClInclude Include="TLobbyScene.h" />
+    <ClInclude Include="TMoveAction.h" />
+    <ClInclude Include="TNPCObject.h" />
+    <ClInclude Include="TObject.h" />
+    <ClInclude Include="TPCObject.h" />
+    <ClInclude Include="TScene.h" />
+    <ClInclude Include="TSound.h" />
+    <ClInclude Include="TStandAction.h" />
+    <ClInclude Include="TStd.h" />
+    <ClInclude Include="TTimer.h" />
+    <ClInclude Include="TWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
