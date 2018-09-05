@@ -348,6 +348,13 @@ bool TObject::AlphaBlend(HDC dcDest, int x, int y, int cx, int cy, HDC dcSrc, HD
 	return true;
 }
 
+void TObject::ProcessDamage(int damage)
+{
+	m_iHP = m_iHP + damage;
+	if (m_iHP <= 0)
+		m_bDead = true;
+}
+
 TObject::TObject()
 {
 	m_pColorBitmap = NULL;

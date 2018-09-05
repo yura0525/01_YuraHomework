@@ -36,6 +36,20 @@ public:
 class TFiniteStateMachine
 {
 public:
+	std::map<DWORD, TFiniteState*>		m_mapState;
+	T_STR								m_szLoadFile;
+
+public:
+	void AddStateTransition(DWORD dwState, DWORD dwEvent, DWORD dwOutState);
+	DWORD StateTransition(DWORD dwState, DWORD dwEvent);
+
+	bool Load(T_STR szLoadFile);
+	bool Release();
+
+public:
+	int GetIndex(T_STR szState);
+
+public:
 	TFiniteStateMachine();
 	virtual ~TFiniteStateMachine();
 };

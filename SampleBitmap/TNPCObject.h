@@ -1,9 +1,9 @@
 #pragma once
 
 #include "TStd.h"
-#include "TPCObject.h"
+#include "TObject.h"
 
-class TNPCObject : public TPCObject
+class TNPCObject : public TObject
 {
 
 public:

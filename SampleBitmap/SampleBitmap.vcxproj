@@ -173,7 +173,6 @@
     <ClCompile Include="TMoveAction.cpp" />
     <ClCompile Include="TNPCObject.cpp" />
     <ClCompile Include="TObject.cpp" />
-    <ClCompile Include="TPCObject.cpp" />
     <ClCompile Include="TScene.cpp" />
     <ClCompile Include="TSound.cpp" />
     <ClCompile Include="TStandAction.cpp" />
@@ -201,7 +200,6 @@
     <ClInclude Include="TMoveAction.h" />
     <ClInclude Include="TNPCObject.h" />
     <ClInclude Include="TObject.h" />
-    <ClInclude Include="TPCObject.h" />
     <ClInclude Include="TScene.h" />
     <ClInclude Include="TSound.h" />
     <ClInclude Include="TStandAction.h" />

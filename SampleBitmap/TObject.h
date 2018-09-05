@@ -22,14 +22,15 @@ public:
 	RECT	m_rtDraw;
 	RECT	m_rtCollision;
 
-	float	m_fDir[2];
-	float	m_fSpeed;
-	
 	bool	m_bDead;
 	bool	m_bDebugRect;
 
 	float	m_fAlpha;
-	
+
+	//이동에 관한 변수들.
+public:
+	float	m_fDir[2];
+	float	m_fSpeed;
 public:
 	//비트맵 회전과 관련된 변수들.
 	HBITMAP				m_hColorRotateBitmap;
@@ -41,6 +42,9 @@ public:
 
 	float				m_iMaxDistance;
 	float				m_fAngle;
+
+public:
+	int	m_iHP;
 public:
 
 	void SetPosition(TPoint pos);
@@ -72,6 +76,11 @@ public:
 	//알파블렌딩
 	bool AlphaBlend(HDC dcDest, int x, int y, int cx, int cy,HDC dcSrc, HDC dcMaskSrc, 
 		int sx, int sy, int scx, int scy, int alpha, DWORD opMode, COLORREF rgbMask);
+
+
+	//데미지 관련 처리
+	void SetHP(int hp)	{	m_iHP = hp;	}
+	void ProcessDamage(int damage);
 
 public:
 	TObject();

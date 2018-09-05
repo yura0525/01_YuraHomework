@@ -58,7 +58,7 @@ bool TEnemy::Process(TObject* pTarget)
 
 DWORD TEnemy::SetTransition(DWORD dwEvent)
 {
-	//m_dwCurrentState = m_pFSM->StateTransition(m_dwCurrentState, dwEvent);
+	m_dwCurrentState = m_pFSM->StateTransition(m_dwCurrentState, dwEvent);
 	m_pAction = m_pActionList[m_dwCurrentState];
 	return m_dwCurrentState;
 }

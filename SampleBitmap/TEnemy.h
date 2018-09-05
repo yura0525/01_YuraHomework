@@ -1,6 +1,7 @@
 #pragma once
 #include "TObject.h"
 #include "TEnemyState.h"
+#include "TFSMMgr.h"
 #include "TFiniteStateMachine.h"
 class TEnemy : public TObject
 {
@@ -16,7 +17,7 @@ public:
 	void SetFSM(int id)
 	{
 		m_iFSMID = id;
-		//m_pFSM = I_FSMMgr.GetPtr(m_iFSMID);
+		m_pFSM = I_FSMMgr.GetPtr(m_iFSMID);
 	}
 public:
 	bool Move(TPoint pos);

@@ -13,10 +13,180 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="FSM">
+      <UniqueIdentifier>{5c9be53b-68da-400d-b6b8-96f05fc892ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SCENE">
+      <UniqueIdentifier>{49b729dc-7320-46a1-b8b2-f4782e756279}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OBJECT">
+      <UniqueIdentifier>{f364af11-28f5-475a-a95b-5ed30ac3415d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BITMAP">
+      <UniqueIdentifier>{af0d05d7-39fb-46c8-a07f-cf8b3341242e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WINDOW">
+      <UniqueIdentifier>{13be49fe-d8ed-4e30-81a8-04f15a536202}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TCollision.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TAttackAction.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="TEnemyState.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="TFiniteStateMachine.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="TFSMMgr.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="TMoveAction.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="TStandAction.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="TEnemy.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="TBitmap.cpp">
+      <Filter>BITMAP</Filter>
+    </ClCompile>
+    <ClCompile Include="TBitmapMgr.cpp">
+      <Filter>BITMAP</Filter>
+    </ClCompile>
+    <ClCompile Include="TBKObject.cpp">
+      <Filter>OBJECT</Filter>
+    </ClCompile>
+    <ClCompile Include="TButton.cpp">
+      <Filter>OBJECT</Filter>
+    </ClCompile>
+    <ClCompile Include="TEffectObject.cpp">
+      <Filter>OBJECT</Filter>
+    </ClCompile>
+    <ClCompile Include="THeroObject.cpp">
+      <Filter>OBJECT</Filter>
+    </ClCompile>
+    <ClCompile Include="TNPCObject.cpp">
+      <Filter>OBJECT</Filter>
+    </ClCompile>
+    <ClCompile Include="TObject.cpp">
+      <Filter>OBJECT</Filter>
+    </ClCompile>
+    <ClCompile Include="TEndScene.cpp">
+      <Filter>SCENE</Filter>
+    </ClCompile>
+    <ClCompile Include="TGameScene.cpp">
+      <Filter>SCENE</Filter>
+    </ClCompile>
+    <ClCompile Include="TLobbyScene.cpp">
+      <Filter>SCENE</Filter>
+    </ClCompile>
+    <ClCompile Include="TWindow.cpp">
+      <Filter>WINDOW</Filter>
+    </ClCompile>
+    <ClCompile Include="TSound.cpp">
+      <Filter>WINDOW</Filter>
+    </ClCompile>
+    <ClCompile Include="TTimer.cpp">
+      <Filter>WINDOW</Filter>
+    </ClCompile>
+    <ClCompile Include="TInput.cpp">
+      <Filter>WINDOW</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore.cpp">
+      <Filter>WINDOW</Filter>
+    </ClCompile>
+    <ClCompile Include="TScene.cpp">
+      <Filter>SCENE</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TCollision.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TAttackAction.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="TEnemy.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="TEnemyState.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="TFiniteStateMachine.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="TFSMMgr.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="TStandAction.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="TMoveAction.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="TBitmapMgr.h">
+      <Filter>BITMAP</Filter>
+    </ClInclude>
+    <ClInclude Include="TBitmap.h">
+      <Filter>BITMAP</Filter>
+    </ClInclude>
+    <ClInclude Include="TBKObject.h">
+      <Filter>OBJECT</Filter>
+    </ClInclude>
+    <ClInclude Include="THeroObject.h">
+      <Filter>OBJECT</Filter>
+    </ClInclude>
+    <ClInclude Include="TNPCObject.h">
+      <Filter>OBJECT</Filter>
+    </ClInclude>
+    <ClInclude Include="TObject.h">
+      <Filter>OBJECT</Filter>
+    </ClInclude>
+    <ClInclude Include="TEffectObject.h">
+      <Filter>OBJECT</Filter>
+    </ClInclude>
+    <ClInclude Include="TButton.h">
+      <Filter>SCENE</Filter>
+    </ClInclude>
+    <ClInclude Include="TEndScene.h">
+      <Filter>SCENE</Filter>
+    </ClInclude>
+    <ClInclude Include="TGameScene.h">
+      <Filter>SCENE</Filter>
+    </ClInclude>
+    <ClInclude Include="TLobbyScene.h">
+      <Filter>SCENE</Filter>
+    </ClInclude>
+    <ClInclude Include="TWindow.h">
+      <Filter>WINDOW</Filter>
+    </ClInclude>
+    <ClInclude Include="TStd.h">
+      <Filter>WINDOW</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore.h">
+      <Filter>WINDOW</Filter>
+    </ClInclude>
+    <ClInclude Include="TTimer.h">
+      <Filter>WINDOW</Filter>
+    </ClInclude>
+    <ClInclude Include="TInput.h">
+      <Filter>WINDOW</Filter>
+    </ClInclude>
+    <ClInclude Include="TSound.h">
+      <Filter>WINDOW</Filter>
+    </ClInclude>
+    <ClInclude Include="TScene.h">
+      <Filter>SCENE</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

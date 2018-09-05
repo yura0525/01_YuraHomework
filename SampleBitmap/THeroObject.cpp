@@ -72,7 +72,7 @@ bool THeroObject::FadeIn()
 }
 void THeroObject::ProcessDamage(int damage)
 {
-	TPCObject::ProcessDamage(damage);
+	TObject::ProcessDamage(damage);
 }
 
 THeroObject::THeroObject()

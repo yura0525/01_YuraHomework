@@ -1,7 +1,7 @@
 #pragma once
-#include "TPCObject.h"
+#include "TObject.h"
 
-class THeroObject : public TPCObject
+class THeroObject : public TObject
 {
 public:
 	bool bFadeStart;
