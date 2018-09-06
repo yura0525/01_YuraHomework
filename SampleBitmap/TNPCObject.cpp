@@ -7,7 +7,7 @@ bool TNPCObject::Frame()
 
 	if ((m_pos.y + iHalfY) > g_rtClient.bottom)
 	{
-		m_bDead = true;
+		SetDead();
 	}
 
 	m_pos.x += m_fDir[0] * m_fSpeed * g_fSecPerFrame;

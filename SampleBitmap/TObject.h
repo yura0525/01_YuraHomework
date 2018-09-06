@@ -23,7 +23,6 @@ public:
 	RECT	m_rtDraw;
 	RECT	m_rtCollision;
 
-	bool	m_bDead;
 	bool	m_bDebugRect;
 
 	float	m_fAlpha;
@@ -83,6 +82,9 @@ public:
 
 	//单固瘤 包访 贸府
 	void SetHP(int hp)	{	m_iHP = hp;	}
+	void SetDead()		{	m_iHP = 0;	}
+	bool IsDead()		{	return (m_iHP <= 0);	}
+
 	void ProcessDamage(int damage);
 
 public:

@@ -2,16 +2,18 @@
 #include "TCollision.h"
 #include "TInput.h"
 
+const int g_iMaxBulletCount = 50;
+
 bool TEffectObject::Frame()
 {
-	if (m_bDead)	return true;
+	if (IsDead())	return true;
 
 	m_fLifeTime -= g_fSecPerFrame;
 
 	if (m_fLifeTime < 0.0f)
 	{
 		m_fLifeTime = 1.0f;
-		m_bDead = true;
+		SetDead();
 	}
 
 	int iHalfX = m_rtDraw.right / 2;
@@ -19,11 +21,21 @@ bool TEffectObject::Frame()
 
 	if ((m_pos.y + iHalfY) > g_rtClient.bottom)
 	{
-		m_bDead = true;
+		SetDead();
 	}
 	if ((m_pos.y - iHalfY) < g_rtClient.top)
 	{
-		m_bDead = true;
+		SetDead();
+	}
+
+	if ((m_pos.x - iHalfX) < g_rtClient.left)
+	{
+		SetDead();
+	}
+
+	if ((m_pos.x + iHalfX) > g_rtClient.right)
+	{
+		SetDead();
 	}
 
 	m_pos.x += m_fDir[0] * m_fSpeed * g_fSecPerFrame;
@@ -102,6 +114,19 @@ bool TEffectMgr::GameDataLoad(const TCHAR* pszFileName)
 
 void TEffectMgr::AddEffect(POINT pos)
 {
+	//for (int iObj = 0; iObj < m_effectObjList.size(); iObj++)
+	//{
+	//	if (m_effectObjList[iObj].IsDead())
+	//	{
+	//		m_effectObjList[iObj].Init();
+	//		m_effectObjList[iObj].SetPosition(pos.x, pos.y, 1, 142, 41, 42);
+	//		m_effectObjList[iObj].Load(L"../../data/bitmap1.bmp", L"../../data/bitmap2.bmp");
+	//		m_effectObjList[iObj].m_iIndexSprite = rand() % m_rtSpriteList.size();
+	//		m_effectObjList[iObj].SetDirectionSpeed(0.0f, -1.0f, 1000.0f);
+	//		return;
+	//	}
+	//}
+
 	TEffectObject obj;
 	obj.Init();
 	obj.SetPosition(pos.x, pos.y, 1, 142, 41, 42);
@@ -120,8 +145,16 @@ bool TEffectMgr::IsCollision(RECT rt)
 	}
 	return false;
 }
-
-
+bool TEffectMgr::Init()
+{
+	/*m_effectObjList.resize(g_iMaxBulletCount);
+	for (int iObj = 0; iObj < m_effectObjList.size(); iObj++)
+	{
+		m_effectObjList[iObj].Init();
+		m_effectObjList[iObj].Load(L"../../data/bitmap1.bmp", L"../../data/bitmap2.bmp");
+	}*/
+	return true;
+}
 bool TEffectMgr::Frame()
 {
 	if (I_Input.Key(VK_LBUTTON))
@@ -138,6 +171,9 @@ bool TEffectMgr::Frame()
 
 	for (int iObj = 0; iObj < m_effectObjList.size(); iObj++)
 	{
+		if (m_effectObjList[iObj].IsDead())
+			continue;
+
 		m_effectObjList[iObj].m_fOffSet = 1.0f / m_rtSpriteList[m_effectObjList[iObj].m_iIndexSprite].size();
 		m_effectObjList[iObj].m_fSpriteTime += g_fSecPerFrame;
 
@@ -170,6 +206,8 @@ bool TEffectMgr::Render()
 
 	for (int iObj = 0; iObj < m_effectObjList.size(); iObj++)
 	{
+		if (m_effectObjList[iObj].IsDead())
+			continue;
 		m_effectObjList[iObj].RotationBlt(m_fAngle);
 	}
 	return true;

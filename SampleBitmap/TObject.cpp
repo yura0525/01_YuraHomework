@@ -231,7 +231,7 @@ void TObject::GetRotateBitmap(float fAngle, HBITMAP hBitmap, TBitmap* pSrcBitmap
 
 void TObject::RotationBlt(float fAngle)
 {
-	if (m_bDead) return;
+	if (IsDead()) return;
 
 	m_fAngle = fAngle;
 	GetRotateBitmap(fAngle, m_hMaskRotateBitmap, m_pMaskBitmap);
@@ -350,9 +350,11 @@ bool TObject::AlphaBlend(HDC dcDest, int x, int y, int cx, int cy, HDC dcSrc, HD
 
 void TObject::ProcessDamage(int damage)
 {
+	TCHAR	m_csBuffer[256];
+
 	m_iHP = m_iHP + damage;
-	if (m_iHP <= 0)
-		m_bDead = true;
+	_stprintf_s(m_csBuffer, L"TObject::ProcessDamage => m_iHP :%d damage : %d", m_iHP, damage);
+	OutputDebugString(m_csBuffer);
 }
 
 TObject::TObject()
@@ -371,7 +373,7 @@ TObject::TObject()
 	m_fAttackRadius = 200.0f;
 
 	m_bDebugRect = false;
-	m_bDead = false;
+	m_iHP = 1;
 
 	m_fAngle = 0.0f;
 	m_fAlpha = 255.0f;

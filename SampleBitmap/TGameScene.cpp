@@ -28,20 +28,24 @@ bool TGameScene::Init()
 	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
 	{
 		m_NPCList[iNPC].Init();
-		m_NPCList[iNPC].SetPosition(0 + (m_NPCGap * iNPC), 0, 46, 62, 68, 82);
-		
-		m_NPCList[iNPC].SetHP(1);
+		m_NPCList[iNPC].SetHP(0);
 		m_NPCList[iNPC].Load(L"../../data/bitmap1.bmp", L"../../data/bitmap2.bmp");	
+	}
+
+	for (int iNPC = 0; iNPC < m_iMaxNPCCount; iNPC++)
+	{
+		m_NPCList[iNPC].SetPosition(0 + (m_NPCGap * iNPC), 0, 46, 62, 68, 82);
+		m_NPCList[iNPC].SetHP(1);
 		m_NPCList[iNPC].m_fAttackRadius = 30 + rand() % 100;
 		m_NPCList[iNPC].SetDirectionSpeed(0.0f, 1.0f, 50.0f);
 	}
-
-	m_iSpriteIndex = 0;
 	return true;
 }
 
 bool TGameScene::Frame()
 {
+	RegenNPCList();
+
 	if (I_Input.Key('0') == KEY_PUSH)
 	{
 		m_Hero.m_bDebugRect = !m_Hero.m_bDebugRect;
@@ -52,8 +56,8 @@ bool TGameScene::Frame()
 	}
 	m_BackGround.Frame();
 	m_Hero.Frame();
+	m_EffectMgr.Frame();
 
-	
 	for (int iNPC = 0; iNPC < m_iMaxNPCCount; iNPC++)
 	{
 		//NPC가 Hero의 총알에 맞는 처리
@@ -62,7 +66,7 @@ bool TGameScene::Frame()
 			m_NPCList[iNPC].ProcessDamage(-1);
 		}
 
-		if (!m_NPCList[iNPC].m_bDead)
+		if (!m_NPCList[iNPC].IsDead())
 			m_NPCList[iNPC].Frame();
 
 		//Hero가 NPC에 맞는거 처리.
@@ -70,34 +74,9 @@ bool TGameScene::Frame()
 			m_Hero.ProcessDamage(-1);
 	}
 
-	m_EffectMgr.Frame();
 	
-	bool isChangeScene = true;
-	for (int iNPC = 0; iNPC < m_iMaxNPCCount; iNPC++)
-	{
-		/*if ( I_Input.Key(VK_LBUTTON) &&
-			TCollision::RectInPoint(m_NPCList[iNPC].m_rtCollision, g_pHeroPos))
-		{
-			m_NPCList[iNPC].m_bDead = true;
-		}
-		*/
-		if( !m_NPCList[iNPC].m_bDead )
-			isChangeScene = false;
-	}
-
-	if (isChangeScene)
-	{
-		//몹 재생성.
-		for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
-		{
-			m_NPCList[iNPC].Init();
-			m_NPCList[iNPC].SetPosition(0 + (m_NPCGap * iNPC), 0, 46, 62, 68, 82);
-
-			m_NPCList[iNPC].SetHP(1);
-			m_NPCList[iNPC].m_fAttackRadius = 30 + rand() % 100;
-			m_NPCList[iNPC].SetDirectionSpeed(0.0f, 1.0f, 50.0f);
-		}
-	}
+	
+	
 
 	////주인공이 NPC총알에 맞는거 처리.
 	//for (int iObj = 0; iObj < m_NPCBulletList.size(); iObj++)
@@ -109,7 +88,7 @@ bool TGameScene::Frame()
 
 
 	//주인공이 죽으면 게임끝
-	if (m_Hero.m_bDead)
+	if (m_Hero.IsDead())
 		m_bEndSceneStart = true;
 
 	return true;
@@ -119,13 +98,14 @@ bool TGameScene::Render()
 {
 	m_BackGround.Render();
 	m_Hero.Render();
+	m_EffectMgr.Render();
+
 	for (int iNPC = 0; iNPC < m_iMaxNPCCount; iNPC++)
 	{
-		if( !m_NPCList[iNPC].m_bDead )
+		if( !m_NPCList[iNPC].IsDead())
 			m_NPCList[iNPC].Render();
 	}
 
-	m_EffectMgr.Render();
 	m_fAngle += g_fSecPerFrame * 100.0f;
 
 	return true;
@@ -134,12 +114,37 @@ bool TGameScene::Release()
 {
 	m_BackGround.Release();
 	m_Hero.Release();
+	m_EffectMgr.Release();
+
 	for (int iNPC = 0; iNPC < m_iMaxNPCCount; iNPC++)
 	{
 		m_NPCList[iNPC].Release();
 	}
-	m_EffectMgr.Release();
+	
 	return true;
+}
+
+void TGameScene::RegenNPCList()
+{
+	//몹이 1마리라도 있으면 리젠되지 않는다.
+	for (int iNPC = 0; iNPC < m_iMaxNPCCount; iNPC++)
+	{
+		if (!m_NPCList[iNPC].IsDead())
+			return;
+	}
+
+	
+	//몹 재생성.
+	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
+	{
+		m_NPCList[iNPC].Init();
+		m_NPCList[iNPC].SetPosition(0 + (m_NPCGap * iNPC), 0, 46, 62, 68, 82);
+
+		m_NPCList[iNPC].SetHP(1);
+		m_NPCList[iNPC].Load(L"../../data/bitmap1.bmp", L"../../data/bitmap2.bmp");
+		m_NPCList[iNPC].m_fAttackRadius = 30 + rand() % 100;
+		m_NPCList[iNPC].SetDirectionSpeed(0.0f, 1.0f, 50.0f);
+	}
 }
 bool TGameScene::Reset()
 {
@@ -149,15 +154,10 @@ bool TGameScene::Reset()
 
 	for (int iNPC = 0; iNPC < m_iMaxNPCCount; iNPC++)
 	{
-		m_NPCList[iNPC].m_bDead = false;
+		m_NPCList[iNPC].SetHP(1);
 		m_NPCList[iNPC].SetPosition(0 + (m_NPCGap * iNPC), 0, 46, 62, 68, 82);
 	}
 	return true;
-}
-
-void TGameScene::AddBullet(eBulletType eType, POINT pos, float dirX, float dirY, float speed)
-{
-	
 }
 
 TGameScene::TGameScene()

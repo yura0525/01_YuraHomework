@@ -34,8 +34,9 @@ public:
 	bool GameDataLoad(const TCHAR* pszFileName);
 	void AddEffect(POINT pos);
 	bool IsCollision(RECT rt);
-
+	void DeleteEffect();
 public:
+	bool Init();
 	bool Frame();
 	bool Render();
 	bool Release();

@@ -2,8 +2,7 @@
 #include "TBKObject.h"
 
 const int g_iMaxLevel = 10;
-const int g_iMaxNPCCount = 10;
-const int g_iMaxBulletCount = 10;
+const int g_iMaxNPCCount = 50;
 const int g_iLineMaxNPCCount = 10;
 
 enum TGameState

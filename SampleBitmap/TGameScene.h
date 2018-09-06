@@ -29,16 +29,9 @@ public:
 	bool Frame();
 	bool Render();
 	bool Release();
-
 	bool Reset();
 
-public:
-	std::vector<RECT_ARRAY> m_rtSpriteList;
-	int						m_iSpriteIndex;
-public:
-
-	void AddBullet(eBulletType eType, POINT pos, float dirX, float dirY, float speed);
-
+	void RegenNPCList();
 public:
 	TGameScene();
 	virtual ~TGameScene();
