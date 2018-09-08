@@ -2,6 +2,9 @@
 #include "TInput.h"
 #include "TCollision.h"
 
+const int g_NPCWidthGap = 55;
+const int g_HeroMAXHP = 100;
+const int g_NPCMoveSpeed = 100.0f;
 bool TGameScene::Init()
 {
 	m_bNextSceneStart = false;
@@ -11,8 +14,7 @@ bool TGameScene::Init()
 	m_NPCGap = 55;
 	m_bEndSceneStart = false;
 
-	m_EffectMgr.GameDataLoad(L"../../data/SpriteList.txt");
-
+	I_EffectMgr.GameDataLoad(L"../../data/SpriteList.txt");
 
 	m_BackGround.Init();
 	m_BackGround.SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 800, 600);
@@ -21,22 +23,21 @@ bool TGameScene::Init()
 	m_Hero.Init();
 	m_Hero.SetPosition(300, 300, 90, 2, 42, 58);
 	m_Hero.Load(L"../../data/bitmap1.bmp", L"../../data/bitmap2.bmp");
-	m_Hero.SetHP(10);
+	m_Hero.SetMAXHP(g_HeroMAXHP);
 
 	//NPCList
-	m_NPCList.resize(g_iMaxNPCCount);
 	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
 	{
-		m_NPCList[iNPC].Init();
-		m_NPCList[iNPC].SetPosition(0 + (m_NPCGap * iNPC), 0, 46, 62, 68, 82);
+		TNPCObject* pNPCObject = new TNPCObject;
+		pNPCObject->Init();
+		pNPCObject->SetPosition((m_NPCGap / 2) + (m_NPCGap * iNPC), 0, 46, 62, 68, 80);
 		
-		m_NPCList[iNPC].SetHP(1);
-		m_NPCList[iNPC].Load(L"../../data/bitmap1.bmp", L"../../data/bitmap2.bmp");	
-		m_NPCList[iNPC].m_fAttackRadius = 30 + rand() % 100;
-		m_NPCList[iNPC].SetDirectionSpeed(0.0f, 1.0f, 50.0f);
+		pNPCObject->SetMAXHP(1);
+		pNPCObject->Load(L"../../data/bitmap1.bmp", L"../../data/bitmap2.bmp");
+		pNPCObject->m_fAttackRadius = 30 + rand() % 100;
+		pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
+		m_NPCList.push_back(pNPCObject);
 	}
-
-	m_iSpriteIndex = 0;
 	return true;
 }
 
@@ -45,59 +46,40 @@ bool TGameScene::Frame()
 	if (I_Input.Key('0') == KEY_PUSH)
 	{
 		m_Hero.m_bDebugRect = !m_Hero.m_bDebugRect;
-		for (int iNPC = 0; iNPC < m_iMaxNPCCount; iNPC++)
+
+		list<TNPCObject*>::iterator iter;
+		for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++)
 		{
-			m_NPCList[iNPC].m_bDebugRect = !m_NPCList[iNPC].m_bDebugRect;
+			(*iter)->m_bDebugRect = !( (*iter)->m_bDebugRect );
 		}
 	}
 	m_BackGround.Frame();
 	m_Hero.Frame();
 
-	
-	for (int iNPC = 0; iNPC < m_iMaxNPCCount; iNPC++)
+	list<TNPCObject*>::iterator iter;
+	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++)
 	{
+		TNPCObject* pNPCObject = (*iter);
 		//NPC가 Hero의 총알에 맞는 처리
-		if (I_EffectMgr.IsCollision(m_NPCList[iNPC].m_rtCollision))
+		if (I_EffectMgr.IsCollision(pNPCObject->m_rtCollision))
 		{
-			m_NPCList[iNPC].ProcessDamage(-1);
+			pNPCObject->ProcessDamage(-1);
 		}
 
-		if (!m_NPCList[iNPC].m_bDead)
-			m_NPCList[iNPC].Frame();
+		if (!(pNPCObject->IsDead()))
+			pNPCObject->Frame();
 
 		//Hero가 NPC에 맞는거 처리.
-		if (TCollision::RectInRect(m_Hero.m_rtCollision, m_NPCList[iNPC].m_rtCollision))
+		if (TCollision::RectInRect(m_Hero.m_rtCollision, pNPCObject->m_rtCollision))
+		{
 			m_Hero.ProcessDamage(-1);
-	}
-
-	m_EffectMgr.Frame();
-	
-	bool isChangeScene = true;
-	for (int iNPC = 0; iNPC < m_iMaxNPCCount; iNPC++)
-	{
-		/*if ( I_Input.Key(VK_LBUTTON) &&
-			TCollision::RectInPoint(m_NPCList[iNPC].m_rtCollision, g_pHeroPos))
-		{
-			m_NPCList[iNPC].m_bDead = true;
 		}
-		*/
-		if( !m_NPCList[iNPC].m_bDead )
-			isChangeScene = false;
+			
 	}
 
-	if (isChangeScene)
-	{
-		//몹 재생성.
-		for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
-		{
-			m_NPCList[iNPC].Init();
-			m_NPCList[iNPC].SetPosition(0 + (m_NPCGap * iNPC), 0, 46, 62, 68, 82);
+	DeleteNPCList();
 
-			m_NPCList[iNPC].SetHP(1);
-			m_NPCList[iNPC].m_fAttackRadius = 30 + rand() % 100;
-			m_NPCList[iNPC].SetDirectionSpeed(0.0f, 1.0f, 50.0f);
-		}
-	}
+	I_EffectMgr.Frame();
 
 	////주인공이 NPC총알에 맞는거 처리.
 	//for (int iObj = 0; iObj < m_NPCBulletList.size(); iObj++)
@@ -109,7 +91,7 @@ bool TGameScene::Frame()
 
 
 	//주인공이 죽으면 게임끝
-	if (m_Hero.m_bDead)
+	if (m_Hero.IsDead())
 		m_bEndSceneStart = true;
 
 	return true;
@@ -119,13 +101,14 @@ bool TGameScene::Render()
 {
 	m_BackGround.Render();
 	m_Hero.Render();
-	for (int iNPC = 0; iNPC < m_iMaxNPCCount; iNPC++)
+	list<TNPCObject*>::iterator iter;
+	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++)
 	{
-		if( !m_NPCList[iNPC].m_bDead )
-			m_NPCList[iNPC].Render();
+		if( !((*iter)->IsDead()) )
+			(*iter)->Render();
 	}
 
-	m_EffectMgr.Render();
+	I_EffectMgr.Render();
 	m_fAngle += g_fSecPerFrame * 100.0f;
 
 	return true;
@@ -134,11 +117,16 @@ bool TGameScene::Release()
 {
 	m_BackGround.Release();
 	m_Hero.Release();
-	for (int iNPC = 0; iNPC < m_iMaxNPCCount; iNPC++)
+
+	list<TNPCObject*>::iterator iter;
+	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++)
 	{
-		m_NPCList[iNPC].Release();
+		(*iter)->Release();
+		delete (*iter);
 	}
-	m_EffectMgr.Release();
+	m_NPCList.clear();
+
+	I_EffectMgr.Release();
 	return true;
 }
 bool TGameScene::Reset()
@@ -147,19 +135,58 @@ bool TGameScene::Reset()
 	m_bNextSceneStart = false;
 	m_bEndSceneStart = false;
 
-	for (int iNPC = 0; iNPC < m_iMaxNPCCount; iNPC++)
+	list<TNPCObject*>::iterator iter;
+	int iNPC = 0;
+	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++)
 	{
-		m_NPCList[iNPC].m_bDead = false;
-		m_NPCList[iNPC].SetPosition(0 + (m_NPCGap * iNPC), 0, 46, 62, 68, 82);
+		TNPCObject* pNPCObject = (*iter);
+		pNPCObject->Init();
+		pNPCObject->SetPosition((m_NPCGap / 2) + (m_NPCGap * iNPC), 0, 46, 62, 68, 80);
+		pNPCObject->SetMAXHP(1);
+		pNPCObject->m_fAttackRadius = 30 + rand() % 100;
+		pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
+		pNPCObject->SetPosition((m_NPCGap / 2) + (m_NPCGap * iNPC++), 0, 46, 62, 68, 80);
 	}
 	return true;
 }
 
-void TGameScene::AddBullet(eBulletType eType, POINT pos, float dirX, float dirY, float speed)
+void TGameScene::DeleteNPCList()
 {
-	
+	list<TNPCObject*>::iterator iter;
+	for (iter = m_NPCList.begin(); iter != m_NPCList.end();)
+	{
+		if ((*iter)->IsDead())
+		{
+			(*iter)->Release();
+			delete (*iter);
+			iter = m_NPCList.erase(iter);
+		}
+		else
+			iter++;
+	}
+
 }
 
+void TGameScene::NPCRegenAlarm()
+{
+	//몹 재생성.
+	list<TNPCObject*>::iterator iter;
+	int iNPC = 0;
+	TCHAR	m_csBuffer[256];
+	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
+	{
+		TNPCObject* pNPCObject = new TNPCObject;
+		pNPCObject->Init();
+		pNPCObject->Load(L"../../data/bitmap1.bmp", L"../../data/bitmap2.bmp");
+		pNPCObject->SetMAXHP(1);
+		pNPCObject->SetPosition((m_NPCGap / 2) + (m_NPCGap * iNPC), 0, 46, 62, 68, 80);
+		pNPCObject->m_fAttackRadius = 30 + rand() % 100;
+		pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
+		m_NPCList.push_back(pNPCObject);
+	}
+	_stprintf_s(m_csBuffer, L"NPCRegenAlarm()!!!!!!!! m_NPCList: %d g_iMaxNPCCount : %d\n", m_NPCList.size(), g_iMaxNPCCount);
+	OutputDebugString(m_csBuffer);
+}
 TGameScene::TGameScene()
 {
 	m_iSceneID = GAME_SCENE_PLAY;
@@ -167,7 +194,7 @@ TGameScene::TGameScene()
 	m_fAngle = 0.0f;
 
 	//NPC사이의 갭들
-	m_NPCGap = 55;
+	m_NPCGap = g_NPCWidthGap;
 	m_bEndSceneStart = false;
 }
 

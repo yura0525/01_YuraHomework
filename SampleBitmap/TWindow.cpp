@@ -1,4 +1,5 @@
 #include "TWindow.h"
+#include "TInput.h"
 
 TWindow*	g_pWindow	= 0;
 HWND		g_hWnd		= NULL;

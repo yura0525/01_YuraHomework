@@ -17,7 +17,6 @@ TScene::TScene()
 {
 	m_iSceneID = GAME_SCENE_LOBBY;
 	m_bNextSceneStart = false;
-	m_iMaxNPCCount = g_iLineMaxNPCCount;
 	m_bEndSceneStart = false;
 }
 

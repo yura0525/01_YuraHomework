@@ -1,7 +1,6 @@
 #pragma once
 #include "TWindow.h"
 #include "TTimer.h"
-//#include "TInput.h"
 
 class TCore : public TWindow
 {
@@ -30,7 +29,10 @@ public:
 	virtual bool Frame() { return true; }
 	virtual bool Render() { return true; }
 	virtual bool Release() { return true; }
-	
+public:
+	virtual void NPCRegenAlarm() { }
+	virtual void GameEndTimeAlarm() { }
+
 public:
 	TCore();
 	virtual ~TCore();

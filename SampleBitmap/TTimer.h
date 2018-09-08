@@ -1,15 +1,16 @@
 #pragma once
 #include "TStd.h"
-
 /*
 1) 1프레임의 경과 시간 = m_fSecPerFrame
 2) 1초의 프레임 카운터	= m_dwFPS
 3) 게임이 실행된 누적시간 = m_fGameTime
 */
+class TCore;
 class TTimer
 {
 private:
-	
+	TCore * m_pOwner;
+
 	DWORD	m_dwFrameCount;
 	DWORD	m_dwFPS;			//2) 1초의 프레임 카운터
 	DWORD	m_dwBeforeTick;
@@ -18,7 +19,12 @@ private:
 	float	m_fGameTime;		//3) 게임이 실행된 누적시간
 	float	m_fTimer;
 
-	TCHAR	m_csBuffer[256];
+	float	m_fNPCRegenStartTime;	//4)이벤트 시작 시간.(NPC생성)
+	float	m_fNPCRegenTimeGap;		//5)이벤트 설정 시간.
+	float	m_fNPCRegenTimer;
+
+	float	m_fGameStartTime;		//6)게임 시작 시간.
+	float	m_fGameTimeGap;			//7)게임 설정 시간.
 
 public:
 	bool Init();			//초기화
@@ -26,7 +32,10 @@ public:
 	bool Render();			//드로우
 	bool Release();			//소멸, 삭제
 
-	TTimer();
+	void NPCRegenTime(float fNPCRegenTimeGap);
+	void GameStartTime(float fGameTimeGap);
+
+	TTimer(TCore* pOwner);
 	virtual ~TTimer();
 };
 

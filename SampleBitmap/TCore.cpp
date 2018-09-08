@@ -1,4 +1,5 @@
 #include "TCore.h"
+#include "TInput.h"
 
 HDC g_hOffScreenDC = NULL;
 HDC g_hScreenDC = NULL;
@@ -81,7 +82,7 @@ bool TCore::GameRelease()
 	ReleaseDC(m_hWnd, m_hOffScreenDC);
 	return true;
 }
-TCore::TCore()
+TCore::TCore() : m_Timer(this)
 {
 }
 

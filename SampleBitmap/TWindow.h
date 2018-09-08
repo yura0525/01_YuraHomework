@@ -1,6 +1,5 @@
 #pragma once
 #include "TStd.h"
-#include "TInput.h"
 
 class TWindow
 {

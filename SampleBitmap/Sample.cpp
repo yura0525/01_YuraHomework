@@ -9,13 +9,13 @@
 
 using namespace std;
 
-#define g_iMaxNPCCount 10
-
 //TCoreLib의 빌드후 이벤트
 //폴더내의 모든 헤더파일을 ../../include 경로로 복사한다
 //폴더내의 모든 .lib 파일을 ../../lib 경로로 복사한다.
 //copy "*.h" "../../include"
 //copy "*.lib" "../../lib"
+const float g_NPCRegenTime = 4.0f;
+const float g_TotalGameTime = 300.0f;
 class Sample : public TCore
 {
 public:
@@ -58,7 +58,7 @@ public:
 			{
 				if ((m_pCurrentScene->m_bEndSceneStart) || (m_iLevel > 3))
 				{
-					m_pCurrentScene->SetNPCCount(g_iLineMaxNPCCount);
+					m_pCurrentScene->SetNPCCount(g_iMaxNPCCount);
 					m_pCurrentScene->Reset();
 					m_iLevel = 1;
 					m_pCurrentScene = m_pEndScene.get();
@@ -67,9 +67,11 @@ public:
 				else
 				{
 					m_pCurrentScene = m_pGameScene.get();
-					m_pCurrentScene->SetNPCCount(g_iLineMaxNPCCount);
+					m_pCurrentScene->SetNPCCount(g_iMaxNPCCount);
 					++m_iLevel;
 					m_pCurrentScene->Reset();
+					m_Timer.NPCRegenTime(g_NPCRegenTime);
+					m_Timer.GameStartTime(g_TotalGameTime);
 				}
 			}
 			break;
@@ -92,6 +94,17 @@ public:
 		m_pEndScene->Release();
 
 		return true;
+	}
+
+	void NPCRegenAlarm()
+	{
+		m_pGameScene->NPCRegenAlarm();
+	}
+
+	void GameEndTimeAlarm()
+	{
+		m_pCurrentScene->m_bNextSceneStart = true;
+		m_pCurrentScene->m_bEndSceneStart = true;
 	}
 public:
 	Sample() {}

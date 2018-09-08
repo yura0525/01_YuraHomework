@@ -23,7 +23,6 @@ public:
 	RECT	m_rtDraw;
 	RECT	m_rtCollision;
 
-	bool	m_bDead;
 	bool	m_bDebugRect;
 
 	float	m_fAlpha;
@@ -46,8 +45,11 @@ public:
 	float				m_iMaxDistance;
 	float				m_fAngle;
 
+	//HP에 관한 변수들
 public:
-	int	m_iHP;
+	int		m_iHP;
+	float	m_fLastDamageTime;
+	float	m_fDamageTimeGap;		//무적타임	
 public:
 
 	void SetPosition(TPoint pos);
@@ -82,7 +84,9 @@ public:
 
 
 	//데미지 관련 처리
-	void SetHP(int hp)	{	m_iHP = hp;	}
+	bool IsDead();
+	void SetDead()			{	m_iHP = 0;	}
+	void SetMAXHP(int hp)	{	m_iHP = hp;	}
 	void ProcessDamage(int damage);
 
 public:

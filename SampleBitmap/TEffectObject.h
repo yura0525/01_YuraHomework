@@ -26,10 +26,11 @@ public:
 class TEffectMgr : public TSingleton<TEffectMgr>
 {
 public:
+	friend class TSingleton<TEffectMgr>;
 	float							m_fAngle;
 	std::vector<RECT_ARRAY>			m_rtSpriteList;
 
-	std::vector<TEffectObject>		m_effectObjList;
+	std::vector<TEffectObject*>		m_effectObjList;
 public:
 	bool GameDataLoad(const TCHAR* pszFileName);
 	void AddEffect(POINT pos);
@@ -39,8 +40,9 @@ public:
 	bool Frame();
 	bool Render();
 	bool Release();
-public:
+protected:
 	TEffectMgr();
+public:
 	~TEffectMgr();
 };
 

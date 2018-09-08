@@ -3,6 +3,7 @@
 
 //TransparentBlt 외부기호
 #pragma comment (lib, "msimg32.lib")
+const int g_DamageTimeGap = 2.0f;
 
 void TObject::SetPosition(TPoint pos)
 {
@@ -67,6 +68,9 @@ bool TObject::Init()
 {
 	m_hBrBack = CreateSolidBrush(RGB(255, 255, 255));
 	m_fAngle = 0.0f;
+
+	m_fLastDamageTime = g_fGameTime;
+	m_iHP = 1;
 	return true;
 }
 bool TObject::Frame()
@@ -103,6 +107,9 @@ bool TObject::Frame()
 }
 bool TObject::Render()
 {
+	if (IsDead())
+		return true;
+
 	if (m_pMaskBitmap == NULL)
 	{
 		BitBlt(g_hOffScreenDC, m_posDraw.x, m_posDraw.y, m_rtDraw.right, m_rtDraw.bottom,
@@ -231,7 +238,7 @@ void TObject::GetRotateBitmap(float fAngle, HBITMAP hBitmap, TBitmap* pSrcBitmap
 
 void TObject::RotationBlt(float fAngle)
 {
-	if (m_bDead) return;
+	if (IsDead()) return;
 
 	m_fAngle = fAngle;
 	GetRotateBitmap(fAngle, m_hMaskRotateBitmap, m_pMaskBitmap);
@@ -347,12 +354,19 @@ bool TObject::AlphaBlend(HDC dcDest, int x, int y, int cx, int cy, HDC dcSrc, HD
 
 	return true;
 }
-
+bool TObject::IsDead()
+{
+	return ((0 < m_iHP) ? false : true);
+}
 void TObject::ProcessDamage(int damage)
 {
-	m_iHP = m_iHP + damage;
-	if (m_iHP <= 0)
-		m_bDead = true;
+	//ProcessDamage가 여러번 처리되는걸 막는다.
+	if ((m_fLastDamageTime + m_fDamageTimeGap) < g_fGameTime)
+	{
+		m_fLastDamageTime += m_fDamageTimeGap;
+
+		m_iHP = m_iHP + damage;
+	}
 }
 
 TObject::TObject()
@@ -371,10 +385,13 @@ TObject::TObject()
 	m_fAttackRadius = 200.0f;
 
 	m_bDebugRect = false;
-	m_bDead = false;
+	m_iHP = 1;
 
 	m_fAngle = 0.0f;
 	m_fAlpha = 255.0f;
+
+	m_fLastDamageTime = g_fGameTime;
+	m_fDamageTimeGap = g_DamageTimeGap;
 }
 
 

@@ -2,16 +2,17 @@
 #include "TCollision.h"
 #include "TInput.h"
 
+const float g_EffectTimeGap = 0.3f;
 bool TEffectObject::Frame()
 {
-	if (m_bDead)	return true;
+	if (IsDead())	return true;
 
 	m_fLifeTime -= g_fSecPerFrame;
 
 	if (m_fLifeTime < 0.0f)
 	{
 		m_fLifeTime = 1.0f;
-		m_bDead = true;
+		SetDead();
 	}
 
 	int iHalfX = m_rtDraw.right / 2;
@@ -19,11 +20,11 @@ bool TEffectObject::Frame()
 
 	if ((m_pos.y + iHalfY) > g_rtClient.bottom)
 	{
-		m_bDead = true;
+		SetDead();
 	}
 	if ((m_pos.y - iHalfY) < g_rtClient.top)
 	{
-		m_bDead = true;
+		SetDead();
 	}
 
 	m_pos.x += m_fDir[0] * m_fSpeed * g_fSecPerFrame;
@@ -37,10 +38,6 @@ bool TEffectObject::Frame()
 	m_rtCollision.right = m_rtCollision.left + m_rtDraw.right;
 	m_rtCollision.bottom = m_rtCollision.top + m_rtDraw.bottom;
 
-	TCHAR m_csBuffer[256];
-	_stprintf_s(m_csBuffer, L"pos.x : %f, pos.y : %f, dirX : %f, dirY : %f, speed : %f",
-		m_pos.x, m_pos.y, m_fDir[0], m_fDir[1], m_fSpeed);
-	OutputDebugString(m_csBuffer);
 	return true;
 }
 
@@ -102,20 +99,19 @@ bool TEffectMgr::GameDataLoad(const TCHAR* pszFileName)
 
 void TEffectMgr::AddEffect(POINT pos)
 {
-	TEffectObject obj;
-	obj.Init();
-	obj.SetPosition(pos.x, pos.y, 1, 142, 41, 42);
-	obj.Load(L"../../data/bitmap1.bmp", L"../../data/bitmap2.bmp");
-	obj.m_iIndexSprite = rand() % m_rtSpriteList.size();
-	obj.SetDirectionSpeed(0.0f, -1.0f, 1000.0f);
-	m_effectObjList.push_back(obj);
-
+	TEffectObject* pObj = new TEffectObject();
+	pObj->Init();
+	pObj->SetPosition(pos.x, pos.y, 1, 142, 41, 42);
+	pObj->Load(L"../../data/bitmap1.bmp", L"../../data/bitmap2.bmp");
+	pObj->m_iIndexSprite = rand() % m_rtSpriteList.size();
+	pObj->SetDirectionSpeed(0.0f, -1.0f, 500.0f);
+	m_effectObjList.push_back(pObj);
 }
 bool TEffectMgr::IsCollision(RECT rt)
 {
 	for (int iObj = 0; iObj < m_effectObjList.size(); iObj++)
 	{
-		if (TCollision::SphereInSphere(rt, m_effectObjList[iObj].m_rtCollision))
+		if (TCollision::RectInRect(rt, m_effectObjList[iObj]->m_rtCollision))
 			return true;
 	}
 	return false;
@@ -129,37 +125,37 @@ bool TEffectMgr::Frame()
 		static float fAddTime = 0.0f;
 		fAddTime += g_fSecPerFrame;
 
-		if (fAddTime >= 0.1f)
+		if (fAddTime >= g_EffectTimeGap)
 		{
 			AddEffect(g_pHeroPos);
-			fAddTime -= 0.1f;
+			fAddTime -= g_EffectTimeGap;
 		}
 	}
 
 	for (int iObj = 0; iObj < m_effectObjList.size(); iObj++)
 	{
-		m_effectObjList[iObj].m_fOffSet = 1.0f / m_rtSpriteList[m_effectObjList[iObj].m_iIndexSprite].size();
-		m_effectObjList[iObj].m_fSpriteTime += g_fSecPerFrame;
+		m_effectObjList[iObj]->m_fOffSet = 1.0f / m_rtSpriteList[m_effectObjList[iObj]->m_iIndexSprite].size();
+		m_effectObjList[iObj]->m_fSpriteTime += g_fSecPerFrame;
 
-		if (m_effectObjList[iObj].m_fSpriteTime >= m_effectObjList[iObj].m_fOffSet)
+		if (m_effectObjList[iObj]->m_fSpriteTime >= m_effectObjList[iObj]->m_fOffSet)
 		{
-			m_effectObjList[iObj].m_iCurrentSprite++;
+			m_effectObjList[iObj]->m_iCurrentSprite++;
 			if (!m_rtSpriteList.empty())
 			{
-				if (m_effectObjList[iObj].m_iCurrentSprite >= m_rtSpriteList[ m_effectObjList[iObj].m_iIndexSprite ].size())
+				if (m_effectObjList[iObj]->m_iCurrentSprite >= m_rtSpriteList[ m_effectObjList[iObj]->m_iIndexSprite ].size())
 				{
-					m_effectObjList[iObj].m_iCurrentSprite = 0;
+					m_effectObjList[iObj]->m_iCurrentSprite = 0;
 				}
 			}
 
-			m_effectObjList[iObj].m_fSpriteTime -= m_effectObjList[iObj].m_fOffSet;
+			m_effectObjList[iObj]->m_fSpriteTime -= m_effectObjList[iObj]->m_fOffSet;
 		}
 
 		if (!m_rtSpriteList.empty())
 		{
-			RECT rt = m_rtSpriteList[m_effectObjList[iObj].m_iIndexSprite][m_effectObjList[iObj].m_iCurrentSprite];
-			m_effectObjList[iObj].m_rtDraw = rt;
-			m_effectObjList[iObj].Frame();
+			RECT rt = m_rtSpriteList[m_effectObjList[iObj]->m_iIndexSprite][m_effectObjList[iObj]->m_iCurrentSprite];
+			m_effectObjList[iObj]->m_rtDraw = rt;
+			m_effectObjList[iObj]->Frame();
 		}
 	}
 	return true;
@@ -170,7 +166,7 @@ bool TEffectMgr::Render()
 
 	for (int iObj = 0; iObj < m_effectObjList.size(); iObj++)
 	{
-		m_effectObjList[iObj].RotationBlt(m_fAngle);
+		m_effectObjList[iObj]->RotationBlt(m_fAngle);
 	}
 	return true;
 }
@@ -178,8 +174,11 @@ bool TEffectMgr::Release()
 {
 	for (int iObj = 0; iObj < m_effectObjList.size(); iObj++)
 	{
-		m_effectObjList[iObj].Release();
+		m_effectObjList[iObj]->Release();
+		delete m_effectObjList[iObj];
 	}
+
+	m_effectObjList.clear();
 	return true;
 }
 

@@ -11,7 +11,7 @@ public:
 	bool Render();
 	bool Release();
 
-	bool IsDead() { return m_BtnStart.m_bDead; }
+	bool IsDead() { return m_BtnStart.IsDead(); }
 public:
 	TLobbyScene();
 	virtual ~TLobbyScene();

@@ -2,9 +2,7 @@
 #include "TBKObject.h"
 
 const int g_iMaxLevel = 10;
-const int g_iMaxNPCCount = 10;
-const int g_iMaxBulletCount = 10;
-const int g_iLineMaxNPCCount = 10;
+const int g_iMaxNPCCount = 14;
 
 enum TGameState
 {
@@ -31,6 +29,8 @@ public:
 	virtual bool IsDead()	{	return false;	}
 
 	virtual bool SetNPCCount(int iNPC);
+
+	virtual	void NPCRegenAlarm() { }
 public:
 	TScene();
 	virtual ~TScene();

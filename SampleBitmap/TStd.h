@@ -38,7 +38,7 @@ extern HDC			g_hScreenDC;
 extern HDC			g_hOffScreenDC;
 extern RECT			g_rtClient;
 extern POINT		g_pHeroPos;
-
+extern float		g_fGameTime;	//현재 게임 시간
 template<class T> class TSingleton
 {
 public:
