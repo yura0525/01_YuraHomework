@@ -1,9 +1,6 @@
 #pragma once
 #include "TStd.h"
-
 #include "TNPCObject.h"
-#include <vector>
-
 typedef std::vector<RECT> RECT_ARRAY;
 
 class TEffectObject : public TNPCObject
@@ -30,7 +27,7 @@ public:
 	float							m_fAngle;
 	std::vector<RECT_ARRAY>			m_rtSpriteList;
 
-	std::vector<TEffectObject*>		m_effectObjList;
+	std::list<TEffectObject*>		m_effectObjList;
 public:
 	bool GameDataLoad(const TCHAR* pszFileName);
 	void AddEffect(POINT pos);
@@ -40,6 +37,8 @@ public:
 	bool Frame();
 	bool Render();
 	bool Release();
+	void DeleteEffectList();
+
 protected:
 	TEffectMgr();
 public:

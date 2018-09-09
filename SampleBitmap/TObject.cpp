@@ -361,11 +361,14 @@ bool TObject::IsDead()
 void TObject::ProcessDamage(int damage)
 {
 	//ProcessDamage가 여러번 처리되는걸 막는다.
+	TCHAR	m_csBuffer[256];
 	if ((m_fLastDamageTime + m_fDamageTimeGap) < g_fGameTime)
 	{
 		m_fLastDamageTime += m_fDamageTimeGap;
 
 		m_iHP = m_iHP + damage;
+		_stprintf_s(m_csBuffer, L"ProcessDamage()!!!!!!!! m_iHP: %d damage : %d\n", m_iHP, damage);
+		OutputDebugString(m_csBuffer);
 	}
 }
 

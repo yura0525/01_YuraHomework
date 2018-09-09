@@ -172,7 +172,6 @@ void TGameScene::NPCRegenAlarm()
 	//¸÷ Àç»ý¼º.
 	list<TNPCObject*>::iterator iter;
 	int iNPC = 0;
-	TCHAR	m_csBuffer[256];
 	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
 	{
 		TNPCObject* pNPCObject = new TNPCObject;
@@ -184,8 +183,6 @@ void TGameScene::NPCRegenAlarm()
 		pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
 		m_NPCList.push_back(pNPCObject);
 	}
-	_stprintf_s(m_csBuffer, L"NPCRegenAlarm()!!!!!!!! m_NPCList: %d g_iMaxNPCCount : %d\n", m_NPCList.size(), g_iMaxNPCCount);
-	OutputDebugString(m_csBuffer);
 }
 TGameScene::TGameScene()
 {

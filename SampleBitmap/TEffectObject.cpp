@@ -2,7 +2,7 @@
 #include "TCollision.h"
 #include "TInput.h"
 
-const float g_EffectTimeGap = 0.3f;
+const float g_EffectTimeGap = 0.1f;
 bool TEffectObject::Frame()
 {
 	if (IsDead())	return true;
@@ -11,7 +11,7 @@ bool TEffectObject::Frame()
 
 	if (m_fLifeTime < 0.0f)
 	{
-		m_fLifeTime = 1.0f;
+		m_fLifeTime = 10.0f;
 		SetDead();
 	}
 
@@ -46,7 +46,7 @@ TEffectObject::TEffectObject()
 	m_iCurrentSprite = 0;
 	m_iIndexSprite = 0;
 	m_fSpriteTime = 1.0f;
-	m_fLifeTime = 1.0f;
+	m_fLifeTime = 10.0f;
 	m_fOffSet = 1.0f;
 
 	m_fDir[0] = 0.0f;
@@ -109,10 +109,20 @@ void TEffectMgr::AddEffect(POINT pos)
 }
 bool TEffectMgr::IsCollision(RECT rt)
 {
-	for (int iObj = 0; iObj < m_effectObjList.size(); iObj++)
+	list<TEffectObject*>::iterator iter;
+	TCHAR	m_csBuffer[256];
+	for (iter = m_effectObjList.begin(); iter != m_effectObjList.end(); iter++)
 	{
-		if (TCollision::RectInRect(rt, m_effectObjList[iObj]->m_rtCollision))
+		if (TCollision::RectInRect(rt, (*iter)->m_rtCollision))
+		{
+			_stprintf_s(m_csBuffer, L"TEffectMgr::IsCollision()@@@@@@ m_effectObjList.size(): %d\t rt.left : %d\t rt.top : %d\t rt.right : %d\t rt.bottom : %d\n", 
+				m_effectObjList.size(), rt.left, rt.top, rt.right, rt.bottom);
+			OutputDebugString(m_csBuffer);
+			_stprintf_s(m_csBuffer, L"TEffectMgr::IsCollision()@@@@@@ m_effectObjList.size(): %d\t m_rtCollision.left : %d\t m_rtCollision.top : %d\t m_rtCollision.right : %d\t m_rtCollision.bottom : %d\n",
+				m_effectObjList.size(), (*iter)->m_rtCollision.left, (*iter)->m_rtCollision.top, (*iter)->m_rtCollision.right, (*iter)->m_rtCollision.bottom);
+			OutputDebugString(m_csBuffer);
 			return true;
+		}
 	}
 	return false;
 }
@@ -132,30 +142,34 @@ bool TEffectMgr::Frame()
 		}
 	}
 
-	for (int iObj = 0; iObj < m_effectObjList.size(); iObj++)
-	{
-		m_effectObjList[iObj]->m_fOffSet = 1.0f / m_rtSpriteList[m_effectObjList[iObj]->m_iIndexSprite].size();
-		m_effectObjList[iObj]->m_fSpriteTime += g_fSecPerFrame;
+	DeleteEffectList();
 
-		if (m_effectObjList[iObj]->m_fSpriteTime >= m_effectObjList[iObj]->m_fOffSet)
+	list<TEffectObject*>::iterator iter;
+	for (iter = m_effectObjList.begin(); iter != m_effectObjList.end(); iter++)
+	{
+		TEffectObject* pEffectObject = (*iter);
+		pEffectObject->m_fOffSet = 1.0f / m_rtSpriteList[pEffectObject->m_iIndexSprite].size();
+		pEffectObject->m_fSpriteTime += g_fSecPerFrame;
+
+		if (pEffectObject->m_fSpriteTime >= pEffectObject->m_fOffSet)
 		{
-			m_effectObjList[iObj]->m_iCurrentSprite++;
+			pEffectObject->m_iCurrentSprite++;
 			if (!m_rtSpriteList.empty())
 			{
-				if (m_effectObjList[iObj]->m_iCurrentSprite >= m_rtSpriteList[ m_effectObjList[iObj]->m_iIndexSprite ].size())
+				if (pEffectObject->m_iCurrentSprite >= m_rtSpriteList[pEffectObject->m_iIndexSprite ].size())
 				{
-					m_effectObjList[iObj]->m_iCurrentSprite = 0;
+					pEffectObject->m_iCurrentSprite = 0;
 				}
 			}
 
-			m_effectObjList[iObj]->m_fSpriteTime -= m_effectObjList[iObj]->m_fOffSet;
+			pEffectObject->m_fSpriteTime -= pEffectObject->m_fOffSet;
 		}
 
 		if (!m_rtSpriteList.empty())
 		{
-			RECT rt = m_rtSpriteList[m_effectObjList[iObj]->m_iIndexSprite][m_effectObjList[iObj]->m_iCurrentSprite];
-			m_effectObjList[iObj]->m_rtDraw = rt;
-			m_effectObjList[iObj]->Frame();
+			RECT rt = m_rtSpriteList[pEffectObject->m_iIndexSprite][pEffectObject->m_iCurrentSprite];
+			pEffectObject->m_rtDraw = rt;
+			pEffectObject->Frame();
 		}
 	}
 	return true;
@@ -164,22 +178,40 @@ bool TEffectMgr::Render()
 {
 	m_fAngle += g_fSecPerFrame * 100.0f;
 
-	for (int iObj = 0; iObj < m_effectObjList.size(); iObj++)
+	list<TEffectObject*>::iterator iter;
+	for (iter = m_effectObjList.begin(); iter != m_effectObjList.end(); iter++)
 	{
-		m_effectObjList[iObj]->RotationBlt(m_fAngle);
+		(*iter)->RotationBlt(m_fAngle);
 	}
 	return true;
 }
 bool TEffectMgr::Release()
 {
-	for (int iObj = 0; iObj < m_effectObjList.size(); iObj++)
+	list<TEffectObject*>::iterator iter;
+	for (iter = m_effectObjList.begin(); iter != m_effectObjList.end(); iter++)
 	{
-		m_effectObjList[iObj]->Release();
-		delete m_effectObjList[iObj];
+		(*iter)->Release();
+		delete (*iter);
 	}
 
 	m_effectObjList.clear();
 	return true;
+}
+
+void TEffectMgr::DeleteEffectList()
+{
+	list<TEffectObject*>::iterator iter;
+	for (iter = m_effectObjList.begin(); iter != m_effectObjList.end();)
+	{
+		if ((*iter)->IsDead())
+		{
+			(*iter)->Release();
+			delete (*iter);
+			iter = m_effectObjList.erase(iter);
+		}
+		else
+			iter++;
+	}
 }
 
 TEffectMgr::TEffectMgr()
