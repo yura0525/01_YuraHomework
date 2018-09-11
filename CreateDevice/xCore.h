@@ -1,8 +1,11 @@
 #pragma once
 #include "xWindow.h"
-
+#include "TTimer.h"
 class xCore : public xWindow
 {
+public:
+	TTimer		m_Timer;
+
 public:
 	bool GameInit();
 	bool GameRun();
@@ -17,6 +20,12 @@ public:
 	{
 		return true;
 	}
+public:
+	bool Init();
+	bool Frame();
+	bool Render();
+	bool Release();
+
 public:
 	xCore();
 	virtual ~xCore();

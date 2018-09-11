@@ -160,6 +160,7 @@ HRESULT TDevice::ResizeDevice(UINT iWidth, UINT iHeight)
 	SetViewPort();
 
 	CreateDeviceResource(iWidth, iHeight);
+	return hr;
 }
 
 bool TDevice::Init()

@@ -9,13 +9,14 @@
 #include <string>
 #include <vector>
 #include <list>
-#include "d3d11.h"
-#include "dxgi.h" //dxgi.lib CreateDXGIFactory 외부 기호
+#include <d3d11.h>
+#include <dxgi.h> //dxgi.lib CreateDXGIFactory 외부 기호
 
 //프로젝트 속성에서 추가 종속성에 넣을걸 코드로 넣을수 있다.
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "dxguid.lib")
 
 typedef std::basic_string <char>	C_STR;	//multi-byte
 typedef std::basic_string <wchar_t>	W_STR;	//unicode byte
@@ -38,6 +39,7 @@ typedef std::basic_string <TCHAR>	T_STR;	//프로젝트속성이 멀티바이트이면 멀티바�
 extern HWND			g_hWnd;
 extern HINSTANCE	g_hInstance;
 extern float		g_fSecPerFrame;
+extern float		g_fGameTime;
 extern RECT			g_rtClient;
 //추가 포함 디렉토리에 해당파일을 또 추가하면
 //../../include; 경로를 추가해서 또 include하면
