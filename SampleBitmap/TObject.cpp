@@ -3,7 +3,7 @@
 
 //TransparentBlt 외부기호
 #pragma comment (lib, "msimg32.lib")
-const int g_DamageTimeGap = 2.0f;
+const int g_NPCDamageTimeGap	= 0.5f;
 
 void TObject::SetPosition(TPoint pos)
 {
@@ -367,6 +367,7 @@ void TObject::ProcessDamage(int damage)
 		m_fLastDamageTime += m_fDamageTimeGap;
 
 		m_iHP = m_iHP + damage;
+		m_iHP = max(0, m_iHP);
 		_stprintf_s(m_csBuffer, L"ProcessDamage()!!!!!!!! m_iHP: %d damage : %d\n", m_iHP, damage);
 		OutputDebugString(m_csBuffer);
 	}
@@ -394,7 +395,7 @@ TObject::TObject()
 	m_fAlpha = 255.0f;
 
 	m_fLastDamageTime = g_fGameTime;
-	m_fDamageTimeGap = g_DamageTimeGap;
+	m_fDamageTimeGap = g_NPCDamageTimeGap;
 }
 
 

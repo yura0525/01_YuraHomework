@@ -1,6 +1,7 @@
 #include "TEffectObject.h"
 #include "TCollision.h"
 #include "TInput.h"
+#include "TLogManager.h"
 
 const float g_EffectTimeGap = 0.1f;
 bool TEffectObject::Frame()
@@ -115,12 +116,7 @@ bool TEffectMgr::IsCollision(RECT rt)
 	{
 		if (TCollision::RectInRect(rt, (*iter)->m_rtCollision))
 		{
-			_stprintf_s(m_csBuffer, L"TEffectMgr::IsCollision()@@@@@@ m_effectObjList.size(): %d\t rt.left : %d\t rt.top : %d\t rt.right : %d\t rt.bottom : %d\n", 
-				m_effectObjList.size(), rt.left, rt.top, rt.right, rt.bottom);
-			OutputDebugString(m_csBuffer);
-			_stprintf_s(m_csBuffer, L"TEffectMgr::IsCollision()@@@@@@ m_effectObjList.size(): %d\t m_rtCollision.left : %d\t m_rtCollision.top : %d\t m_rtCollision.right : %d\t m_rtCollision.bottom : %d\n",
-				m_effectObjList.size(), (*iter)->m_rtCollision.left, (*iter)->m_rtCollision.top, (*iter)->m_rtCollision.right, (*iter)->m_rtCollision.bottom);
-			OutputDebugString(m_csBuffer);
+			I_LOGMANAGER.OutputLog("TEffectMgr::IsCollision!!!!!");
 			return true;
 		}
 	}

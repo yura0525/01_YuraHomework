@@ -108,6 +108,9 @@
     <ClCompile Include="TScene.cpp">
       <Filter>SCENE</Filter>
     </ClCompile>
+    <ClCompile Include="TLogManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCollision.h">
@@ -187,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="TScene.h">
       <Filter>SCENE</Filter>
+    </ClInclude>
+    <ClInclude Include="TLogManager.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

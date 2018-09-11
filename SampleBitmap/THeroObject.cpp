@@ -3,6 +3,7 @@
 #include "TCollision.h"
 
 POINT	g_pHeroPos;
+const int g_HeroDamageTimeGap = 2.0f;
 
 bool THeroObject::Frame()
 {
@@ -95,6 +96,7 @@ THeroObject::THeroObject()
 {
 	bFadeStart = false;
 	m_fLastDamageTime = g_fGameTime;
+	m_fDamageTimeGap = g_HeroDamageTimeGap;
 }
 
 THeroObject::~THeroObject()

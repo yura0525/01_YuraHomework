@@ -170,6 +170,7 @@
     <ClCompile Include="THeroObject.cpp" />
     <ClCompile Include="TInput.cpp" />
     <ClCompile Include="TLobbyScene.cpp" />
+    <ClCompile Include="TLogManager.cpp" />
     <ClCompile Include="TMoveAction.cpp" />
     <ClCompile Include="TNPCObject.cpp" />
     <ClCompile Include="TObject.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="THeroObject.h" />
     <ClInclude Include="TInput.h" />
     <ClInclude Include="TLobbyScene.h" />
+    <ClInclude Include="TLogManager.h" />
     <ClInclude Include="TMoveAction.h" />
     <ClInclude Include="TNPCObject.h" />
     <ClInclude Include="TObject.h" />
