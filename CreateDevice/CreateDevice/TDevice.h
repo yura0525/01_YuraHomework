@@ -19,19 +19,19 @@ public:
 	void	SetViewPort();
 
 public:
-	void CreateDeviceResource(UINT iWidth, UINT iHeight);
-	void DeleteDeviceResource(UINT iWidth, UINT iHeight);
+	virtual HRESULT CreateDeviceResources(UINT iWidth, UINT iHeight);
+	virtual void DeleteDeviceResources(UINT iWidth, UINT iHeight);
 	HRESULT ResizeDevice(UINT iWidth, UINT iHeight);
 public:
-	bool Init();
+	virtual bool Init();
 	virtual bool Frame()
 	{
 		return true;
 	}
 	bool PreRender();
 	bool PostRender();
-	bool Render();
-	bool Release();
+	virtual bool Render();
+	virtual bool Release();
 
 public:
 	TDevice();

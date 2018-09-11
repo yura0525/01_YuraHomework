@@ -8,7 +8,7 @@
 */
 class TTimer
 {
-private:
+public:
 	LARGE_INTEGER	m_Frequency;			//초당 주파수
 	LARGE_INTEGER	m_CurrentTime;			//현재 시간
 	LARGE_INTEGER	m_FPS;					//FPS체크 타이머

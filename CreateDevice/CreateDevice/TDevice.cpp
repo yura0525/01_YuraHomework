@@ -126,12 +126,12 @@ void TDevice::SetViewPort()
 	vp.MaxDepth = 1.0f;
 	m_pContext->RSSetViewports(1, &vp);	//Rasterizer Stage에 셋팅.
 }
-void TDevice::CreateDeviceResource(UINT iWidth, UINT iHeight)
+HRESULT TDevice::CreateDeviceResources(UINT iWidth, UINT iHeight)
 {
-
+	return S_OK;
 }
 
-void TDevice::DeleteDeviceResource(UINT iWidth, UINT iHeight)
+void TDevice::DeleteDeviceResources(UINT iWidth, UINT iHeight)
 {
 
 }
@@ -144,7 +144,7 @@ HRESULT TDevice::ResizeDevice(UINT iWidth, UINT iHeight)
 
 	//랜더타겟을 널로 셋팅하고 해제.
 	m_pContext->OMSetRenderTargets(0, NULL, NULL);
-	DeleteDeviceResource(iWidth, iHeight);
+	DeleteDeviceResources(iWidth, iHeight);
 
 	if (m_pRenderTargetView != NULL) m_pRenderTargetView->Release();
 
@@ -159,7 +159,7 @@ HRESULT TDevice::ResizeDevice(UINT iWidth, UINT iHeight)
 	}
 	SetViewPort();
 
-	CreateDeviceResource(iWidth, iHeight);
+	CreateDeviceResources(iWidth, iHeight);
 	return hr;
 }
 

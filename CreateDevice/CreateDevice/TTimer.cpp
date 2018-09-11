@@ -1,7 +1,7 @@
 #include "TTimer.h"
 
 float g_fSecPerFrame = 0.0f;
-float g_fGameTime = 0.0f;
+float g_fGameTimer = 0.0f;
 
 bool TTimer::Init()
 {
@@ -27,7 +27,7 @@ bool TTimer::Frame()
 	g_fSecPerFrame = m_fSecPerFrame;
 
 	m_fGameTime += m_fSecPerFrame;
-	g_fGameTime = m_fGameTime;
+	g_fGameTimer = m_fGameTime;
 
 	if( ((m_CurrentTime.LowPart - m_FPS.LowPart) / m_Frequency.LowPart) >= 1 )
 	{
