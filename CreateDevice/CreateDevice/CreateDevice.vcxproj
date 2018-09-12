@@ -147,6 +147,9 @@
     <ClInclude Include="xStd.h" />
     <ClInclude Include="xWindow.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="vertesshader.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

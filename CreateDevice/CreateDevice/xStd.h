@@ -71,3 +71,11 @@ public:
 		return theSingleInstance;
 	}
 };
+
+#ifndef V_RETURN
+#define V_RETURN(x) { hr = (x); if( FAILED(hr) ) {return hr;} }
+#endif
+
+#ifndef V
+#define V(x) { hr = (x);}
+#endif
