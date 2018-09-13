@@ -1,8 +1,0 @@
-//시멘틱(의미구조)
-//레지스터번호, 어떤 레지스터를 써라. 저장하는 타입별로 저장위치가 다르다.
-//SV_POSITION(float4 함수전달인자), POSITION(float3 함수전달인자)
-
-float4 VS(in float3 pos : POSITION) : SV_POSITION
-{
-	return float4(pos, 1.0f)	//스위즐링
-}

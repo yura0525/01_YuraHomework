@@ -1,4 +1,9 @@
 #include "xCore.h"
+#include "D3Dcompiler.h"		//D3DCOMPILE_DEBUG
+#include <math.h>
+
+#define CPU
+//#define GPU
 
 struct P3VERTEX
 {
@@ -6,17 +11,35 @@ struct P3VERTEX
 	float y;
 	float z;
 };
-
+//콘스턴트 버퍼, 상수버퍼. 셰이더내에서 글로벌 변수와 비슷하게 쓰인다.
+//float4개 단위로 보내야한다. 안쓰더라도 float 4개단위로 보내야한다.
+//fTime[0]이거 하나만 쓰더라도 float fTime[4];이렇게 선언해야한다.
+struct VS_CB
+{
+	float r, g, b, a;
+	float fTime[4];
+};
 class Sample : public xCore
 {
 public:
+	VS_CB					m_constantData;
+
 	ID3D11Buffer *			m_pVertexBuffer;
+	ID3D11Buffer *			m_pIndexBuffer;
+	ID3D11Buffer *			m_pConstantBuffer;
+
 	ID3D11VertexShader*		m_pVS;
 	ID3D11PixelShader*		m_pPS;
 	ID3D11InputLayout*		m_pVertexLayout;
 
+	std::vector<P3VERTEX>	m_verList;
+	std::vector<DWORD>		m_indexList;
+
 public:
 	HRESULT CreateVertexBuffer();
+	HRESULT CreateIndexBuffer();
+	HRESULT CreateConstantBuffer();
+
 	HRESULT LoadShaderAndInputLayout();
 	HRESULT CreatePixelShader();
 
@@ -25,7 +48,15 @@ public:
 	{
 		xCore::Init();
 		
+		m_constantData.r = cosf(g_fGameTimer) * 0.5 + 0.5f;
+		m_constantData.g = sinf(g_fGameTimer) * 0.5 + 0.5f;
+		m_constantData.b = 0.5f + cosf(g_fGameTimer) * 0.5f + 0.5f;
+		m_constantData.a = 1;
+		m_constantData.fTime[0] = g_fGameTimer;
+
 		CreateVertexBuffer();
+		CreateIndexBuffer();
+		CreateConstantBuffer();
 
 		if (FAILED(LoadShaderAndInputLayout()))
 		{
@@ -42,44 +73,28 @@ public:
 	{
 		xCore::Frame();
 		
-		TCHAR	m_csBuffer[256];
+		static float fAngle = 0.0f;
+		fAngle += g_fSecPerFrame;
+		//gpu update
+#ifdef GPU
+		m_constantData.r = cosf(g_fGameTimer) * 0.5 + 0.5f;
+		m_constantData.g = sinf(g_fGameTimer) * 0.5 + 0.5f;
+		m_constantData.b = 0.5f + cosf(g_fGameTimer) * 0.5f + 0.5f;
+		m_constantData.a = 1;
+		m_constantData.fTime[0] = g_fGameTimer;
+		m_constantData.fTime[1] = 0.5f;
+		m_constantData.fTime[2] = 1.0f;
+		m_constantData.fTime[3] = fAngle;
+		m_pContext->UpdateSubresource(m_pConstantBuffer, 0, NULL, &m_constantData, 0, 0);
+#elif define CPU
+		//cpu update
+		//MAP	-> 자물쇠 열고
+		//~~	-> 상수버퍼 갱신
+		//UNMAP -> 자물쇠 닫고
+		
+		//작성중이다!!!!!!
 
-		/*if (g_Input.bFront)
-		{
-			_stprintf_s(m_csBuffer, L"g_Input.bFront!!!!!\n");
-			OutputDebugString(m_csBuffer);
-		}
-		if (g_Input.bFront)
-		{
-			_stprintf_s(m_csBuffer, L"g_Input.bFront!!!!!\n");
-			OutputDebugString(m_csBuffer);
-		}
-		if (g_Input.bBack)
-		{
-			_stprintf_s(m_csBuffer, L"g_Input.bBack!!!!!\n");
-			OutputDebugString(m_csBuffer);
-		}
-		if (g_Input.bLeft)
-		{
-			_stprintf_s(m_csBuffer, L"g_Input.bLeft!!!!!\n");
-			OutputDebugString(m_csBuffer);
-		}
-		if (g_Input.bRight)
-		{
-			_stprintf_s(m_csBuffer, L"g_Input.bRight!!!!!\n");
-			OutputDebugString(m_csBuffer);
-		}
-		if (g_Input.bAttack)
-		{
-			_stprintf_s(m_csBuffer, L"g_Input.bAttack!!!!!\n");
-			OutputDebugString(m_csBuffer);
-		}
-		if (g_Input.bJump)
-		{
-			_stprintf_s(m_csBuffer, L"g_Input.bJump!!!!!\n");
-			OutputDebugString(m_csBuffer);
-		}*/
-
+#endif
 		return true;
 	}
 	bool Render()
@@ -126,12 +141,12 @@ HRESULT Sample::CreateVertexBuffer()
 
 	//정점의 저장순서 : 시계방향
 	//반시계방향으로 그리면 안나온다.
-	vList[0].x = -0.5f; vList[0].y = 0.5f; vList[0].z = 0.5f;
-	vList[1].x = 0.5f; vList[1].y = 0.5f; vList[1].z = 0.5f;
+	vList[0].x = -0.5f; vList[0].y = 0.5f;	vList[0].z = 0.5f;
+	vList[1].x = 0.5f;	vList[1].y = 0.5f;	vList[1].z = 0.5f;
 	vList[2].x = -0.5f; vList[2].y = -0.5f; vList[2].z = 0.5f;
 	vList[3].x = -0.5f; vList[3].y = -0.5f; vList[3].z = 0.5f;
-	vList[4].x = 0.5f; vList[4].y = 0.5f; vList[4].z = 0.5f;
-	vList[5].x = 0.5f; vList[5].y = -0.5f; vList[5].z = 0.5f;
+	vList[4].x = 0.5f;	vList[4].y = 0.5f;	vList[4].z = 0.5f;
+	vList[5].x = 0.5f;	vList[5].y = -0.5f; vList[5].z = 0.5f;
 
 	//GPU상에 메모리를 할당함.
 	D3D11_BUFFER_DESC bd;
@@ -153,6 +168,17 @@ HRESULT Sample::CreateVertexBuffer()
 	}
 	return hr;
 }
+
+HRESULT Sample::CreateIndexBuffer()
+{
+	HRESULT hr = S_OK;
+	return hr;
+}
+HRESULT Sample::CreateConstantBuffer()
+{
+	HRESULT hr = S_OK;
+	return hr;
+}
 HRESULT Sample::LoadShaderAndInputLayout()
 {
 	HRESULT hr = S_OK;
@@ -160,12 +186,12 @@ HRESULT Sample::LoadShaderAndInputLayout()
 
 	//LoadShader
 	//L"vertexshader.txt" => 셰이더파일이름, "VS" => VertexShader함수이름(), "vs_5_0"=> 컴파일러 
-	V_RETURN(D3DX11CompilerFromFile(L"vertexshader.txt", NULL, NULL, "VS", "vs_5_0", 0, 0, NULL, &pVSBuf, NULL, NULL));
+	V_RETURN(D3DX11CompileFromFile(L"vertexshader.txt", NULL, NULL, "VS", "vs_5_0", 0, 0, NULL, &pVSBuf, NULL, NULL));
 
 	//셰이더 컴파일된 결과(오브젝트파일, 목적파일)
 	V_RETURN(m_pd3dDevice->CreateVertexShader(pVSBuf->GetBufferPointer(), pVSBuf->GetBufferSize(), NULL, &m_pVS));
 
-	//InputLayout
+	//InputLayout.
 	//셰이더 함수의 선언. 전달인자 타입으로 POSITION을 쓰겠다.
 	//float4 VS(in float3 pos : POSITION ) : SV_POSITION
 	D3D11_INPUT_ELEMENT_DESC layout[] =
@@ -185,7 +211,7 @@ HRESULT Sample::CreatePixelShader()
 	ID3DBlob* pPSBuf = NULL;
 	//LoadShader
 	//L"vertexshader.txt" => 셰이더파일이름, "PS" => PixelShader함수이름(), "ps_5_0"=> 컴파일러 
-	V_RETURN(D3DX11CompilerFromFile(L"vertexshader.txt", NULL, NULL, "PS", "ps_5_0", 0, 0, NULL, &pPSBuf, NULL, NULL));
+	V_RETURN(D3DX11CompileFromFile(L"vertexshader.txt", NULL, NULL, "PS", "ps_5_0", 0, 0, NULL, &pPSBuf, NULL, NULL));
 
 	//셰이더 컴파일된 결과(오브젝트파일, 목적파일)
 	V_RETURN(m_pd3dDevice->CreatePixelShader(pPSBuf->GetBufferPointer(), pPSBuf->GetBufferSize(), NULL, &m_pPS));

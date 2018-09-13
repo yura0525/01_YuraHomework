@@ -42,7 +42,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -70,8 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>../../output/CreateDevice/</OutDir>
-    <IntDir>../../output/CreateDevice/</IntDir>
+    <OutDir>../output/CreateDevice/</OutDir>
+    <IntDir>../output/CreateDevice/</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>../output/CreateDevice/</OutDir>
+    <IntDir>../output/CreateDevice/</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -91,7 +95,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../../dx/include;../../include_3D</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>../../lib;../../dx/Lib/x64</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -122,16 +130,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Sample.cpp" />
-    <ClCompile Include="..\TDevice.cpp" />
-    <ClCompile Include="..\xCore.cpp" />
-    <ClCompile Include="..\xWindow.cpp" />
+    <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TDevice.cpp" />
+    <ClCompile Include="TDirectWrite.cpp" />
+    <ClCompile Include="TTimer.cpp" />
+    <ClCompile Include="xCore.cpp" />
+    <ClCompile Include="xInput.cpp" />
+    <ClCompile Include="xWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\TDevice.h" />
-    <ClInclude Include="..\xCore.h" />
-    <ClInclude Include="..\xStd.h" />
-    <ClInclude Include="..\xWindow.h" />
+    <ClInclude Include="TDevice.h" />
+    <ClInclude Include="TDirectWrite.h" />
+    <ClInclude Include="TTimer.h" />
+    <ClInclude Include="xCore.h" />
+    <ClInclude Include="xInput.h" />
+    <ClInclude Include="xStd.h" />
+    <ClInclude Include="xWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="vertexshader.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

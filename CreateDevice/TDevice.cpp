@@ -200,7 +200,7 @@ bool TDevice::Init()
 bool TDevice::PreRender()
 {
 	//RGB 255가 0~1의 값으로 컨버팅. RGBA
-	float color[4] = { 1,0,0,1 };
+	float color[4] = { 1,1,0,1 };
 	m_pContext->ClearRenderTargetView(m_pRenderTargetView, color);
 	return true;
 }
