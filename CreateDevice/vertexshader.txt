@@ -131,7 +131,35 @@ float4 PS(PS_INPUT input) : SV_Target
 	//return fColor;
 
 	float4 fTexColor = g_txDiffuse.Sample(g_SamState, input.tex);
+	float4 fColorR	= fTexColor;
+	
+	if(fColorR.r > 0.99f & fColorR.g > 0.99f && fColorR.b > 0.99f && fColorR.a > 1.0f)
+	{
+		fColorR.a = 0.0f;	//discard
+	}
+
+	return fColorR;
+	//return input.color * fTexColor;
+}
+
+float4 PS2(PS_INPUT input) : SV_Target
+{
+	//float4 fColor = GetColor(g_iIndex);
+	//return fColor;
+
+	float4 fTexColor	= g_txDiffuse.Sample(g_SamState, input.tex);
+	float4 fColorR		= fTexColor;
 	return input.color * fTexColor;
+}
+
+float4 PS3(PS_INPUT input) : SV_Target
+{
+	//float4 fColor = GetColor(g_iIndex);
+	//return fColor;
+
+	float4 fTexColor	= g_txDiffuse.Sample(g_SamState, input.tex);
+	float4 fColorR		= GetColor(g_iIndex);
+	return fColorR * fTexColor;
 }
 //float4 PS(in float4 pos:SV_POSITION) : SV_Target
 //{

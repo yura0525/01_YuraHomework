@@ -30,6 +30,8 @@ public:
 
 	ID3D11VertexShader*			m_pVS;
 	ID3D11PixelShader*			m_pPS;
+	ID3D11PixelShader*			m_pPS2;
+	ID3D11PixelShader*			m_pPS3;
 	ID3D11InputLayout*			m_pVertexLayout;
 
 	std::vector<P3VERTEX>		m_verList;
@@ -43,6 +45,8 @@ public:
 	ID3D11ShaderResourceView*	m_pTexSRVAlpha;
 	ID3D11ShaderResourceView*	m_pTexSRVNoAlpha;
 	ID3D11BlendState*			m_pAlphaBlend;
+	ID3D11BlendState*			m_pAlphaBlend2;
+	ID3D11BlendState*			m_pAlphaBlend3;
 
 public:
 	HRESULT CreateVertexBuffer();
@@ -63,6 +67,11 @@ public:
 	{
 		xCore::Init();
 		
+		if (FAILED(SetBlendState()))
+		{
+			return false;
+		}
+
 		m_constantData.r = (rand() % 255) / 255.0f;
 		m_constantData.g = (rand() % 255) / 255.0f;
 		m_constantData.b = (rand() % 255) / 255.0f;
@@ -72,7 +81,7 @@ public:
 		m_constantData.fTime[2] = 1.0f;
 		m_constantData.fTime[3] = 1.0f;
 
-		LoadTextureFile(&m_pTexSRV, L"../../data/bitmap1.bmp");
+		LoadTextureFile(&m_pTexSRV, L"../../data/Particle4.dds");
 		LoadTextureFile(&m_pTexSRVAlpha, L"../../data/hud.dds");
 		LoadTextureFile(&m_pTexSRVNoAlpha, L"../../data/Dirt_Diff.dds");
 
@@ -145,12 +154,15 @@ public:
 		m_pContext->HSSetShader(NULL, NULL, 0);
 		m_pContext->DSSetShader(NULL, NULL, 0);
 		m_pContext->GSSetShader(NULL, NULL, 0);
-		m_pContext->PSSetShader(m_pPS, NULL, 0);
-
+		
+		//알파블렌딩
+		m_pContext->OMSetBlendState(m_pAlphaBlend, 0, -1);
 		//텍스쳐
 		m_pContext->PSSetShaderResources(0, 1, &m_pTexSRV);
 		m_pContext->PSSetSamplers(0, 1, &m_pSamplerState);
 		
+		m_pContext->PSSetShader(m_pPS, NULL, 0);
+
 		UINT offset = 0;
 		UINT stride = sizeof(P3VERTEX);
 		m_pContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
@@ -166,16 +178,35 @@ public:
 
 		m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		m_pContext->IASetInputLayout(m_pVertexLayout);
-		
-		//m_pContext->Draw(6, 0);
 		m_pContext->DrawIndexed(m_indexList.size(), 0, 0);
+
+		//알파블렌딩
+		m_pContext->PSSetShader(m_pPS2, NULL, 0);
+		m_pContext->OMSetBlendState(m_pAlphaBlend2, 0, -1);
+		m_pContext->PSSetShaderResources(0, 1, &m_pTexSRVNoAlpha);
+		m_pContext->DrawIndexed(m_indexList.size(), 0, 0);
+
+		m_pContext->PSSetShader(m_pPS3, NULL, 0);
+		m_pContext->OMSetBlendState(m_pAlphaBlend3, 0, -1);
+		m_pContext->PSSetShaderResources(0, 1, &m_pTexSRVAlpha);
+		m_pContext->DrawIndexed(m_indexList.size(), 0, 0);
+		//m_pContext->Draw(6, 0);
+		
 		return true;
 	}
 	bool Release()
 	{
 		xCore::Release();
 		
+		
+		if (m_pAlphaBlend != NULL)		m_pAlphaBlend->Release();
+		if (m_pAlphaBlend2 != NULL)		m_pAlphaBlend2->Release();
+		if (m_pAlphaBlend3 != NULL)		m_pAlphaBlend3->Release();
+
 		if (m_pTexSRV != NULL)			m_pTexSRV->Release();
+		if (m_pTexSRVNoAlpha != NULL)	m_pTexSRVNoAlpha->Release();
+		if (m_pTexSRVAlpha != NULL)		m_pTexSRVAlpha->Release();
+
 		if (m_pSamplerState != NULL)	m_pSamplerState->Release();
 
 		if (m_pVertexBuffer != NULL)	m_pVertexBuffer->Release();
@@ -183,17 +214,23 @@ public:
 		if (m_pConstantBuffer != NULL)	m_pConstantBuffer->Release();
 
 		if (m_pPS != NULL)				m_pPS->Release();
+		if (m_pPS2 != NULL)				m_pPS2->Release();
+		if (m_pPS3 != NULL)				m_pPS3->Release();
+
 		if( m_pVS != NULL )				m_pVS->Release();
 		if (m_pVertexLayout != NULL)	m_pVertexLayout->Release();
 
-		m_pTexSRV = NULL;
+		m_pAlphaBlend	= m_pAlphaBlend2	= m_pAlphaBlend3	= NULL;
+		m_pTexSRV		= m_pTexSRVNoAlpha	= m_pTexSRVAlpha	= NULL;
+
 		m_pSamplerState = NULL;
 
 		m_pVertexBuffer = NULL;
 		m_pIndexBuffer = NULL;
 		m_pConstantBuffer = NULL;
 
-		m_pPS = NULL;
+		m_pPS = m_pPS2 = m_pPS3 = NULL;
+
 		m_pVS = NULL;
 		m_pVertexLayout = NULL;
 		return true;
@@ -216,15 +253,15 @@ HRESULT Sample::CreateVertexBuffer()
 
 	m_verList[1].x = 0.5f;	m_verList[1].y = 0.5f;	m_verList[1].z = 0.5f;
 	m_verList[1].r = 0.0f;	m_verList[1].g = 1.0f;	m_verList[1].b = 0.0f;
-	m_verList[1].u = 3.0f;	m_verList[1].v = 0.0f;
+	m_verList[1].u = 1.0f;	m_verList[1].v = 0.0f;
 
 	m_verList[2].x = -0.5f; m_verList[2].y = -0.5f; m_verList[2].z = 0.5f;
 	m_verList[2].r = 0.0f;	m_verList[2].g = 0.0f;	m_verList[2].b = 1.0f;
-	m_verList[2].u = 0.0f; m_verList[2].v = 3.0f;
+	m_verList[2].u = 0.0f; m_verList[2].v = 1.0f;
 
 	m_verList[3].x = 0.5f;  m_verList[3].y = -0.5f; m_verList[3].z = 0.5f;
 	m_verList[3].r = 1.0f;  m_verList[3].g = 1.0f;	m_verList[3].b = 1.0f;
-	m_verList[3].u = 3.0f;  m_verList[3].v = 3.0f;
+	m_verList[3].u = 1.0f;  m_verList[3].v = 1.0f;
 	//vList[3].x = -0.5f; vList[3].y = -0.5f; vList[3].z = 0.5f;
 	//vList[4].x = 0.5f;	vList[4].y = 0.5f;	vList[4].z = 0.5f;
 	//vList[5].x = 0.5f;	vList[5].y = -0.5f; vList[5].z = 0.5f;
@@ -381,6 +418,31 @@ HRESULT Sample::CreatePixelShader()
 	//셰이더 컴파일된 결과(오브젝트파일, 목적파일)
 	V_RETURN(m_pd3dDevice->CreatePixelShader(pPSBuf->GetBufferPointer(), pPSBuf->GetBufferSize(), NULL, &m_pPS));
 	pPSBuf->Release();
+
+
+	//2)
+	if (FAILED(hr = D3DX11CompileFromFile(L"vertexshader.txt", NULL, NULL,
+		"PS2", "ps_5_0", dwFlags, NULL, NULL, &pPSBuf, &pErrorMsgs, NULL)))
+	{
+		OutputDebugStringA((char*)pErrorMsgs->GetBufferPointer());
+		return hr;
+	}
+
+	//셰이더 컴파일된 결과(오브젝트파일, 목적파일)
+	V_RETURN(m_pd3dDevice->CreatePixelShader(pPSBuf->GetBufferPointer(), pPSBuf->GetBufferSize(), NULL, &m_pPS2));
+	pPSBuf->Release();
+
+	//3)
+	if (FAILED(hr = D3DX11CompileFromFile(L"vertexshader.txt", NULL, NULL,
+		"PS3", "ps_5_0", dwFlags, NULL, NULL, &pPSBuf, &pErrorMsgs, NULL)))
+	{
+		OutputDebugStringA((char*)pErrorMsgs->GetBufferPointer());
+		return hr;
+	}
+
+	//셰이더 컴파일된 결과(오브젝트파일, 목적파일)
+	V_RETURN(m_pd3dDevice->CreatePixelShader(pPSBuf->GetBufferPointer(), pPSBuf->GetBufferSize(), NULL, &m_pPS3));
+	pPSBuf->Release();
 	return hr;
 }
 
@@ -412,6 +474,56 @@ HRESULT Sample::LoadTextureFile(ID3D11ShaderResourceView** ppTexSRV, const TCHAR
 	sd.Filter	= D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 
 	m_pd3dDevice->CreateSamplerState(&sd, &m_pSamplerState);
+	return hr;
+}
+
+HRESULT Sample::SetBlendState()
+{
+	HRESULT hr = S_OK;
+	D3D11_BLEND_DESC bd;
+	ZeroMemory(&bd, sizeof(D3D11_BLEND_DESC));
+
+	//FinalColor = destColor * DescBlend + srcColor * SrcBlend;
+	bd.RenderTarget[0].BlendEnable = true;
+	bd.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	bd.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	bd.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+
+	//FinalAlpha = destAlpha * DescBlendAlpha + srcAlpha * SrcBlendAlpha;
+	bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	bd.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+
+	bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	m_pd3dDevice->CreateBlendState(&bd, (ID3D11BlendState**)&m_pAlphaBlend);
+
+	//2)
+	bd.RenderTarget[0].BlendEnable = false;
+	bd.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	bd.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	bd.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+
+	//FinalAlpha = destAlpha * DescBlendAlpha + srcAlpha * SrcBlendAlpha;
+	bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	bd.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+
+	bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	m_pd3dDevice->CreateBlendState(&bd, (ID3D11BlendState**)&m_pAlphaBlend2);
+
+	//3)
+	bd.RenderTarget[0].BlendEnable = true;
+	bd.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	bd.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	bd.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+
+	//FinalAlpha = destAlpha * DescBlendAlpha + srcAlpha * SrcBlendAlpha;
+	bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	bd.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+
+	bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	m_pd3dDevice->CreateBlendState(&bd, (ID3D11BlendState**)&m_pAlphaBlend3);
 	return hr;
 }
 GAMERUN("CreateDevice", 800, 600);
