@@ -7,18 +7,20 @@
 #include <iostream>
 #include <map>
 #include <string>
-#include <vector>
 #include <list>
+#include <vector>
 #include <d3dx11.h>
-#include <dxgi.h> //dxgi.lib CreateDXGIFactory 외부 기호
+#include <dxgi.h>
 #include <dinput.h>
+#include "D3Dcompiler.h"		//D3DCOMPILE_DEBUG
+#include <math.h>
 
 //프로젝트 속성에서 추가 종속성에 넣을걸 코드로 넣을수 있다.
 #pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "d3dx11.lib")
 #pragma comment(lib, "dxgi.lib")
-#pragma comment(lib, "dxguid.lib")
-#pragma comment(lib, "dinput8.lib")
+#pragma comment( lib, "dinput8.lib")
+#pragma comment( lib, "dxguid.lib")
+#pragma comment( lib, "d3dx11.lib")
 
 #pragma warning (disable : 4005)
 
