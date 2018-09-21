@@ -151,34 +151,33 @@ public:
 		xCore::Render();
 
 		m_pContext->VSSetShader(m_pVS, NULL, 0);
+		m_pContext->PSSetShader(m_pPS, NULL, 0);
 		m_pContext->HSSetShader(NULL, NULL, 0);
 		m_pContext->DSSetShader(NULL, NULL, 0);
 		m_pContext->GSSetShader(NULL, NULL, 0);
+		m_pContext->IASetInputLayout(m_pVertexLayout);
 		
+		UINT offset = 0;
+		UINT stride = sizeof(P3VERTEX);
+		m_pContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
+		m_pContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		//상수 버퍼 적용(버텍스 셰이더)
+		m_pContext->VSSetConstantBuffers(0, //0 슬롯번호(레지스터 번호)
+			1,								//1 상수버퍼 1개
+			&m_pConstantBuffer);
+		//상수버퍼 적용(픽셀 셰이더)
+		m_pContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+
+		m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
 		//알파블렌딩
 		m_pContext->OMSetBlendState(m_pAlphaBlend, 0, -1);
 		//텍스쳐
 		m_pContext->PSSetShaderResources(0, 1, &m_pTexSRV);
 		m_pContext->PSSetSamplers(0, 1, &m_pSamplerState);
-		
-		m_pContext->PSSetShader(m_pPS, NULL, 0);
-
-		UINT offset = 0;
-		UINT stride = sizeof(P3VERTEX);
-		m_pContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
-		m_pContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-		//상수 버퍼 적용(버텍스 셰이더)
-		m_pContext->VSSetConstantBuffers(0, //0 슬롯번호(레지스터 번호)
-			1,								//1 상수버퍼 1개
-			&m_pConstantBuffer);
-
-		//상수버퍼 적용(픽셀 셰이더)
-		m_pContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-
-		m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		m_pContext->IASetInputLayout(m_pVertexLayout);
 		m_pContext->DrawIndexed(m_indexList.size(), 0, 0);
+
 
 		//알파블렌딩
 		m_pContext->PSSetShader(m_pPS2, NULL, 0);
@@ -186,11 +185,11 @@ public:
 		m_pContext->PSSetShaderResources(0, 1, &m_pTexSRVNoAlpha);
 		m_pContext->DrawIndexed(m_indexList.size(), 0, 0);
 
+		//알파블렌딩
 		m_pContext->PSSetShader(m_pPS3, NULL, 0);
 		m_pContext->OMSetBlendState(m_pAlphaBlend3, 0, -1);
 		m_pContext->PSSetShaderResources(0, 1, &m_pTexSRVAlpha);
 		m_pContext->DrawIndexed(m_indexList.size(), 0, 0);
-		//m_pContext->Draw(6, 0);
 		
 		return true;
 	}
