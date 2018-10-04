@@ -136,6 +136,13 @@
     <ClCompile Include="TTimer.cpp" />
     <ClCompile Include="xCore.cpp" />
     <ClCompile Include="xInput.cpp" />
+    <ClCompile Include="xObject.cpp" />
+    <ClCompile Include="xPlaneObj.cpp" />
+    <ClCompile Include="xShader.cpp" />
+    <ClCompile Include="xShaderManager.cpp" />
+    <ClCompile Include="xTexManager.cpp" />
+    <ClCompile Include="xTexture.cpp" />
+    <ClCompile Include="xTriangleObj.cpp" />
     <ClCompile Include="xWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -144,7 +151,14 @@
     <ClInclude Include="TTimer.h" />
     <ClInclude Include="xCore.h" />
     <ClInclude Include="xInput.h" />
+    <ClInclude Include="xObject.h" />
+    <ClInclude Include="xPlaneObj.h" />
+    <ClInclude Include="xShader.h" />
+    <ClInclude Include="xShaderManager.h" />
     <ClInclude Include="xStd.h" />
+    <ClInclude Include="xTexManager.h" />
+    <ClInclude Include="xTexture.h" />
+    <ClInclude Include="xTriangleObj.h" />
     <ClInclude Include="xWindow.h" />
   </ItemGroup>
   <ItemGroup>

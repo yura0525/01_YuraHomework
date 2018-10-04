@@ -48,6 +48,10 @@ public:
 	ID3D11BlendState*			m_pAlphaBlend2;
 	ID3D11BlendState*			m_pAlphaBlend3;
 
+	//와이어프레임
+	ID3D11RasterizerState*      m_pRSWireFrame;
+	ID3D11RasterizerState*      m_pRSSolid;
+
 public:
 	HRESULT CreateVertexBuffer();
 	HRESULT CreateIndexBuffer();
@@ -67,6 +71,8 @@ public:
 	{
 		xCore::Init();
 		
+		SetRasterizerState();
+
 		if (FAILED(SetBlendState()))
 		{
 			return false;
@@ -157,6 +163,16 @@ public:
 		m_pContext->GSSetShader(NULL, NULL, 0);
 		m_pContext->IASetInputLayout(m_pVertexLayout);
 		
+		//W키를 누르면 와이어 프레임이 보이게함.
+		if (g_Input.bFront)
+		{
+			m_pContext->RSSetState(m_pRSWireFrame);
+		}
+		else
+		{
+			m_pContext->RSSetState(m_pRSSolid);
+		}
+
 		UINT offset = 0;
 		UINT stride = sizeof(P3VERTEX);
 		m_pContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
@@ -197,6 +213,9 @@ public:
 	{
 		xCore::Release();
 		
+		if (m_pRSWireFrame != NULL)		m_pRSWireFrame->Release();
+		if (m_pRSSolid != NULL)			m_pRSSolid->Release();
+
 		
 		if (m_pAlphaBlend != NULL)		m_pAlphaBlend->Release();
 		if (m_pAlphaBlend2 != NULL)		m_pAlphaBlend2->Release();
@@ -233,6 +252,22 @@ public:
 		m_pVS = NULL;
 		m_pVertexLayout = NULL;
 		return true;
+	}
+
+	HRESULT SetRasterizerState(D3D11_FILL_MODE fill = D3D11_FILL_SOLID)
+	{
+		HRESULT hr = S_OK;
+		D3D11_RASTERIZER_DESC desc;
+		ZeroMemory(&desc, sizeof(D3D11_RASTERIZER_DESC));
+		desc.FillMode = D3D11_FILL_WIREFRAME;
+		desc.CullMode = D3D11_CULL_NONE;
+		desc.DepthClipEnable = TRUE;
+
+		hr = m_pd3dDevice->CreateRasterizerState(&desc, &m_pRSWireFrame);
+
+		desc.FillMode = D3D11_FILL_SOLID;
+		hr = m_pd3dDevice->CreateRasterizerState(&desc, &m_pRSSolid);
+		return hr;
 	}
 public:
 	Sample() {}
