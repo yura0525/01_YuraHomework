@@ -25,34 +25,16 @@ cbuffer VS_CB
 	float g_angle : packoffset(c1.w);			//:packoffset(c1.w);
 };
 
+//float4 rRet;
+//rRet.x = pos.x;
+//rRet.y = pos.y;
+//rRet.z = pos.z;
+//rRet.w = 1;
+//정규화 w값으로 x와 y와 z값을 나눠서 넘겨준다. w가 1이면 그대로 넘겨준다.
+
 //--------------------------------------------------------------------------------------
 // Vertex Shader
 //--------------------------------------------------------------------------------------
-float4 GetPos(in float3 pos)
-{
-	//float4 rRet;
-	//rRet.x = pos.x;
-	//rRet.y = pos.y;
-	//rRet.z = pos.z;
-	//rRet.w = 1;
-	//정규화 w값으로 x와 y와 z값을 나눠서 넘겨준다. w가 1이면 그대로 넘겨준다.
-
-	float3 vPos = pos;
-	vPos.x = pos.x * cos(g_angle) - pos.y * sin(g_angle);
-	vPos.y = pos.x * sin(g_angle) + pos.y * cos(g_angle);
-	vPos.z = 1.0f;
-
-	//vPos = vPos * (cos(g_fTimeX) * 0.5f + 0.5f);
-	vPos = vPos * g_scale;
-	return float4(vPos, 1.0f);					//스위즐링.	
-}
-
-//float4 VS(in float3 pos:POSITION) : SV_POSITION
-//{
-//	float4 vPos = GetPos(pos);
-//	return vPos;
-//}
-
 //D3D11_INPUT_ELEMENT_DESC 와 일치
 struct VS_INPUT
 {
@@ -68,9 +50,28 @@ struct VS_OUTPUT
 	float2 tex : TEXCOORD;
 };
 
+
+float4 GetPos(in float3 pos)
+{
+	float3 vPos = pos;
+	//vPos.x = pos.x * cos(g_angle) - pos.y * sin(g_angle);			//앵글값에 의한 회전 공식. 일단은 회전을 막음.
+	//vPos.y = pos.x * sin(g_angle) + pos.y * cos(g_angle);			//앵글값에 의한 회전 공식. 일단은 회전을 막음.
+	vPos.z = 1.0f;
+
+	//vPos = vPos * (cos(g_fTimeX) * 0.5f + 0.5f);
+	vPos = vPos * g_scale;
+	return float4(vPos, 1.0f);					//스위즐링.	
+}
+
+//float4 VS(in float3 pos:POSITION) : SV_POSITION
+//{
+//	float4 vPos = GetPos(pos);
+//	return vPos;
+//}
+
 VS_OUTPUT VS(VS_INPUT input)
 {
-	VS_OUTPUT output = (VS_OUTPUT)0;
+	VS_OUTPUT output = (VS_OUTPUT)0;			//0으로 초기화
 	output.pos = GetPos(input.pos);
 	output.color = input.color;
 	output.tex = input.tex;
@@ -82,21 +83,23 @@ VS_OUTPUT VS(VS_INPUT input)
 Texture2D		g_txDiffuse : register(t0);
 SamplerState	g_SamState	: register(s0);
 
+struct PS_INPUT
+{
+	float4 pos : SV_POSITION;
+	float4 color: COLOR;
+	float2 tex : TEXCOORD;
+};
+
 float4 GetColor(uint index)
 {
-	//float4 rRet;
-	//rRet.x = pos.x;
-	//rRet.y = pos.y;
-	//rRet.z = pos.z;
-	//rRet.w = 1;
-	//정규화 w값으로 x와 y와 z값을 나눠서 넘겨준다. w가 1이면 그대로 넘겨준다.
-
 	float4 vPos = float4(1,1,1,1);
 	switch(index)
 	{
 		case 0:
 		{
-			vPos = float4( (cos(g_fTimeX) * 0.5f + 0.5f), (sin(g_fTimeX) * 0.5f + 0.5f), (cos(g_fTimeX) * 0.5f + 0.5f), 1.0f);
+			vPos = float4( (cos(g_fTimeX) * 0.5f + 0.5f), 
+							(sin(g_fTimeX) * 0.5f + 0.5f),
+							(cos(g_fTimeX) * 0.5f + 0.5f), 1.0f);
 			break;
 		}
 		case 1:
@@ -117,13 +120,6 @@ float4 GetColor(uint index)
 	}
 	return vPos;
 }
-
-struct PS_INPUT
-{
-	float4 pos : SV_POSITION;
-	float4 color: COLOR;
-	float2 tex : TEXCOORD;
-};
 
 float4 PS(PS_INPUT input) : SV_Target
 {

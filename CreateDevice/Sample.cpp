@@ -3,8 +3,6 @@
 #include <math.h>
 #include "xTriangleObj.h"
 #include "xPlaneObj.h"
-#define CPU
-//#define GPU
 
 class Sample : public xCore
 {
@@ -21,7 +19,7 @@ public:
 	bool Frame()
 	{
 		xCore::Frame();
-		m_Object.Frame();
+		m_Object.Frame(m_pContext);
 		return true;
 	}
 	bool Render()

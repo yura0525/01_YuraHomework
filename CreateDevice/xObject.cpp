@@ -1,6 +1,6 @@
 #include "xObject.h"
 
-
+#define GPU
 bool xObject::Init()
 {
 	m_constantData.r = (rand() % 255) / 255.0f;
@@ -14,7 +14,7 @@ bool xObject::Init()
 
 	return true;
 }
-bool xObject::Frame()
+bool xObject::Frame(ID3D11DeviceContext* pContext)
 {
 	static float fAngle = 0.0f;
 	fAngle += g_fSecPerFrame;
@@ -27,13 +27,14 @@ bool xObject::Frame()
 	//gpu update
 	m_constantData.r = cosf(g_fGameTimer) * 0.5f + 0.5f;
 	m_constantData.g = sinf(g_fGameTimer) * 0.5f + 0.5f;
-	m_constantData.b = 0.5f + cosf(g_fGameTimer) * 0.5f + 0.5f;
+	m_constantData.b = cosf(g_fGameTimer) * 0.5f + 0.5f;
 	m_constantData.a = 1;
 	m_constantData.fTime[0] = g_fGameTimer;
-	m_constantData.fTime[1] = 0.f;
+	m_constantData.fTime[1] = 0.0f;
 	m_constantData.fTime[2] = 1.0f;
-	m_constantData.fTime[3] = 0.0f;
-	m_pContext->UpdateSubresource(m_pConstantBuffer, 0, NULL, &m_constantData, 0, 0);
+	m_constantData.fTime[3] = 1.0f;
+	//m_constantData.fTime[3] = fAngle;
+	pContext->UpdateSubresource(m_pConstantBuffer, 0, NULL, &m_constantData, 0, 0);
 #endif
 #ifdef CPU
 	//cpu update
@@ -42,7 +43,7 @@ bool xObject::Frame()
 	//UNMAP -> ÀÚ¹°¼è ´Ý°í
 	D3D11_MAPPED_SUBRESOURCE address;
 	HRESULT hr;
-	if (SUCCEEDED(hr = m_pContext->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &address)))
+	if (SUCCEEDED(hr = pContext->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &address)))
 	{
 		VS_CB* cb = (VS_CB*)address.pData;
 		cb->r = cosf(g_fGameTimer) * 0.5f + 0.5f;
@@ -50,10 +51,11 @@ bool xObject::Frame()
 		cb->b = cosf(g_fGameTimer) * 0.5f + 0.5f;
 		cb->a = 1.0f;
 		cb->fTime[0] = g_fGameTimer;
-		cb->fTime[1] = 0.f;
+		cb->fTime[1] = 0.0f;
 		cb->fTime[2] = 1.0f;
-		cb->fTime[3] = 0.0f;
-		m_pContext->Unmap(m_pConstantBuffer, 0);
+		cb->fTime[3] = 1.0f;
+		//cb->fTime[3] = fAngle;
+		pContext->Unmap(m_pConstantBuffer, 0);
 	}
 #endif
 
