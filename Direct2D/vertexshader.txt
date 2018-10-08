@@ -1,0 +1,164 @@
+//1)정점버퍼는 반드시 float4로 반환되어야한다.
+//2)반환정점은 투영좌표이어야한다.
+
+//시멘틱(의미구조)
+//레지스터번호, 어떤레지스터를 써라. 저장하는 타입별로 저장위치가 다르다.
+
+//C++코드에서 "POSITION"으로 보내서 (in float3 pos:POSITION)으로 받는다.
+//D3D11_INPUT_ELEMENT_DESC layout[] = 
+//{
+//{ "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+//};
+
+//SV_POSITION(float4 리턴타입), POSITOIN(float3 함수전달인자)
+//VertextShader는 SV_POSITION(float4)을 리턴하고 
+//이것은 PixelShader가 함수 전달인자로(in float4 pos : SV_POSITION )SV_POSITION을 받는다.
+//PS와 VS등 최초로 셰이더 진입 함수만 전달인자와 리턴타입을 명시해준다.(POSITION, SV_POSITION, SV_Target 등등)
+
+cbuffer VS_CB
+{
+	//x,y,z,w
+	float4 g_color : packoffset(c0);			//:packoffset(c0);
+	float g_fTimeX : packoffset(c1.x);			//:packoffset(c1.x);
+	float g_iIndex : packoffset(c1.y);			//:packoffset(c1.y);
+	float g_scale : packoffset(c1.z);			//:packoffset(c1.z);
+	float g_angle : packoffset(c1.w);			//:packoffset(c1.w);
+};
+
+//float4 rRet;
+//rRet.x = pos.x;
+//rRet.y = pos.y;
+//rRet.z = pos.z;
+//rRet.w = 1;
+//정규화 w값으로 x와 y와 z값을 나눠서 넘겨준다. w가 1이면 그대로 넘겨준다.
+
+//--------------------------------------------------------------------------------------
+// Vertex Shader
+//--------------------------------------------------------------------------------------
+//D3D11_INPUT_ELEMENT_DESC 와 일치
+struct VS_INPUT
+{
+	float3 pos : POSITION;
+	float4 color : COLOR;
+	float2 tex : TEXCOORD;
+};
+
+struct VS_OUTPUT
+{
+	float4 pos : SV_POSITION;
+	float4 color: COLOR;
+	float2 tex : TEXCOORD;
+};
+
+
+float4 GetPos(in float3 pos)
+{
+	float3 vPos = pos;
+	//vPos.x = pos.x * cos(g_angle) - pos.y * sin(g_angle);			//앵글값에 의한 회전 공식. 일단은 회전을 막음.
+	//vPos.y = pos.x * sin(g_angle) + pos.y * cos(g_angle);			//앵글값에 의한 회전 공식. 일단은 회전을 막음.
+	vPos.z = 1.0f;
+
+	//vPos = vPos * (cos(g_fTimeX) * 0.5f + 0.5f);
+	vPos = vPos * g_scale;
+	return float4(vPos, 1.0f);					//스위즐링.	
+}
+
+//float4 VS(in float3 pos:POSITION) : SV_POSITION
+//{
+//	float4 vPos = GetPos(pos);
+//	return vPos;
+//}
+
+VS_OUTPUT VS(VS_INPUT input)
+{
+	VS_OUTPUT output = (VS_OUTPUT)0;			//0으로 초기화
+	output.pos = GetPos(input.pos);
+	output.color = input.color;
+	output.tex = input.tex;
+	return output;
+}
+//--------------------------------------------------------------------------------------
+// Pixel Shader
+//--------------------------------------------------------------------------------------
+Texture2D		g_txDiffuse : register(t0);
+SamplerState	g_SamState	: register(s0);
+
+struct PS_INPUT
+{
+	float4 pos : SV_POSITION;
+	float4 color: COLOR;
+	float2 tex : TEXCOORD;
+};
+
+float4 GetColor(uint index)
+{
+	float4 vPos = float4(1,1,1,1);
+	switch(index)
+	{
+		case 0:
+		{
+			vPos = float4( (cos(g_fTimeX) * 0.5f + 0.5f), 
+							(sin(g_fTimeX) * 0.5f + 0.5f),
+							(cos(g_fTimeX) * 0.5f + 0.5f), 1.0f);
+			break;
+		}
+		case 1:
+		{
+			vPos = float4(1,0,0,1);
+			break;
+		}
+		case 2:
+		{
+			vPos = float4(1,0,1,1);
+			break;
+		}
+		case 3:
+		{
+			vPos = float4(0,1,1,1);
+			break;
+		}
+	}
+	return vPos;
+}
+
+float4 PS(PS_INPUT input) : SV_Target
+{
+	//float4 fColor = GetColor(g_iIndex);
+	//return fColor;
+
+	float4 fTexColor = g_txDiffuse.Sample(g_SamState, input.tex);
+	float4 fColorR	= fTexColor;
+	
+	if(fColorR.r > 0.99f & fColorR.g > 0.99f && fColorR.b > 0.99f && fColorR.a > 1.0f)
+	{
+		fColorR.a = 0.0f;	//discard
+	}
+
+	return fColorR;
+	//return input.color * fTexColor;
+}
+
+float4 PS2(PS_INPUT input) : SV_Target
+{
+	//float4 fColor = GetColor(g_iIndex);
+	//return fColor;
+
+	float4 fTexColor	= g_txDiffuse.Sample(g_SamState, input.tex);
+	float4 fColorR		= fTexColor;
+	return input.color * fTexColor;
+}
+
+float4 PS3(PS_INPUT input) : SV_Target
+{
+	//float4 fColor = GetColor(g_iIndex);
+	//return fColor;
+
+	float4 fTexColor	= g_txDiffuse.Sample(g_SamState, input.tex);
+	float4 fColorR		= GetColor(g_iIndex);
+	return fColorR * fTexColor;
+}
+//float4 PS(in float4 pos:SV_POSITION) : SV_Target
+//{
+//	float4 fColor = GetColor(g_iIndex);
+//	return fColor;
+//}
