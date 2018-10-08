@@ -1,9 +1,9 @@
 #pragma once
-#include "xObject_2D.h"
+#include "xObject.h"
 #include "TEnemyState.h"
 #include "TFSMMgr.h"
 #include "TFiniteStateMachine.h"
-class TEnemy : public xObject_2D
+class TEnemy : public xObject
 {
 public:
 	TEnemyState *			m_pAction;
@@ -23,7 +23,7 @@ public:
 	bool Move(TPoint pos);
 	bool Move();
 	bool Frame()	{	return true;	}
-	bool Process(xObject_2D* pTarget);
+	bool Process(xObject* pTarget);
 
 	DWORD SetTransition(DWORD dwEvent);
 

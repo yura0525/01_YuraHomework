@@ -1,6 +1,6 @@
 #include "TAttackAction.h"
 
-bool TAttackAction::Process(xObject_2D* pTarget)
+bool TAttackAction::Process(xObject* pTarget)
 {
 	RECT rt;
 	rt.left = (m_pOwner->m_pos.x) - (m_pOwner->m_fAttackRadius);

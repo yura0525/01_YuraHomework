@@ -14,7 +14,7 @@ bool TButton::Frame()
 			m_pCurrentBitmap = m_pColorBitmap[Btn_Click];
 		}
 	}*/
-	return xObject_2D::Frame();
+	return xObject::Frame();
 }
 bool TButton::Render()
 {
@@ -22,7 +22,7 @@ bool TButton::Render()
 		m_rtDraw.right, m_rtDraw.bottom,
 		m_pCurrentBitmap->m_hMemDC, m_rtDraw.left, m_rtDraw.top, SRCCOPY);*/
 
-	return xObject_2D::Render();
+	return xObject::Render();
 }
 
 bool TButton::LoadUI(const TCHAR* pszColor, const TCHAR* pszMask, int iState)

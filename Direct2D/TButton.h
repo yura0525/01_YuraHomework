@@ -1,5 +1,5 @@
 #pragma once
-#include "xObject_2D.h"
+#include "xObject.h"
 enum Btn_State
 {
 	Btn_Normal,
@@ -8,7 +8,7 @@ enum Btn_State
 	Btn_Disable,
 	Btn_Count,
 };
-class TButton : public xObject_2D
+class TButton : public xObject
 {
 public:
 	//TBitmap * m_pColorBitmap[Btn_Count];

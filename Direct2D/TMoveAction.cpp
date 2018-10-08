@@ -1,6 +1,6 @@
 #include "TMoveAction.h"
 
-bool TMoveAction::Process(xObject_2D* pTarget)
+bool TMoveAction::Process(xObject* pTarget)
 {
 	RECT rt;
 	rt.left = (m_pOwner->m_pos.x) - (m_pOwner->m_fAttackRadius);

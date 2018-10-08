@@ -1,73 +1,76 @@
 #pragma once
-#include "xStd.h"
-#include "xTexManager.h"
-#include "xShaderManager.h"
+#include "xObject_2D.h"
+#include "TCollision.h"
 
-struct P3VERTEX	//pnct
+struct TPoint
 {
-	float x, y, z;
-	float r, g, b, a;
-	float u, v;
-};
-//콘스턴트 버퍼, 상수버퍼. 셰이더내에서 글로벌 변수와 비슷하게 쓰인다.
-//float4개 단위로 보내야한다. 안쓰더라도 float 4개단위로 보내야한다.
-//fTime[0]이거 하나만 쓰더라도 float fTime[4];이렇게 선언해야한다.
-struct VS_CB
-{
-	float r, g, b, a;
-	float fTime[4];
+	float x;
+	float y;
 };
 
-class xObject
+class xObject : public xObject_2D
 {
 public:
-	VS_CB						m_constantData;
+	TPoint	m_pos;
+	TPoint	m_posDraw;
 
-	ID3D11Buffer*				m_pVertexBuffer;
-	ID3D11Buffer*				m_pIndexBuffer;
-	ID3D11Buffer*				m_pConstantBuffer;
+	RECT	m_rtDraw;
+	RECT	m_rtCollision;
 
-	xShader*					m_pShader;
-	ID3D11InputLayout*			m_pVertexLayout;
+	bool	m_bDebugRect;
 
-	std::vector<P3VERTEX>		m_verList;
-	std::vector<DWORD>			m_indexList;
+	float	m_fAlpha;
 
-	//texture info
-	UINT						m_iTexIndex;
-	xTexture*					m_pTexture;
-	ID3DBlob*					m_pBlobVS;
-
-	//알파블렌딩
-	//ID3D11ShaderResourceView*	m_pTexSRVAlpha;
-	//ID3D11ShaderResourceView*	m_pTexSRVNoAlpha;
-	ID3D11BlendState*			m_pAlphaBlend;
-
-	//와이어프레임
-	ID3D11RasterizerState*      m_pRSWireFrame;
-	ID3D11RasterizerState*      m_pRSSolid;
-
+	D3DXVECTOR2		m_texUV;		//텍스쳐 사이즈
+	//이동에 관한 변수들.
 public:
+	float	m_fDir[2];
+	float	m_fSpeed;
+	float	m_fAttackRadius;
+	RECT	m_rtAttackRect;
+public:
+	float				m_iMaxDistance;
+	float				m_fAngle;
+
+	//HP에 관한 변수들
+public:
+	int		m_iHP;
+	float	m_fLastDamageTime;
+	float	m_fDamageTimeGap;		//무적타임	
+public:
+	//void SetPosition(TPoint pos);
+	void SetPosition(float xPos, float yPos, DWORD left, DWORD top, DWORD right, DWORD bottom);
+
+	//텍스쳐좌표와 버텍스 좌표 관련 함수.
+	void SetTexUV(float _u, float _v);
+
+	D3DXVECTOR3 Generate(float x, float y);
+	D3DXVECTOR2 UVGenerate(float _u, float _v);
+	
+	void SetVertexData();
+	void GenCenter();
+
+
+	void SetDirectionSpeed(int dirX, int dirY, float speed);
+
+
 	virtual bool Init();
 	virtual bool Frame();
-	virtual bool PreRender();
 	virtual bool Render();
-	virtual bool PostRender();
 	virtual bool Release();
-	virtual bool Create(ID3D11Device* pd3dDevice, T_STR szShaderName, T_STR szTexName);
 
-public:
-	virtual HRESULT CreateVertexBuffer(ID3D11Device* pd3dDevice);
-	virtual HRESULT CreateIndexBuffer(ID3D11Device* pd3dDevice);
-	virtual HRESULT CreateConstantBuffer(ID3D11Device* pd3dDevice);
 
-	virtual HRESULT CreateShader(ID3D11Device *pd3dDevice, T_STR szShaderName);		//셰이더
-	virtual HRESULT CreateTexture(ID3D11Device *pd3dDevice, T_STR szTextureName);	//텍스쳐
-	virtual HRESULT CreateInputLayout(ID3D11Device *pd3dDevice);
+	//FadeIn & FadeOut
+	virtual bool FadeOut() { return true; }
+	virtual bool FadeIn() { return true; }
 
-	//알파블렌딩
-	virtual HRESULT SetBlendState(ID3D11Device *pd3dDevice);
-	virtual HRESULT SetRasterizerState(ID3D11Device *pd3dDevice, D3D11_FILL_MODE fill = D3D11_FILL_SOLID);
+
+	//데미지 관련 처리
+	bool IsDead();
+	void SetDead() { m_iHP = 0; }
+	void SetMAXHP(int hp) { m_iHP = hp; }
+	void ProcessDamage(int damage);
+
 public:
 	xObject();
 	virtual ~xObject();

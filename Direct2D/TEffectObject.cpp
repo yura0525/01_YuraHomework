@@ -1,7 +1,6 @@
 #include "TEffectObject.h"
 #include "TCollision.h"
 #include "xInput.h"
-#include "TLogManager.h"
 
 const float g_EffectTimeGap = 0.1f;
 bool TEffectObject::Frame()
@@ -116,7 +115,6 @@ bool TEffectMgr::IsCollision(RECT rt)
 	{
 		if (TCollision::RectInRect(rt, (*iter)->m_rtCollision))
 		{
-			I_LOGMANAGER.OutputLog("TEffectMgr::IsCollision!!!!!");
 			return true;
 		}
 	}

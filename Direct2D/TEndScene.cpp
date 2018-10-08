@@ -9,12 +9,14 @@ bool TEndScene::Init()
 	m_iSceneID = GAME_SCENE_END;
 
 	m_BackGround.Init();
+	m_BackGround.SetTexUV(800, 600);
 	m_BackGround.SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 800, 600);
 	m_BackGround.Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/RAINBOW.bmp");
 
 
 	m_BtnStart.Init();
-	m_BtnStart.SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 334, 79);
+	m_BtnStart.SetTexUV(100, 50);
+	m_BtnStart.SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 100, 50);
 	m_BtnStart.Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/end.bmp");
 	/*m_BtnStart.LoadUI(L"../../data/end.bmp", NULL, 0);
 	m_BtnStart.LoadUI(L"../../data/end.bmp", NULL, 1);

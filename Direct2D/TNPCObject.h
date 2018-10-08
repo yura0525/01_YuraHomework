@@ -1,8 +1,8 @@
 #pragma once
 #include "xStd.h"
-#include "xObject_2D.h"
+#include "xObject.h"
 
-class TNPCObject : public xObject_2D
+class TNPCObject : public xObject
 {
 public:
 	bool Frame();

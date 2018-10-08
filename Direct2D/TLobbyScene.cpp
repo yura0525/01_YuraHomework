@@ -7,13 +7,15 @@ bool TLobbyScene::Init()
 	m_bNextSceneStart = false;
 	
 	m_BackGround.Init();
+	m_BackGround.SetTexUV(800, 600);
 	m_BackGround.SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 800, 600);
 	m_BackGround.Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/bk.bmp");
 
 
 	m_BtnStart.Init();
-	m_BtnStart.SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 334, 82);
-	m_BackGround.Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/main_start_nor.bmp");
+	m_BtnStart.SetTexUV(332, 82);
+	m_BtnStart.SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 332, 82);
+	m_BtnStart.Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/main_start_nor.bmp");
 	/*m_BtnStart.LoadUI(L"../../data/main_start_nor.bmp", NULL, 0);
 	m_BtnStart.LoadUI(L"../../data/main_start_pus.bmp", NULL, 1);
 	m_BtnStart.LoadUI(L"../../data/main_start_sel.bmp", NULL, 2);

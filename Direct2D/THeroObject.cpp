@@ -45,12 +45,12 @@ bool THeroObject::Frame()
 	}
 
 	//위치값이나 충돌박스 수정.
-	return xObject_2D::Frame();
+	return xObject::Frame();
 }
 
 bool THeroObject::Render()
 {
-	xObject_2D::Render();
+	xObject::Render();
 
 	// fade out<--> fadeIn
 	/*if (bFadeStart && FadeOut())

@@ -4,7 +4,7 @@
 class TAttackAction : public TEnemyState
 {
 public:
-	virtual bool Process(xObject_2D* pTarget);
+	virtual bool Process(xObject* pTarget) override;
 public:
 	TAttackAction(TEnemy * pOwner);
 	virtual ~TAttackAction();

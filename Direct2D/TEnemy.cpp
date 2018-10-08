@@ -50,7 +50,7 @@ bool TEnemy::Move()
 
 	return true;
 }
-bool TEnemy::Process(xObject_2D* pTarget)
+bool TEnemy::Process(xObject* pTarget)
 {
 	m_pAction->Process(pTarget);
 	return true;

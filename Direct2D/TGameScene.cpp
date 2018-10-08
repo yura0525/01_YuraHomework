@@ -17,6 +17,7 @@ bool TGameScene::Init()
 	I_EffectMgr.GameDataLoad(L"../../data/SpriteList.txt");
 
 	m_BackGround.Init();
+	m_BackGround.SetTexUV(800, 600);
 	m_BackGround.SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 800, 600);
 	m_BackGround.Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/bk.bmp");
 

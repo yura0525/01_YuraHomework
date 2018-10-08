@@ -1,7 +1,7 @@
 #pragma once
-#include "xObject_2D.h"
+#include "xObject.h"
 
-class THeroObject : public xObject_2D
+class THeroObject : public xObject
 {
 public:
 	bool	bFadeStart;

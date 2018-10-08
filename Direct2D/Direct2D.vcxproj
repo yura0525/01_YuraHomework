@@ -89,7 +89,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../../dx/include;../../include_3D;../../fmod/inc</AdditionalIncludeDirectories>
     </ClCompile>
@@ -163,7 +163,6 @@
     <ClCompile Include="TGameScene.cpp" />
     <ClCompile Include="THeroObject.cpp" />
     <ClCompile Include="TLobbyScene.cpp" />
-    <ClCompile Include="TLogManager.cpp" />
     <ClCompile Include="TMoveAction.cpp" />
     <ClCompile Include="TNPCObject.cpp" />
     <ClCompile Include="TScene.cpp" />
@@ -174,12 +173,10 @@
     <ClCompile Include="xInput.cpp" />
     <ClCompile Include="xObject.cpp" />
     <ClCompile Include="xObject_2D.cpp" />
-    <ClCompile Include="xPlaneObj.cpp" />
     <ClCompile Include="xShader.cpp" />
     <ClCompile Include="xShaderManager.cpp" />
     <ClCompile Include="xTexManager.cpp" />
     <ClCompile Include="xTexture.cpp" />
-    <ClCompile Include="xTriangleObj.cpp" />
     <ClCompile Include="xWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -198,7 +195,6 @@
     <ClInclude Include="TGameScene.h" />
     <ClInclude Include="THeroObject.h" />
     <ClInclude Include="TLobbyScene.h" />
-    <ClInclude Include="TLogManager.h" />
     <ClInclude Include="TMoveAction.h" />
     <ClInclude Include="TNPCObject.h" />
     <ClInclude Include="TScene.h" />
@@ -209,13 +205,11 @@
     <ClInclude Include="xInput.h" />
     <ClInclude Include="xObject.h" />
     <ClInclude Include="xObject_2D.h" />
-    <ClInclude Include="xPlaneObj.h" />
     <ClInclude Include="xShader.h" />
     <ClInclude Include="xShaderManager.h" />
     <ClInclude Include="xStd.h" />
     <ClInclude Include="xTexManager.h" />
     <ClInclude Include="xTexture.h" />
-    <ClInclude Include="xTriangleObj.h" />
     <ClInclude Include="xWindow.h" />
   </ItemGroup>
   <ItemGroup>

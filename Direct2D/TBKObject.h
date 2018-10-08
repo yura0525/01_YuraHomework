@@ -1,6 +1,6 @@
 #pragma once
-#include "xObject_2D.h"
-class TBKObject : public xObject_2D
+#include "xObject.h"
+class TBKObject : public xObject
 {
 
 public:

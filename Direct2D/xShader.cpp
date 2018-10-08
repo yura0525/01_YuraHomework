@@ -24,17 +24,15 @@ bool xShader::Load(ID3D11Device* pd3dDevice, T_STR szFileName, C_STR vs, C_STR p
 	//Pixel Shader
 	//LoadShader
 	//L"vertexshader.txt" => 셰이더파일이름, "PS" => PixelShader함수이름(), "ps_5_0"=> 컴파일러 
-	ID3DBlob* pPSBuf = NULL;
 	if (FAILED(hr = D3DX11CompileFromFile(szFileName.c_str(), NULL, NULL,
-		ps.c_str(), "ps_5_0", dwFlags, NULL, NULL, &pPSBuf, &pErrorMsgs, NULL)))
+		ps.c_str(), "ps_5_0", dwFlags, NULL, NULL, &m_pBlobPS, &pErrorMsgs, NULL)))
 	{
 		OutputDebugStringA((char*)pErrorMsgs->GetBufferPointer());
 		return false;
 	}
 
 	//셰이더 컴파일된 결과(오브젝트파일, 목적파일)
-	V_RETURN(m_pd3dDevice->CreatePixelShader(pPSBuf->GetBufferPointer(), pPSBuf->GetBufferSize(), NULL, &m_pPS));
-	pPSBuf->Release();
+	V_RETURN(m_pd3dDevice->CreatePixelShader(m_pBlobPS->GetBufferPointer(), m_pBlobPS->GetBufferSize(), NULL, &m_pPS));
 
 	return true;
 }
@@ -55,6 +53,7 @@ bool xShader::Release()
 {
 	SAFE_RELEASE(m_pTexSRV);
 	SAFE_RELEASE(m_pBlobVS);
+	SAFE_RELEASE(m_pBlobPS);
 	return true;
 }
 

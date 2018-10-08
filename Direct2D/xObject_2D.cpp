@@ -1,141 +1,377 @@
 #include "xObject_2D.h"
 #include "xInput.h"
 
-const int g_NPCDamageTimeGap = 0.5f;
-
-void xObject_2D::SetPosition(TPoint pos)
-{
-	m_pos = pos;
-}
-
-void xObject_2D::SetPosition(float xPos, float yPos, DWORD left, DWORD top, DWORD right, DWORD bottom)
-{
-	m_pos.x = xPos;
-	m_pos.y = yPos;
-
-	m_rtDraw.left = left;
-	m_rtDraw.top = top;
-	m_rtDraw.right = right;
-	m_rtDraw.bottom = bottom;
-
-	m_posDraw.x = m_pos.x - (m_rtDraw.right / 2);
-	m_posDraw.y = m_pos.y - (m_rtDraw.bottom / 2);
-
-	m_fDir[0] = 0.0f;								//NPC는 위에서 아래로만 움직인다.
-	m_fDir[1] = 1.0f;
-
-	m_rtCollision.left = m_posDraw.x;
-	m_rtCollision.top = m_posDraw.y;
-	m_rtCollision.right = m_rtCollision.left + m_rtDraw.right;
-	m_rtCollision.bottom = m_rtCollision.top + m_rtDraw.bottom;
-
-	m_iMaxDistance = sqrt((m_rtDraw.right * m_rtDraw.right)
-		+ (m_rtDraw.bottom * m_rtDraw.bottom));
-}
-
-void xObject_2D::SetDirectionSpeed(int dirX, int dirY, float speed)
-{
-	m_fDir[0] = dirX;
-	m_fDir[1] = dirY;
-	m_fSpeed = speed;
-}
-
+#define CPU
 bool xObject_2D::Init()
 {
-	xPlaneObj::Init();
-	m_fAngle = 0.0f;
+	m_constantData.r = (rand() % 255) / 255.0f;
+	m_constantData.g = (rand() % 255) / 255.0f;
+	m_constantData.b = (rand() % 255) / 255.0f;
+	m_constantData.a = 1;
+	m_constantData.fTime[0] = g_fGameTimer;
+	m_constantData.fTime[1] = 1.0f;
+	m_constantData.fTime[2] = 1.0f;
+	m_constantData.fTime[3] = 1.0f;
 
-	m_fLastDamageTime = g_fGameTimer;
-	m_iHP = 1;
-	
 	return true;
 }
 bool xObject_2D::Frame()
 {
-	xPlaneObj::Frame();
+	if (g_pContext == NULL)
+		return false;
 
-	if (I_Input.m_KeyState[DIK_W])
-	{
-		m_pos.y += -1 * g_fSecPerFrame * 300.0f;
-		//m_bitmap.SetOffeSet(0, 1 * g_fSecPerFrame * m_fSpeed);
-	}
-	if (I_Input.m_KeyState[DIK_S])
-	{
-		m_pos.y += 1 * g_fSecPerFrame * 300.0f;
-		//m_bitmap.SetOffeSet(0, -1 * g_fSecPerFrame * m_fSpeed);
-	}
-	if (I_Input.m_KeyState[DIK_A])
-	{
-		m_pos.x += -1 * g_fSecPerFrame * 300.0f;
-		//m_bitmap.SetOffeSet(-1 * g_fSecPerFrame * m_fSpeed, 0);
-	}
-	if (I_Input.m_KeyState[DIK_D])
-	{
-		m_pos.x += 1 * g_fSecPerFrame * 300.0f;
-		//m_bitmap.SetOffeSet(1 * g_fSecPerFrame * m_fSpeed, 0);
-	}
+	static float fAngle = 0.0f;
+	fAngle += g_fSecPerFrame;
 
-	m_posDraw.x = m_pos.x - (m_rtDraw.right / 2);
-	m_posDraw.y = m_pos.y - (m_rtDraw.bottom / 2);
+	ID3D11DeviceContext* pContext = g_pContext;
 
-	m_rtCollision.left = m_posDraw.x;
-	m_rtCollision.top = m_posDraw.y;
-	m_rtCollision.right = m_rtCollision.left + m_rtDraw.right;
-	m_rtCollision.bottom = m_rtCollision.top + m_rtDraw.bottom;
+	//float g_fTimeX : packoffset(c1.x);			//:packoffset(c1.x);
+	//float g_iIndex : packoffset(c1.y);			//:packoffset(c1.y);
+	//float g_scale : packoffset(c1.z);			//:packoffset(c1.z);
+	//float g_angle : packoffset(c1.w);			//:packoffset(c1.w);
+#ifdef GPU
+	//gpu update
+	m_constantData.r = cosf(g_fGameTimer) * 0.5f + 0.5f;
+	m_constantData.g = sinf(g_fGameTimer) * 0.5f + 0.5f;
+	m_constantData.b = cosf(g_fGameTimer) * 0.5f + 0.5f;
+	m_constantData.a = 1;
+	m_constantData.fTime[0] = g_fGameTimer;
+	m_constantData.fTime[1] = 0.0f;
+	m_constantData.fTime[2] = 1.0f;
+	m_constantData.fTime[3] = 1.0f;
+	//m_constantData.fTime[3] = fAngle;
+	pContext->UpdateSubresource(m_pConstantBuffer, 0, NULL, &m_constantData, 0, 0);
+#endif
+#ifdef CPU
+	//cpu update
+	//MAP	-> 자물쇠 열고
+	//~~	-> 상수버퍼 갱신
+	//UNMAP -> 자물쇠 닫고
+	D3D11_MAPPED_SUBRESOURCE address;
+	HRESULT hr;
+	if (SUCCEEDED(hr = pContext->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &address)))
+	{
+		VS_CB* cb = (VS_CB*)address.pData;
+		cb->r = cosf(g_fGameTimer) * 0.5f + 0.5f;
+		cb->g = sinf(g_fGameTimer) * 0.5f + 0.5f;
+		cb->b = cosf(g_fGameTimer) * 0.5f + 0.5f;
+		cb->a = 1.0f;
+		cb->fTime[0] = g_fGameTimer;
+		cb->fTime[1] = 0.0f;
+		cb->fTime[2] = 1.0f;
+		cb->fTime[3] = 1.0f;
+		//cb->fTime[3] = fAngle;
+		pContext->Unmap(m_pConstantBuffer, 0);
+	}
+#endif
+
+	return true;
+}
+bool xObject_2D::PreRender()
+{
 	return true;
 }
 bool xObject_2D::Render()
 {
-	if (IsDead())
-		return true;
+	if (g_pContext == NULL)
+		return false;
 
-	return xPlaneObj::Render();
+	g_pContext->VSSetShader(m_pShader->m_pVS, NULL, 0);
+	g_pContext->PSSetShader(m_pShader->m_pPS, NULL, 0);
+	g_pContext->HSSetShader(NULL, NULL, 0);
+	g_pContext->DSSetShader(NULL, NULL, 0);
+	g_pContext->GSSetShader(NULL, NULL, 0);
+	g_pContext->IASetInputLayout(m_pVertexLayout);
+
+	//F1키를 누르면 와이어 프레임이 보이게함.
+	if (I_Input.m_KeyState[DIK_F1])
+	{
+		g_pContext->RSSetState(m_pRSWireFrame);
+	}
+	else
+	{
+		g_pContext->RSSetState(m_pRSSolid);
+	}
+
+	UINT offset = 0;
+	UINT stride = sizeof(P3VERTEX);
+	g_pContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
+	g_pContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	//상수 버퍼 적용(버텍스 셰이더)
+	g_pContext->VSSetConstantBuffers(0, //0 슬롯번호(레지스터 번호)
+		1,								//1 상수버퍼 1개
+		&m_pConstantBuffer);
+	//상수버퍼 적용(픽셀 셰이더)
+	g_pContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+
+	g_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	//알파블렌딩
+	g_pContext->OMSetBlendState(m_pAlphaBlend, 0, -1);
+	//텍스쳐
+	g_pContext->PSSetShaderResources(0, 1, &(m_pTexture->m_pTexSRV));
+	g_pContext->PSSetSamplers(0, 1, &(m_pTexture->m_pSamplerState));
+	g_pContext->DrawIndexed(m_indexList.size(), 0, 0);
+
+	return true;
+}
+bool xObject_2D::PostRender()
+{
+	return true;
 }
 bool xObject_2D::Release()
 {
-	return xPlaneObj::Release();
+	SAFE_RELEASE(m_pVertexBuffer);
+	SAFE_RELEASE(m_pIndexBuffer);
+	SAFE_RELEASE(m_pConstantBuffer);
+	SAFE_RELEASE(m_pShader);
+	SAFE_RELEASE(m_pVertexLayout);
+	SAFE_RELEASE(m_pTexture);
+	SAFE_RELEASE(m_pAlphaBlend);
+	SAFE_RELEASE(m_pRSWireFrame);
+	SAFE_RELEASE(m_pRSSolid);
+
+	return true;
+}
+bool xObject_2D::Create(ID3D11Device* pd3dDevice, T_STR szShaderName, T_STR szTexName)
+{
+	CreateVertexBuffer(pd3dDevice);
+	CreateIndexBuffer(pd3dDevice);
+	CreateConstantBuffer(pd3dDevice);
+	CreateShader(pd3dDevice, szShaderName);
+	CreateInputLayout(pd3dDevice);
+	CreateTexture(pd3dDevice, szTexName);
+	SetRasterizerState(pd3dDevice);
+	SetBlendState(pd3dDevice);
+	return true;
 }
 
-bool xObject_2D::IsDead()
+HRESULT xObject_2D::CreateVertexBuffer(ID3D11Device* pd3dDevice)
 {
-	return ((0 < m_iHP) ? false : true);
-}
-void xObject_2D::ProcessDamage(int damage)
-{
-	//ProcessDamage가 여러번 처리되는걸 막는다.
-	TCHAR	m_csBuffer[256];
-	if ((m_fLastDamageTime + m_fDamageTimeGap) < g_fGameTimer)
+	HRESULT hr = S_OK;
+
+	//정점의 저장순서 : 시계방향
+	//반시계방향으로 그리면 안나온다.
+	/*m_verList.resize(4);
+	m_verList[0].x = -0.5f; m_verList[0].y = 0.5f;	m_verList[0].z = 0.5f;
+	m_verList[0].r = 1.0f;	m_verList[0].g = 0.0f;	m_verList[0].b = 0.0f;
+	m_verList[0].u = 0.0f; m_verList[0].v = 0.0f;
+
+	m_verList[1].x = 0.5f;	m_verList[1].y = 0.5f;	m_verList[1].z = 0.5f;
+	m_verList[1].r = 0.0f;	m_verList[1].g = 1.0f;	m_verList[1].b = 0.0f;
+	m_verList[1].u = 1.0f;	m_verList[1].v = 0.0f;
+
+	m_verList[2].x = -0.5f; m_verList[2].y = -0.5f; m_verList[2].z = 0.5f;
+	m_verList[2].r = 0.0f;	m_verList[2].g = 0.0f;	m_verList[2].b = 1.0f;
+	m_verList[2].u = 0.0f; m_verList[2].v = 1.0f;
+
+	m_verList[3].x = 0.5f;  m_verList[3].y = -0.5f; m_verList[3].z = 0.5f;
+	m_verList[3].r = 1.0f;  m_verList[3].g = 1.0f;	m_verList[3].b = 1.0f;
+	m_verList[3].u = 1.0f;  m_verList[3].v = 1.0f;*/
+
+	//GPU상에 메모리를 할당함.
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(bd));
+	bd.ByteWidth = m_verList.size() * sizeof(P3VERTEX);		//36바이트
+	bd.Usage = D3D11_USAGE_DEFAULT;							//GPU에 메모리를 할당해라. 기본이 GPU메모리. GPU는 READ/WRITE 가능.CPU는 접근불가능하다.
+															//D3D11_USAGE_STAGING만이 CPU가 접근가능하다. 단점은 느리다.
+
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;//정점 버퍼
+
+											//GPU상에 메모리를 셋팅하고 할당함.
+	D3D11_SUBRESOURCE_DATA initialData;
+	ZeroMemory(&initialData, sizeof(initialData));
+	initialData.pSysMem = &(m_verList.at(0));
+
+	if (FAILED(hr = pd3dDevice->CreateBuffer(&bd, &initialData, &m_pVertexBuffer)))
 	{
-		m_fLastDamageTime += m_fDamageTimeGap;
-
-		m_iHP = m_iHP + damage;
-		m_iHP = max(0, m_iHP);
-		_stprintf_s(m_csBuffer, L"ProcessDamage()!!!!!!!! m_iHP: %d damage : %d\n", m_iHP, damage);
-		OutputDebugString(m_csBuffer);
+		return hr;
 	}
+	return hr;
+}
+HRESULT xObject_2D::CreateIndexBuffer(ID3D11Device* pd3dDevice)
+{
+	HRESULT hr = S_OK;
+	m_indexList.push_back(0);
+	m_indexList.push_back(1);
+	m_indexList.push_back(2);
+
+
+	m_indexList.push_back(2);
+	m_indexList.push_back(1);
+	m_indexList.push_back(3);
+
+	/*DWORD indices[] =
+	{
+	0,1,2,
+	2,1,3,
+	};*/
+
+	//GPU상에 메모리를 할당함
+	int iNumCount = sizeof(m_indexList) / sizeof(m_indexList[0]);
+
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(bd));
+	bd.ByteWidth = m_indexList.size() * sizeof(DWORD);
+	bd.Usage = D3D11_USAGE_DEFAULT;				//GPU에 메모리를 할당해라. 기본이 GPU메모리. GPU는 READ/WRITE 가능.CPU는 접근불가능하다.
+												//D3D11_USAGE_STAGING만이 CPU가 접근가능하다. 단점은 느리다.
+	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;		//인덱스 버퍼
+
+	D3D11_SUBRESOURCE_DATA InitialData;
+	ZeroMemory(&InitialData, sizeof(InitialData));
+
+	InitialData.pSysMem = &(m_indexList.at(0));
+	if (FAILED(hr = pd3dDevice->CreateBuffer(&bd, &InitialData, &m_pIndexBuffer)))
+	{
+		return hr;
+	}
+
+	return hr;
 }
 
+HRESULT xObject_2D::CreateConstantBuffer(ID3D11Device* pd3dDevice)
+{
+	HRESULT hr = S_OK;
+
+	//GPU상에 메모리를 할당함
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(bd));
+	bd.ByteWidth = sizeof(VS_CB);
+	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;	//상수버퍼
+												//GPU상에 메모리를 셋팅하고 할당함.
+
+												//Usage
+												//D3D11_USAGE_DEFAULT = 0,						 // GPU READ/WRITE가능. CPU 접근 불가능.
+												//D3D11_USAGE_IMMUTABLE = 1,					 // GPU READ 가능
+												//D3D11_USAGE_DYNAMIC = 2,						 // 중간에 변경가능. CPUAccessFlags 값을 셋팅해야한다.
+												//D3D11_USAGE_STAGING = 3						 // CPU READ/WRITE 가능
+#ifdef CPU
+	bd.Usage = D3D11_USAGE_DYNAMIC;					//D3D11_USAGE_DYNAMIC. GPU는 READ/WRITE 가능. CPU는 READ X /WRITE 0.
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;		//D3D11_USAGE_DYNAMIC이면 CPUAccessFlags 값을 셋팅해야한다.
+#endif
+#ifdef GPU
+	bd.Usage = D3D11_USAGE_DEFAULT;
+#endif
+
+	D3D11_SUBRESOURCE_DATA initialData;
+	ZeroMemory(&initialData, sizeof(initialData));
+	initialData.pSysMem = &(m_constantData);
+
+	if (FAILED(hr = pd3dDevice->CreateBuffer(&bd, &initialData, &m_pConstantBuffer)))
+	{
+		return hr;
+	}
+	return hr;
+}
+
+HRESULT xObject_2D::CreateShader(ID3D11Device *pd3dDevice, T_STR szShaderName)
+{
+	int iIndex = I_ShaderMgr.Load(pd3dDevice, szShaderName);
+	m_pShader = I_ShaderMgr.GetPtr(iIndex);
+	return S_OK;
+}
+HRESULT xObject_2D::CreateTexture(ID3D11Device *pd3dDevice, T_STR szTextureName)
+{
+	int iIndex = I_TextureMgr.Load(pd3dDevice, szTextureName);
+	m_pTexture = I_TextureMgr.GetPtr(iIndex);
+	return S_OK;
+}
+HRESULT xObject_2D::CreateInputLayout(ID3D11Device *pd3dDevice)
+{
+	//InputLayout.
+	//셰이더 함수의 선언. 전달인자 타입으로 POSITION을 쓰겠다.
+	//float4 VS(in float3 pos : POSITION ) : SV_POSITION
+	D3D11_INPUT_ELEMENT_DESC layout[] =
+	{
+		//5번째 전달인자인 0에서부터 DXGI_FORMAT_R32G32B32_FLOAT만큼인 float 3개를 꺼낸다.
+		{ "POSITION", 0,  DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		//5번째 전달인자인 12바이트에서부터 DXGI_FORMAT_R32G32B32A32_FLOAT float 4개를 꺼낸다.
+	{ "COLOR", 0,  DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA,0 },
+	//5번째 전달인자인 28바이트에서 DXGI_FORMAT_R32G32_FLOAT float2개를 꺼낸다.
+	{ "TEXCOORD", 0,  DXGI_FORMAT_R32G32_FLOAT, 0, 28,D3D11_INPUT_PER_VERTEX_DATA,0 },
+	};
+	int iNum = sizeof(layout) / sizeof(layout[0]);
+
+	//layout.SemanticName = "POSITION";				//함수전달인자 타입.
+	//layout.SemanticIndex = 0;
+	//layout.Format = DXGI_FORMAT_R32G32B32_FLOAT;	//POSITION은 float3개이다.
+	//layout.InputSlot = 0;
+	//layout.AlignedByteOffset = 0;
+	//layout.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	//layout.InstanceDataStepRate = 0;
+	ID3DBlob* pBlobVS = m_pShader->m_pBlobVS;
+	pd3dDevice->CreateInputLayout(layout, iNum, pBlobVS->GetBufferPointer(), pBlobVS->GetBufferSize(), &m_pVertexLayout);
+	return S_OK;
+}
+
+//알파블렌딩
+HRESULT xObject_2D::SetBlendState(ID3D11Device *pd3dDevice)
+{
+	HRESULT hr = S_OK;
+	D3D11_BLEND_DESC bd;
+	ZeroMemory(&bd, sizeof(D3D11_BLEND_DESC));
+
+	//FinalColor = destColor * DescBlend + srcColor * SrcBlend;
+	bd.RenderTarget[0].BlendEnable = true;
+	bd.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	bd.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	bd.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+
+	//FinalAlpha = destAlpha * DescBlendAlpha + srcAlpha * SrcBlendAlpha;
+	bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	bd.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+
+	bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	pd3dDevice->CreateBlendState(&bd, (ID3D11BlendState**)&m_pAlphaBlend);
+
+	////2)
+	//bd.RenderTarget[0].BlendEnable = false;
+	//bd.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	//bd.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	//bd.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+
+	////FinalAlpha = destAlpha * DescBlendAlpha + srcAlpha * SrcBlendAlpha;
+	//bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	//bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	//bd.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+
+	//bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	//m_pd3dDevice->CreateBlendState(&bd, (ID3D11BlendState**)&m_pAlphaBlend2);
+
+	////3)
+	//bd.RenderTarget[0].BlendEnable = true;
+	//bd.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	//bd.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	//bd.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+
+	////FinalAlpha = destAlpha * DescBlendAlpha + srcAlpha * SrcBlendAlpha;
+	//bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	//bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	//bd.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+
+	//bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	//m_pd3dDevice->CreateBlendState(&bd, (ID3D11BlendState**)&m_pAlphaBlend3);
+	return hr;
+}
+
+HRESULT xObject_2D::SetRasterizerState(ID3D11Device *pd3dDevice, D3D11_FILL_MODE fill)
+{
+	HRESULT hr = S_OK;
+	D3D11_RASTERIZER_DESC desc;
+	ZeroMemory(&desc, sizeof(D3D11_RASTERIZER_DESC));
+	desc.FillMode = D3D11_FILL_WIREFRAME;
+	desc.CullMode = D3D11_CULL_NONE;
+	desc.DepthClipEnable = TRUE;
+
+	hr = pd3dDevice->CreateRasterizerState(&desc, &m_pRSWireFrame);
+
+	desc.FillMode = D3D11_FILL_SOLID;
+	hr = pd3dDevice->CreateRasterizerState(&desc, &m_pRSSolid);
+	return hr;
+}
 xObject_2D::xObject_2D()
 {
-	m_pos.x = 0;
-	m_pos.y = 0;
-	m_posDraw.x = 0;
-	m_posDraw.y = 0;
-
-	m_fDir[0] = 1.0f;
-	m_fDir[1] = 1.0f;
-
-	m_fSpeed = 100.0f;
-	m_fAttackRadius = 200.0f;
-
-	m_bDebugRect = false;
-	m_iHP = 1;
-
-	m_fAngle = 0.0f;
-	m_fAlpha = 255.0f;
-
-	m_fLastDamageTime = g_fGameTimer;
-	m_fDamageTimeGap = g_NPCDamageTimeGap;
 }
 
 

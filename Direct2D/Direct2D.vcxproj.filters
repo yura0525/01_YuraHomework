@@ -57,12 +57,6 @@
     <ClCompile Include="xShader.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
-    <ClCompile Include="xTriangleObj.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
-    <ClCompile Include="xPlaneObj.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
     <ClCompile Include="xObject.cpp">
       <Filter>Object</Filter>
     </ClCompile>
@@ -117,9 +111,6 @@
     <ClCompile Include="TStandAction.cpp">
       <Filter>FSM</Filter>
     </ClCompile>
-    <ClCompile Include="TLogManager.cpp">
-      <Filter>Utility</Filter>
-    </ClCompile>
     <ClCompile Include="TTimer.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
@@ -161,13 +152,7 @@
     <ClInclude Include="xShader.h">
       <Filter>Texture</Filter>
     </ClInclude>
-    <ClInclude Include="xPlaneObj.h">
-      <Filter>Object</Filter>
-    </ClInclude>
     <ClInclude Include="xObject.h">
-      <Filter>Object</Filter>
-    </ClInclude>
-    <ClInclude Include="xTriangleObj.h">
       <Filter>Object</Filter>
     </ClInclude>
     <ClInclude Include="xObject_2D.h">
@@ -220,9 +205,6 @@
     </ClInclude>
     <ClInclude Include="TAttackAction.h">
       <Filter>FSM</Filter>
-    </ClInclude>
-    <ClInclude Include="TLogManager.h">
-      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="TTimer.h">
       <Filter>Utility</Filter>

@@ -3,7 +3,7 @@
 class TStandAction : public TEnemyState
 {
 public:
-	virtual bool Process(xObject_2D* pTarget);
+	virtual bool Process(xObject* pTarget) override;
 public:
 	TStandAction(TEnemy * pOwner);
 	virtual ~TStandAction();

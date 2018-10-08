@@ -1,6 +1,6 @@
 #include "TStandAction.h"
 
-bool TStandAction::Process(xObject_2D* pTarget)
+bool TStandAction::Process(xObject* pTarget)
 {
 	RECT rt;
 	rt.left = (m_pOwner->m_pos.x) - (m_pOwner->m_fAttackRadius);
