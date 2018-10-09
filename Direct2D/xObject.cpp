@@ -3,23 +3,18 @@
 
 const int g_NPCDamageTimeGap = 0.5f;
 
-//void xObject::SetPosition(TPoint pos)
-//{
-//	m_pos = pos;
-//}
-
-void xObject::SetPosition(float xPos, float yPos, DWORD left, DWORD top, DWORD right, DWORD bottom)
+void xObject::SetPosition(float xPos, float yPos, DWORD left, DWORD top, DWORD width, DWORD height)
 {
-	m_pos.x = left;
-	m_pos.y = top;
+	m_pos.x = xPos;
+	m_pos.y = yPos;
 
-	m_rtDraw.left = xPos;
-	m_rtDraw.top = yPos;
-	m_rtDraw.right = right;
-	m_rtDraw.bottom = bottom;
+	m_rtDraw.left = left;
+	m_rtDraw.top = top;
+	m_rtDraw.right = width;
+	m_rtDraw.bottom = height;
 
-	//m_posDraw.x = m_pos.x - (m_rtDraw.right / 2);
-	//m_posDraw.y = m_pos.y - (m_rtDraw.bottom / 2);
+	m_posDraw.x = m_pos.x - (m_rtDraw.right / 2);
+	m_posDraw.y = m_pos.y - (m_rtDraw.bottom / 2);
 
 	m_fDir[0] = 0.0f;								//NPC는 위에서 아래로만 움직인다.
 	m_fDir[1] = 1.0f;
@@ -54,6 +49,7 @@ D3DXVECTOR3 xObject::Generate(float x, float y)
 
 D3DXVECTOR2 xObject::UVGenerate(float _u, float _v)
 {
+	// 0 ~ 800 - > 0 ~1
 	D3DXVECTOR2 uvRet;
 	uvRet.u = _u / m_texUV.u;
 	uvRet.v = _v / m_texUV.v;
@@ -65,29 +61,26 @@ void xObject::SetVertexData()
 {
 	m_verList.resize(4);
 
-	D3DXVECTOR3 pos = Generate(m_rtDraw.left, m_rtDraw.top);
-	D3DXVECTOR2 uv = UVGenerate(m_pos.x, m_pos.y);
+	D3DXVECTOR3 pos = Generate(m_posDraw.x, m_posDraw.y);
+	D3DXVECTOR2 uv = UVGenerate(m_rtDraw.left, m_rtDraw.top);
 	m_verList[0].p = D3DXVECTOR3(pos.x, pos.y, 0.0f);
 	m_verList[0].t = D3DXVECTOR2(uv.u, uv.v);
 	m_verList[0].c = D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
 
-	pos = Generate(m_rtDraw.left + m_rtDraw.right,
-		m_rtDraw.top);
-	uv = UVGenerate(m_pos.x + m_rtDraw.right, m_pos.y);
+	pos = Generate(m_posDraw.x + m_rtDraw.right, m_posDraw.y);
+	uv = UVGenerate(m_rtDraw.left + m_rtDraw.right, m_rtDraw.top);
 	m_verList[1].p = D3DXVECTOR3(pos.x, pos.y, 0.0f);
 	m_verList[1].t = D3DXVECTOR2(uv.u, uv.v);
 	m_verList[1].c = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
 
-	pos = Generate(m_rtDraw.left,
-		m_rtDraw.top + m_rtDraw.bottom);
-	uv = UVGenerate(m_pos.x, m_pos.y + m_rtDraw.bottom);
+	pos = Generate(m_posDraw.x, m_posDraw.y + m_rtDraw.bottom);
+	uv = UVGenerate(m_rtDraw.left, m_rtDraw.top + m_rtDraw.bottom);
 	m_verList[2].p = D3DXVECTOR3(pos.x, pos.y, 0.0f);
 	m_verList[2].t = D3DXVECTOR2(uv.u, uv.v);
 	m_verList[2].c = D3DXVECTOR4(0.0f, 0.0f, 1.0f, 1.0f);
 
-	pos = Generate(m_rtDraw.left + m_rtDraw.right,
-		m_rtDraw.top + m_rtDraw.bottom);
-	uv = UVGenerate(m_pos.x + m_rtDraw.right, m_pos.y + m_rtDraw.bottom);
+	pos = Generate(m_posDraw.x + m_rtDraw.right, m_posDraw.y + m_rtDraw.bottom);
+	uv = UVGenerate(m_rtDraw.left + m_rtDraw.right, m_rtDraw.top + m_rtDraw.bottom);
 	m_verList[3].p = D3DXVECTOR3(pos.x, pos.y, 0.0f);
 	m_verList[3].t = D3DXVECTOR2(uv.u, uv.v);
 	m_verList[3].c = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);

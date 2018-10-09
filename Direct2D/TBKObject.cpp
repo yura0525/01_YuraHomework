@@ -2,10 +2,12 @@
 
 bool TBKObject::Render()
 {
-	if (FadeIn())
-		RenderScroll();
+	/*if (FadeIn())
+		RenderScroll();*/
 
-	return true;
+	return xObject::Render();
+
+	//return true;
 }
 bool TBKObject::RenderScroll()
 {

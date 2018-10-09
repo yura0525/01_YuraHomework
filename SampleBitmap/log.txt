@@ -1,1 +1,1 @@
-TEffectMgr::IsCollision()@@@@@@
+TEffectMgr::IsCollision!!!!!

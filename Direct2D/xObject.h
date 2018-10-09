@@ -38,8 +38,7 @@ public:
 	float	m_fLastDamageTime;
 	float	m_fDamageTimeGap;		//무적타임	
 public:
-	//void SetPosition(TPoint pos);
-	void SetPosition(float xPos, float yPos, DWORD left, DWORD top, DWORD right, DWORD bottom);
+	void SetPosition(float xPos, float yPos, DWORD left, DWORD top, DWORD width, DWORD height);
 
 	//텍스쳐좌표와 버텍스 좌표 관련 함수.
 	void SetTexUV(float _u, float _v);
