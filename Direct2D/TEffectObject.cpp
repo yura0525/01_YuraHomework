@@ -101,6 +101,7 @@ void TEffectMgr::AddEffect(POINT pos)
 {
 	TEffectObject* pObj = new TEffectObject();
 	pObj->Init();
+	pObj->SetTexUV(400, 300);
 	pObj->SetPosition(pos.x, pos.y, 1, 142, 41, 42);
 	pObj->Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/bitmap1.bmp");
 	pObj->m_iIndexSprite = rand() % m_rtSpriteList.size();
