@@ -27,7 +27,7 @@ bool TLobbyScene::Frame()
 {
 	m_BackGround.Frame();
 
-	if (I_Input.m_MouseState.rgbButtons[0] && 
+	if (I_Input.m_CurrentMouseState.rgbButtons[0] == KEY_PUSH && 
 		TCollision::RectInPoint(m_BtnStart.m_rtCollision, g_pMousePos))
 	{
 		m_bNextSceneStart = true;

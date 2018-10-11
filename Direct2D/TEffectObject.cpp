@@ -124,7 +124,7 @@ bool TEffectMgr::IsCollision(RECT rt)
 
 bool TEffectMgr::Frame()
 {
-	if (I_Input.m_MouseState.rgbButtons[0])
+	if (I_Input.m_CurrentMouseState.rgbButtons[0] == KEY_PUSH)
 	{
 		static float fAddTime = 0.0f;
 		fAddTime += g_fSecPerFrame;
