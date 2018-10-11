@@ -24,66 +24,59 @@ LRESULT xWindow::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch (msg)
 	{
 	case WM_SIZE:
-	{
-		UINT width = LOWORD(lParam);
-		UINT height = HIWORD(lParam);
-		ResizeDevice(width, height);
-	}
-	break;
+		{
+			UINT width = LOWORD(lParam);
+			UINT height = HIWORD(lParam);
+			ResizeDevice(width, height);
+		}
+		break;
 	case WM_KEYDOWN:
 		switch (wParam)
 		{
 			// 전체화면과 윈도우 모드 토글 변환(백 버퍼의 크기는 변화가 없다.)
-			case '0':
+		case '0':
 			{
-				BOOL isScreenMode = false;
-				m_pSwapChain->GetFullscreenState(&isScreenMode, NULL);
-				m_pSwapChain->SetFullscreenState(!isScreenMode, NULL);
-
-				if (isScreenMode)
+				BOOL IsScreenMode = false;
+				m_pSwapChain->GetFullscreenState(&IsScreenMode, NULL);
+				m_pSwapChain->SetFullscreenState(!IsScreenMode, NULL);
+				if (IsScreenMode)
 				{
 					ShowWindow(m_hWnd, SW_SHOW);
 				}
 			}
 			break;
-			case '1':		// 윈도우 크기(해상도) 및 포맷 변경
+		case '1':// 윈도우 크기(해상도) 및 포맷 변경
+			if (m_pSwapChain)
 			{
-				if (m_pSwapChain)
-				{
-					DXGI_MODE_DESC desc;
-					ZeroMemory(&desc, sizeof(DXGI_MODE_DESC));
-
-					desc.Width = 1024;
-					desc.Height = 768;
-					desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-					desc.RefreshRate.Denominator = 0;
-					desc.RefreshRate.Numerator = 0;
-					desc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-					desc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-					// 윈도우 크기 및 해상도( 화면모드 ) 변경
-					m_pSwapChain->ResizeTarget(&desc);
-				}
+				DXGI_MODE_DESC desc;
+				ZeroMemory(&desc, sizeof(desc));
+				desc.Width = 1024;
+				desc.Height = 768;
+				desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+				desc.RefreshRate.Denominator = 0;
+				desc.RefreshRate.Numerator = 0;
+				desc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+				desc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+				// 윈도우 크기 및 해상도( 화면모드 ) 변경
+				m_pSwapChain->ResizeTarget(&desc);
 			}
 			break;
-			case '2':		// 전체화면 모드로 전환 및 해상도 변경
+		case '2':// 전체화면 모드로 전환 및 해상도 변경
+			if (m_pSwapChain)
 			{
-				if (m_pSwapChain)
-				{
-					DXGI_MODE_DESC desc;
-					ZeroMemory(&desc, sizeof(DXGI_MODE_DESC));
+				DXGI_MODE_DESC desc;
+				ZeroMemory(&desc, sizeof(desc));
+				desc.Width = 800;
+				desc.Height = 600;
+				desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+				desc.RefreshRate.Denominator = 0;
+				desc.RefreshRate.Numerator = 0;
+				desc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+				desc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 
-					desc.Width = 800;
-					desc.Height = 600;
-					desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-					desc.RefreshRate.Denominator = 0;
-					desc.RefreshRate.Numerator = 0;
-					desc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-					desc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-
-					// 윈도우 크기 및 해상도( 화면모드 ) 변경
-					m_pSwapChain->ResizeTarget(&desc);
-					m_pSwapChain->SetFullscreenState(true, NULL);
-				}
+				// 윈도우 크기(해상도) 변경
+				m_pSwapChain->ResizeTarget(&desc);
+				m_pSwapChain->SetFullscreenState(TRUE, NULL);
 			}
 			break;
 		}
@@ -93,6 +86,7 @@ LRESULT xWindow::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);		// WM_QUIT 메세지가 메시지큐에 푸쉬된다.
 								//DestroyWindow(hWnd);	// WM_DESTROY 메세지가 메세지큐에 푸쉬된다.(다른버튼으로 종료할때)
 	}
+	break;
 	return 0;
 	//default:
 	//	return DefWindowProc(hWnd, msg, wParam, lParam);
@@ -221,6 +215,7 @@ bool xWindow::Run()
 
 bool xWindow::GameInit()
 {
+	TDevice::Init();
 	return true;
 }
 
@@ -233,7 +228,6 @@ bool xWindow::GameRelease()
 {
 	return true;
 }
-
 xWindow::xWindow()
 {
 	g_pWindow = this;

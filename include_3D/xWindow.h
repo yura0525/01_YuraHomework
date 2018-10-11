@@ -1,7 +1,7 @@
 #pragma once
 #include "TDevice.h"
 
-class xWindow : public TDevice
+class xWindow :public TDevice
 {
 public:
 	HWND			m_hWnd;

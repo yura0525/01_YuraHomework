@@ -36,15 +36,6 @@
     <ClCompile Include="Sample.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TDevice.cpp">
-      <Filter>Window</Filter>
-    </ClCompile>
-    <ClCompile Include="xWindow.cpp">
-      <Filter>Window</Filter>
-    </ClCompile>
-    <ClCompile Include="xCore.cpp">
-      <Filter>Window</Filter>
-    </ClCompile>
     <ClCompile Include="xTexture.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
@@ -111,15 +102,6 @@
     <ClCompile Include="TStandAction.cpp">
       <Filter>FSM</Filter>
     </ClCompile>
-    <ClCompile Include="TTimer.cpp">
-      <Filter>Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="xInput.cpp">
-      <Filter>Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="TDirectWrite.cpp">
-      <Filter>Utility</Filter>
-    </ClCompile>
     <ClCompile Include="TCollision.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
@@ -128,18 +110,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="xStd.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="xWindow.h">
-      <Filter>Window</Filter>
-    </ClInclude>
-    <ClInclude Include="TDevice.h">
-      <Filter>Window</Filter>
-    </ClInclude>
-    <ClInclude Include="xCore.h">
-      <Filter>Window</Filter>
-    </ClInclude>
     <ClInclude Include="xTexManager.h">
       <Filter>Texture</Filter>
     </ClInclude>
@@ -205,15 +175,6 @@
     </ClInclude>
     <ClInclude Include="TAttackAction.h">
       <Filter>FSM</Filter>
-    </ClInclude>
-    <ClInclude Include="TTimer.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="xInput.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="TDirectWrite.h">
-      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="TCollision.h">
       <Filter>Utility</Filter>

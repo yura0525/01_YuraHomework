@@ -1,4 +1,5 @@
 #pragma once
+#define DIRECTINPUT_VERSION 0x0800
 
 #include <windows.h>
 #include <assert.h>
@@ -14,20 +15,25 @@
 #include <dinput.h>
 #include "D3Dcompiler.h"		//D3DCOMPILE_DEBUG
 #include <math.h>
+using namespace std;
 
 //프로젝트 속성에서 추가 종속성에 넣을걸 코드로 넣을수 있다.
+#pragma comment(lib, "xCoreLib_3D.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment( lib, "dinput8.lib")
 #pragma comment( lib, "dxguid.lib")
 #pragma comment( lib, "d3dx11.lib")
-#pragma comment(lib, "fmod64_vc.lib")
 
 #pragma warning (disable : 4005)
 
 typedef std::basic_string <char>	C_STR;	//multi-byte
 typedef std::basic_string <wchar_t>	W_STR;	//unicode byte
 typedef std::basic_string <TCHAR>	T_STR;	//프로젝트속성이 멀티바이트이면 멀티바이트, 유니코드이면 유니코드로 바뀜.
+
+typedef std::basic_string <char>::iterator		C_ITOR;
+typedef std::basic_string <wchar_t>::iterator	W_ITOR;
+typedef std::basic_string <TCHAR>::iterator		T_ITOR;
 
 											//string a;		//multi-byte
 											//wstring b;	//unicode byte
@@ -46,16 +52,14 @@ typedef std::basic_string <TCHAR>	T_STR;	//프로젝트속성이 멀티바이트이면 멀티바�
 extern HWND			g_hWnd;
 extern HINSTANCE	g_hInstance;
 extern float		g_fSecPerFrame;
-extern float		g_fGameTimer;
 extern RECT			g_rtClient;
+extern float		g_fGameTimer;
 //DirectX2D
 extern ID3D11Device*		g_pd3dDevice;
 extern ID3D11DeviceContext*	g_pContext;
 
 //Game
 extern POINT		g_pHeroPos;
-extern POINT		g_pMousePos;
-
 struct TGameInput
 {
 	BOOL bFront;

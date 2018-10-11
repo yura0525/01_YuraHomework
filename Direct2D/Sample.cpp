@@ -29,6 +29,7 @@ public:
 	bool Init()
 	{
 		xCore::Init();
+		
 		m_iLevel = 1;
 		m_pLobbyScene = make_shared<TLobbyScene>();
 		m_pGameScene = make_shared<TGameScene>();
