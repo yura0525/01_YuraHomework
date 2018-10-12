@@ -9,7 +9,7 @@ bool TLobbyScene::Init()
 	m_BackGround.Init();
 	m_BackGround.SetTexUV(800, 600);
 	m_BackGround.SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 800, 600);
-	m_BackGround.Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/bk.bmp");
+	m_BackGround.Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/lobby.jpg");
 
 
 	m_BtnStart.Init();
@@ -27,7 +27,7 @@ bool TLobbyScene::Frame()
 {
 	m_BackGround.Frame();
 
-	if (I_Input.m_MouseState.rgbButtons[0] && 
+	if (I_Input.m_CurrentMouseState.rgbButtons[0] == KEY_PUSH && 
 		TCollision::RectInPoint(m_BtnStart.m_rtCollision, g_pMousePos))
 	{
 		m_bNextSceneStart = true;

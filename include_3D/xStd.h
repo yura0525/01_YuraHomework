@@ -24,6 +24,7 @@ using namespace std;
 #pragma comment( lib, "dinput8.lib")
 #pragma comment( lib, "dxguid.lib")
 #pragma comment( lib, "d3dx11.lib")
+#pragma comment(lib, "fmod64_vc.lib")
 
 #pragma warning (disable : 4005)
 
@@ -60,6 +61,7 @@ extern ID3D11DeviceContext*	g_pContext;
 
 //Game
 extern POINT		g_pHeroPos;
+extern POINT		g_pMousePos;
 struct TGameInput
 {
 	BOOL bFront;

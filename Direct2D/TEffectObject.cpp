@@ -101,6 +101,7 @@ void TEffectMgr::AddEffect(POINT pos)
 {
 	TEffectObject* pObj = new TEffectObject();
 	pObj->Init();
+	pObj->SetTexUV(400, 300);
 	pObj->SetPosition(pos.x, pos.y, 1, 142, 41, 42);
 	pObj->Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/bitmap1.bmp");
 	pObj->m_iIndexSprite = rand() % m_rtSpriteList.size();
@@ -124,7 +125,7 @@ bool TEffectMgr::IsCollision(RECT rt)
 
 bool TEffectMgr::Frame()
 {
-	if (I_Input.m_MouseState.rgbButtons[0])
+	if (I_Input.m_CurrentMouseState.rgbButtons[0] == KEY_PUSH)
 	{
 		static float fAddTime = 0.0f;
 		fAddTime += g_fSecPerFrame;

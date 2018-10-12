@@ -84,23 +84,8 @@ void xObject::SetVertexData()
 	m_verList[3].p = D3DXVECTOR3(pos.x, pos.y, 0.0f);
 	m_verList[3].t = D3DXVECTOR2(uv.u, uv.v);
 	m_verList[3].c = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-
-	GenCenter();
 }
-void xObject::GenCenter()
-{
-	m_pos.x = 0.0f;
-	m_pos.y = 0.0f;
-	for (int iV = 0; iV < m_verList.size(); iV++)
-	{
-		D3DXVECTOR3 vertex = m_verList[iV].p;
-		m_pos.x += vertex.x;
-		m_pos.y += vertex.y;
-	}
 
-	m_pos.x /= (float)(m_verList.size());
-	m_pos.y /= (float)(m_verList.size());
-}
 void xObject::SetDirectionSpeed(int dirX, int dirY, float speed)
 {
 	m_fDir[0] = dirX;

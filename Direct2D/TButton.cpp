@@ -9,7 +9,7 @@ bool TButton::Frame()
 	if (m_pColorBitmap[Btn_Hover] != NULL && TCollision::RectInPoint(m_rtCollision, g_pMousePos))
 	{
 		m_pCurrentBitmap = m_pColorBitmap[Btn_Hover];
-		if (m_pColorBitmap[Btn_Click] != NULL && I_Input.m_MouseState.rgbButtons[0])
+		if (m_pColorBitmap[Btn_Click] != NULL && I_Input.m_MouseState.rgbButtons[0] == KEY_PUSH)
 		{
 			m_pCurrentBitmap = m_pColorBitmap[Btn_Click];
 		}

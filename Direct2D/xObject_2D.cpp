@@ -1,7 +1,7 @@
 #include "xObject_2D.h"
 #include "xInput.h"
 
-#define CPU
+#define GPU
 bool xObject_2D::Init()
 {
 	m_constantData.r = (rand() % 255) / 255.0f;

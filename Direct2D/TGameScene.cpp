@@ -17,11 +17,12 @@ bool TGameScene::Init()
 	I_EffectMgr.GameDataLoad(L"../../data/SpriteList.txt");
 
 	m_BackGround.Init();
-	m_BackGround.SetTexUV(800, 600);
+	m_BackGround.SetTexUV(450, 600);
 	m_BackGround.SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 800, 600);
-	m_BackGround.Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/bk.bmp");
+	m_BackGround.Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/background_00.png");
 
 	m_Hero.Init();
+	m_Hero.SetTexUV(400, 300);
 	m_Hero.SetPosition(300, 300, 90, 2, 42, 58);
 	m_Hero.Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/bitmap1.bmp");
 	m_Hero.SetMAXHP(g_HeroMAXHP);
@@ -34,6 +35,7 @@ bool TGameScene::Init()
 		pNPCObject->SetPosition((m_NPCGap / 2) + (m_NPCGap * iNPC), 0, 46, 62, 68, 80);
 		
 		pNPCObject->SetMAXHP(1);
+		pNPCObject->SetTexUV(400, 300);
 		pNPCObject->Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/bitmap1.bmp");
 		pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
