@@ -51,7 +51,6 @@ bool xShader::Render()
 }
 bool xShader::Release()
 {
-	SAFE_RELEASE(m_pTexSRV);
 	SAFE_RELEASE(m_pBlobVS);
 	SAFE_RELEASE(m_pBlobPS);
 	return true;

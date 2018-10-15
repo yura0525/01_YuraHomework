@@ -108,6 +108,9 @@
     <ClCompile Include="TSound.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="TBKScrollObject.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="xTexManager.h">
@@ -181,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="TSound.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="TBKScrollObject.h">
+      <Filter>Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

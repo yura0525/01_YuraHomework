@@ -1,5 +1,6 @@
 #pragma once
 #include "TScene.h"
+#include "TBKScrollObject.h"
 #include "TNPCObject.h"
 #include "TEffectObject.h"
 #include "THeroObject.h"
@@ -16,6 +17,7 @@ enum eBulletType
 class TGameScene : public TScene
 {
 public:
+	TBKScrollObject		m_BackGround;
 	THeroObject			m_Hero;
 	list<TNPCObject*>	m_NPCList;
 

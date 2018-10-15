@@ -15,7 +15,6 @@ class TScene
 public:
 	int			m_iSceneID;
 
-	TBKObject	m_BackGround;
 	bool		m_bNextSceneStart;
 	int			m_iMaxNPCCount;
 	bool		m_bEndSceneStart;

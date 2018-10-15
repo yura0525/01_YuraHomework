@@ -6,28 +6,6 @@ bool TBKObject::Render()
 		RenderScroll();*/
 
 	return xObject::Render();
-
-	//return true;
-}
-bool TBKObject::RenderScroll()
-{
-	//스크롤 하는 부분
-	static float fStep = 0.0f;
-	fStep += g_fSecPerFrame * m_fScrollSpeed;
-
-	//if (fStep >= m_pColorBitmap->m_BmpInfo.bmHeight)
-	//	fStep = 0.0f;
-
-	//int iScroll = m_pColorBitmap->m_BmpInfo.bmHeight - fStep;
-
-	////두번에 나눠서 출력한다. 아래부분 출력
-	//BitBlt(g_hOffScreenDC, m_rtDraw.left, fStep, m_rtDraw.right, m_rtDraw.bottom - fStep,
-	//	m_pColorBitmap->m_hMemDC, m_rtDraw.left, m_rtDraw.top, SRCCOPY);
-
-	////윗부분 출력
-	//BitBlt(g_hOffScreenDC, m_rtDraw.left, m_rtDraw.top, m_rtDraw.right, fStep,
-	//	m_pColorBitmap->m_hMemDC, m_rtDraw.left, iScroll, SRCCOPY);
-	return true;
 }
 
 bool TBKObject::FadeOut()
@@ -75,7 +53,6 @@ bool TBKObject::FadeIn()
 
 TBKObject::TBKObject()
 {
-	m_fScrollSpeed = 100.0f;
 }
 
 

@@ -2,10 +2,6 @@
 #include "xObject.h"
 class TBKObject : public xObject
 {
-
-public:
-	float	m_fScrollSpeed;
-
 public:
 	bool Frame()
 	{

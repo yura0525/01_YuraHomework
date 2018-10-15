@@ -5,6 +5,8 @@ class TLobbyScene : public TScene
 {
 public:
 	TButton		m_BtnStart;
+	TBKObject	m_BackGround;
+
 public:
 	bool Init();
 	bool Frame();

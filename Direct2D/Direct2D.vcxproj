@@ -150,6 +150,7 @@
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TAttackAction.cpp" />
     <ClCompile Include="TBKObject.cpp" />
+    <ClCompile Include="TBKScrollObject.cpp" />
     <ClCompile Include="TButton.cpp" />
     <ClCompile Include="TCollision.cpp" />
     <ClCompile Include="TEffectObject.cpp" />
@@ -176,6 +177,7 @@
   <ItemGroup>
     <ClInclude Include="TAttackAction.h" />
     <ClInclude Include="TBKObject.h" />
+    <ClInclude Include="TBKScrollObject.h" />
     <ClInclude Include="TButton.h" />
     <ClInclude Include="TCollision.h" />
     <ClInclude Include="TEffectObject.h" />
