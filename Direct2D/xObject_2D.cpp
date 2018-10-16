@@ -111,7 +111,7 @@ bool xObject_2D::Render()
 	//텍스쳐
 	g_pContext->PSSetShaderResources(0, 1, &(m_pTexture->m_pTexSRV));
 	g_pContext->PSSetSamplers(0, 1, &(m_pTexture->m_pSamplerState));
-	g_pContext->DrawIndexed(m_indexList.size(), 0, 0);
+	g_pContext->DrawIndexed(6, 0, 0);
 
 	return true;
 }
@@ -172,7 +172,7 @@ HRESULT xObject_2D::CreateVertexBuffer(ID3D11Device* pd3dDevice)
 	//GPU상에 메모리를 할당함.
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
-	bd.ByteWidth = m_verList.size() * sizeof(P3VERTEX);		//36바이트
+	bd.ByteWidth = 4 * sizeof(P3VERTEX);		//36바이트
 	bd.Usage = D3D11_USAGE_DEFAULT;							//GPU에 메모리를 할당해라. 기본이 GPU메모리. GPU는 READ/WRITE 가능.CPU는 접근불가능하다.
 															//D3D11_USAGE_STAGING만이 CPU가 접근가능하다. 단점은 느리다.
 
@@ -181,7 +181,7 @@ HRESULT xObject_2D::CreateVertexBuffer(ID3D11Device* pd3dDevice)
 											//GPU상에 메모리를 셋팅하고 할당함.
 	D3D11_SUBRESOURCE_DATA initialData;
 	ZeroMemory(&initialData, sizeof(initialData));
-	initialData.pSysMem = &(m_verList.at(0));
+	initialData.pSysMem = &(m_verList[0]);
 
 	if (FAILED(hr = pd3dDevice->CreateBuffer(&bd, &initialData, &m_pVertexBuffer)))
 	{
@@ -192,14 +192,12 @@ HRESULT xObject_2D::CreateVertexBuffer(ID3D11Device* pd3dDevice)
 HRESULT xObject_2D::CreateIndexBuffer(ID3D11Device* pd3dDevice)
 {
 	HRESULT hr = S_OK;
-	m_indexList.push_back(0);
-	m_indexList.push_back(1);
-	m_indexList.push_back(2);
-
-
-	m_indexList.push_back(2);
-	m_indexList.push_back(1);
-	m_indexList.push_back(3);
+	m_indexList[0] = 0;
+	m_indexList[1] = 1;
+	m_indexList[2] = 2;
+	m_indexList[3] = 2;
+	m_indexList[4] = 1;
+	m_indexList[5] = 3;
 
 	/*DWORD indices[] =
 	{
@@ -212,7 +210,7 @@ HRESULT xObject_2D::CreateIndexBuffer(ID3D11Device* pd3dDevice)
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
-	bd.ByteWidth = m_indexList.size() * sizeof(DWORD);
+	bd.ByteWidth = 6 * sizeof(DWORD);
 	bd.Usage = D3D11_USAGE_DEFAULT;				//GPU에 메모리를 할당해라. 기본이 GPU메모리. GPU는 READ/WRITE 가능.CPU는 접근불가능하다.
 												//D3D11_USAGE_STAGING만이 CPU가 접근가능하다. 단점은 느리다.
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;		//인덱스 버퍼
@@ -220,7 +218,7 @@ HRESULT xObject_2D::CreateIndexBuffer(ID3D11Device* pd3dDevice)
 	D3D11_SUBRESOURCE_DATA InitialData;
 	ZeroMemory(&InitialData, sizeof(InitialData));
 
-	InitialData.pSysMem = &(m_indexList.at(0));
+	InitialData.pSysMem = &(m_indexList[0]);
 	if (FAILED(hr = pd3dDevice->CreateBuffer(&bd, &InitialData, &m_pIndexBuffer)))
 	{
 		return hr;

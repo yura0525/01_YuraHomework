@@ -32,8 +32,8 @@ void xObject::SetPosition(float xPos, float yPos, DWORD left, DWORD top, DWORD w
 
 void xObject::SetTexUV(float _u, float _v)
 {
-	m_texUV.u = _u;
-	m_texUV.v = _v;
+	m_MaxTexUV.u = _u;
+	m_MaxTexUV.v = _v;
 }
 
 D3DXVECTOR3 xObject::Generate(float x, float y)
@@ -51,16 +51,14 @@ D3DXVECTOR2 xObject::UVGenerate(float _u, float _v)
 {
 	// 0 ~ 800 - > 0 ~1
 	D3DXVECTOR2 uvRet;
-	uvRet.u = _u / m_texUV.u;
-	uvRet.v = _v / m_texUV.v;
+	uvRet.u = _u / m_MaxTexUV.u;
+	uvRet.v = _v / m_MaxTexUV.v;
 
 	return uvRet;
 }
 
 void xObject::SetVertexData()
 {
-	m_verList.resize(4);
-
 	D3DXVECTOR3 pos = Generate(m_posDraw.x, m_posDraw.y);
 	D3DXVECTOR2 uv = UVGenerate(m_rtDraw.left, m_rtDraw.top);
 	m_verList[0].p = D3DXVECTOR3(pos.x, pos.y, 0.0f);
@@ -174,8 +172,8 @@ xObject::xObject()
 	m_pos.y = 0;
 	m_posDraw.x = 0;
 	m_posDraw.y = 0;
-	m_texUV.u = 0.0f;
-	m_texUV.v = 0.0f;
+	m_MaxTexUV.u = 0.0f;
+	m_MaxTexUV.v = 0.0f;
 
 	m_fDir[0] = 1.0f;
 	m_fDir[1] = 1.0f;

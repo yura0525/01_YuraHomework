@@ -67,8 +67,8 @@ public:
 	xShader*					m_pShader;
 	ID3D11InputLayout*			m_pVertexLayout;
 
-	std::vector<P3VERTEX>		m_verList;
-	std::vector<DWORD>			m_indexList;
+	P3VERTEX					m_verList[4];
+	DWORD						m_indexList[6];
 
 	//texture info
 	UINT						m_iTexIndex;

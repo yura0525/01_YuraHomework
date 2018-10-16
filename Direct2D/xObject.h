@@ -21,7 +21,7 @@ public:
 
 	float	m_fAlpha;
 
-	D3DXVECTOR2		m_texUV;		//텍스쳐 사이즈
+	D3DXVECTOR2		m_MaxTexUV;		//텍스쳐 사이즈
 	//이동에 관한 변수들.
 public:
 	float	m_fDir[2];
