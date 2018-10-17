@@ -16,31 +16,24 @@ bool TGameScene::Init()
 
 	I_EffectMgr.GameDataLoad(L"../../data/SpriteList.txt");
 
-	m_BackGround.Init();
-	m_BackGround.SetTexUV(800, 600);
-	m_BackGround.SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 800, 600);
-	m_BackGround.Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/background_00.png");
+	m_BackGround.Create(g_pd3dDevice, 800, 600, (g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 800, 600,
+		L"vertexshader.txt", L"../../data/background_00.png");
 
-	m_Hero.Init();
-	m_Hero.SetTexUV(298, 207);
-	m_Hero.SetPosition(300, 300, 0, 0, 298, 207);
-	m_Hero.Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/Hero.png");
+	m_Hero.SetScale(0.5f);
+	m_Hero.Create(g_pd3dDevice, 298, 207, 300, 300, 0, 0, 298, 207, L"vertexshader.txt", L"../../data/Hero.png");
 	m_Hero.SetMAXHP(g_HeroMAXHP);
 
 	//NPCList
 	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
 	{
 		TNPCObject* pNPCObject = new TNPCObject;
-		pNPCObject->Init();
-		pNPCObject->SetTexUV(400, 300);
-		pNPCObject->SetPosition((m_NPCGap / 2) + (m_NPCGap * iNPC), 0, 46, 62, 68, 80);
-		pNPCObject->Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/bitmap1.bmp");
+		pNPCObject->Create(g_pd3dDevice, 346, 200, (m_NPCGap / 2) + (m_NPCGap * iNPC), 50, 87, 0, 174, 100, L"vertexshader.txt", L"../../data/bitmap1.png");
 		
 		pNPCObject->SetMAXHP(1);
 		
 		
-		pNPCObject->m_fAttackRadius = 30 + rand() % 100;
-		pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
+		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
+		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
 		m_NPCList.push_back(pNPCObject);
 	}
 	return true;
@@ -145,13 +138,10 @@ bool TGameScene::Reset()
 	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++)
 	{
 		TNPCObject* pNPCObject = (*iter);
-		pNPCObject->Init();
-		pNPCObject->Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/bitmap1.bmp");
-		pNPCObject->SetPosition((m_NPCGap / 2) + (m_NPCGap * iNPC), 0, 46, 62, 68, 80);
+		pNPCObject->Create(g_pd3dDevice, 346, 200, (m_NPCGap / 2) + (m_NPCGap * iNPC), 50, 87, 0, 174, 100, L"vertexshader.txt", L"../../data/bitmap1.png");
 		pNPCObject->SetMAXHP(1);
-		pNPCObject->m_fAttackRadius = 30 + rand() % 100;
-		pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
-		pNPCObject->SetPosition((m_NPCGap / 2) + (m_NPCGap * iNPC++), 0, 46, 62, 68, 80);
+		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
+		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
 	}
 	return true;
 }
@@ -181,12 +171,10 @@ void TGameScene::NPCRegenAlarm()
 	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
 	{
 		TNPCObject* pNPCObject = new TNPCObject;
-		pNPCObject->Init();
-		pNPCObject->Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/bitmap1.bmp");
+		pNPCObject->Create(g_pd3dDevice, 346, 200, (m_NPCGap / 2) + (m_NPCGap * iNPC), 50, 87, 0, 174, 100, L"vertexshader.txt", L"../../data/bitmap1.png");
 		pNPCObject->SetMAXHP(1);
-		pNPCObject->SetPosition((m_NPCGap / 2) + (m_NPCGap * iNPC), 0, 46, 62, 68, 80);
-		pNPCObject->m_fAttackRadius = 30 + rand() % 100;
-		pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
+		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
+		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
 		m_NPCList.push_back(pNPCObject);
 	}
 }

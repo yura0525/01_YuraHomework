@@ -2,16 +2,31 @@
 #include "xInput.h"
 
 const int g_NPCDamageTimeGap = 0.5f;
-
-void xObject::SetPosition(float xPos, float yPos, DWORD left, DWORD top, DWORD width, DWORD height)
+void xObject::SetPosition(float xPos, float yPos)
 {
 	m_pos.x = xPos;
 	m_pos.y = yPos;
 
-	m_rtDraw.left = left;
-	m_rtDraw.top = top;
-	m_rtDraw.right = width;
-	m_rtDraw.bottom = height;
+	m_posDraw.x = m_pos.x - (m_rtDraw.right / 2);
+	m_posDraw.y = m_pos.y - (m_rtDraw.bottom / 2);
+
+	m_rtCollision.left = m_posDraw.x;
+	m_rtCollision.top = m_posDraw.y;
+	m_rtCollision.right = m_rtCollision.left + m_rtDraw.right;
+	m_rtCollision.bottom = m_rtCollision.top + m_rtDraw.bottom;
+
+	m_iMaxDistance = sqrt((m_rtDraw.right * m_rtDraw.right)
+		+ (m_rtDraw.bottom * m_rtDraw.bottom));
+}
+void xObject::SetPosition(float xPos, float yPos, DWORD texLeft, DWORD texTop, DWORD texRight, DWORD texBottom)
+{
+	m_pos.x = xPos;
+	m_pos.y = yPos;
+
+	m_rtDraw.left = texLeft;
+	m_rtDraw.top = texTop;
+	m_rtDraw.right = (texRight - texLeft);
+	m_rtDraw.bottom = (texBottom - texTop);
 
 	m_posDraw.x = m_pos.x - (m_rtDraw.right / 2);
 	m_posDraw.y = m_pos.y - (m_rtDraw.bottom / 2);
@@ -26,14 +41,12 @@ void xObject::SetPosition(float xPos, float yPos, DWORD left, DWORD top, DWORD w
 
 	m_iMaxDistance = sqrt((m_rtDraw.right * m_rtDraw.right)
 		+ (m_rtDraw.bottom * m_rtDraw.bottom));
-
-	SetVertexData();
 }
 
-void xObject::SetTexUV(float _u, float _v)
+void xObject::SetTexUV(float texMaxU, float texMaxV)
 {
-	m_MaxTexUV.u = _u;
-	m_MaxTexUV.v = _v;
+	m_MaxTexUV.u = texMaxU;
+	m_MaxTexUV.v = texMaxV;
 }
 
 D3DXVECTOR3 xObject::Generate(float x, float y)
@@ -57,8 +70,9 @@ D3DXVECTOR2 xObject::UVGenerate(float _u, float _v)
 	return uvRet;
 }
 
-void xObject::SetVertexData()
+void xObject::UpdateVertexData()
 {
+	m_verList.resize(4);
 	D3DXVECTOR3 pos = Generate(m_posDraw.x, m_posDraw.y);
 	D3DXVECTOR2 uv = UVGenerate(m_rtDraw.left, m_rtDraw.top);
 	m_verList[0].p = D3DXVECTOR3(pos.x, pos.y, 0.0f);
@@ -105,27 +119,6 @@ bool xObject::Frame()
 {
 	xObject_2D::Frame();
 
-	if (I_Input.m_KeyState[DIK_W])
-	{
-		m_pos.y += -1 * g_fSecPerFrame * 300.0f;
-		//m_bitmap.SetOffeSet(0, 1 * g_fSecPerFrame * m_fSpeed);
-	}
-	if (I_Input.m_KeyState[DIK_S])
-	{
-		m_pos.y += 1 * g_fSecPerFrame * 300.0f;
-		//m_bitmap.SetOffeSet(0, -1 * g_fSecPerFrame * m_fSpeed);
-	}
-	if (I_Input.m_KeyState[DIK_A])
-	{
-		m_pos.x += -1 * g_fSecPerFrame * 300.0f;
-		//m_bitmap.SetOffeSet(-1 * g_fSecPerFrame * m_fSpeed, 0);
-	}
-	if (I_Input.m_KeyState[DIK_D])
-	{
-		m_pos.x += 1 * g_fSecPerFrame * 300.0f;
-		//m_bitmap.SetOffeSet(1 * g_fSecPerFrame * m_fSpeed, 0);
-	}
-
 	m_posDraw.x = m_pos.x - (m_rtDraw.right / 2);
 	m_posDraw.y = m_pos.y - (m_rtDraw.bottom / 2);
 
@@ -133,6 +126,8 @@ bool xObject::Frame()
 	m_rtCollision.top = m_posDraw.y;
 	m_rtCollision.right = m_rtCollision.left + m_rtDraw.right;
 	m_rtCollision.bottom = m_rtCollision.top + m_rtDraw.bottom;
+
+	UpdateVertexData();
 	return true;
 }
 bool xObject::Render()
@@ -145,6 +140,25 @@ bool xObject::Render()
 bool xObject::Release()
 {
 	return xObject_2D::Release();
+}
+
+bool xObject::Create(ID3D11Device* pd3dDevice, float texMaxU, float texMaxV, float xPos, float yPos, DWORD left, DWORD top, DWORD width, DWORD height,
+	T_STR szShaderName, T_STR szTexName, T_STR VSFunc, T_STR PSFunc)
+{
+	Init();
+	SetTexUV(texMaxU, texMaxV);
+	SetPosition(xPos, yPos, left, top, width, height);
+	UpdateVertexData();
+
+	CreateVertexBuffer(pd3dDevice);
+	CreateIndexBuffer(pd3dDevice);
+	CreateConstantBuffer(pd3dDevice);
+	CreateShader(pd3dDevice, szShaderName);
+	CreateInputLayout(pd3dDevice);
+	CreateTexture(pd3dDevice, szTexName);
+	SetRasterizerState(pd3dDevice);
+	SetBlendState(pd3dDevice);
+	return true;
 }
 
 bool xObject::IsDead()

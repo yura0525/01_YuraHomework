@@ -11,7 +11,7 @@ bool THeroObject::Frame()
 	int iHalfY = m_rtDraw.bottom / 2;
 
 	//Hero의 움직임 처리. 화면영역 밖으로 넘어가는것을 막는다.
-	if (I_Input.m_KeyState[DIK_W])
+	if (g_Input.bFront)
 	{
 		m_pos.y += -1 * g_fSecPerFrame * 300.0f;
 		if ((m_pos.y - iHalfY) < g_rtClient.top)
@@ -19,7 +19,7 @@ bool THeroObject::Frame()
 			m_pos.y = g_rtClient.top + iHalfY;
 		}
 	}
-	if (I_Input.m_KeyState[DIK_S])
+	if (g_Input.bBack)
 	{
 		m_pos.y += 1 * g_fSecPerFrame * 300.0f;
 		if ((m_pos.y + iHalfY) > g_rtClient.bottom)
@@ -27,7 +27,7 @@ bool THeroObject::Frame()
 			m_pos.y = g_rtClient.bottom - iHalfY;
 		}
 	}
-	if (I_Input.m_KeyState[DIK_A])
+	if (g_Input.bLeft)
 	{
 		m_pos.x += -1 * g_fSecPerFrame * 300.0f;
 		if ((m_pos.x - iHalfX) < g_rtClient.left)
@@ -35,7 +35,7 @@ bool THeroObject::Frame()
 			m_pos.x = g_rtClient.left + iHalfY;
 		}
 	}
-	if (I_Input.m_KeyState[DIK_D])
+	if (g_Input.bRight)
 	{
 		m_pos.x += 1 * g_fSecPerFrame * 300.0f;
 		if ((m_pos.x + iHalfX) > g_rtClient.right)

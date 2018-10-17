@@ -49,6 +49,11 @@ struct P3VERTEX	//pnct
 //콘스턴트 버퍼, 상수버퍼. 셰이더내에서 글로벌 변수와 비슷하게 쓰인다.
 //float4개 단위로 보내야한다. 안쓰더라도 float 4개단위로 보내야한다.
 //fTime[0]이거 하나만 쓰더라도 float fTime[4];이렇게 선언해야한다.
+
+//float g_fTimeX : packoffset(c1.x);			//:packoffset(c1.x);
+//float g_iIndex : packoffset(c1.y);			//:packoffset(c1.y);
+//float g_scale : packoffset(c1.z);			//:packoffset(c1.z);
+//float g_angle : packoffset(c1.w);			//:packoffset(c1.w);
 struct VS_CB
 {
 	float r, g, b, a;
@@ -59,7 +64,7 @@ class xObject_2D
 {
 public:
 	VS_CB						m_constantData;
-
+	float						m_fScale;
 	ID3D11Buffer*				m_pVertexBuffer;
 	ID3D11Buffer*				m_pIndexBuffer;
 	ID3D11Buffer*				m_pConstantBuffer;
@@ -67,8 +72,8 @@ public:
 	xShader*					m_pShader;
 	ID3D11InputLayout*			m_pVertexLayout;
 
-	P3VERTEX					m_verList[4];
-	DWORD						m_indexList[6];
+	std::vector<P3VERTEX>		m_verList;
+	std::vector<DWORD>			m_indexList;
 
 	//texture info
 	UINT						m_iTexIndex;
@@ -90,7 +95,8 @@ public:
 	virtual bool Render();
 	virtual bool PostRender();
 	virtual bool Release();
-	virtual bool Create(ID3D11Device* pd3dDevice, T_STR szShaderName, T_STR szTexName);
+
+	virtual void SetScale(float scale);
 
 public:
 	virtual HRESULT CreateVertexBuffer(ID3D11Device* pd3dDevice);

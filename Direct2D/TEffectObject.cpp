@@ -100,13 +100,11 @@ bool TEffectMgr::GameDataLoad(const TCHAR* pszFileName)
 void TEffectMgr::AddEffect(POINT pos)
 {
 	TEffectObject* pObj = new TEffectObject();
-	pObj->Init();
-	pObj->SetTexUV(400, 300);
-	pObj->SetPosition(pos.x, pos.y, 1, 142, 41, 42);
-	pObj->Create(g_pd3dDevice, L"vertexshader.txt", L"../../data/bitmap1.bmp");
-	pObj->m_iIndexSprite = rand() % m_rtSpriteList.size();
-	pObj->SetDirectionSpeed(0.0f, -1.0f, 500.0f);
-	m_effectObjList.push_back(pObj);
+	//pObj->Create(g_pd3dDevice, 400, 300, pos.x, pos.y, 0, 142, 41, 42, L"vertexshader.txt", L"../../data/bitmap0.bmp");
+	//pObj->m_iIndexSprite = 0;
+	//pObj->m_iIndexSprite = rand() % m_rtSpriteList.size();
+	//pObj->SetDirectionSpeed(0.0f, -1.0f, 500.0f);
+	//m_effectObjList.push_back(pObj);
 }
 bool TEffectMgr::IsCollision(RECT rt)
 {

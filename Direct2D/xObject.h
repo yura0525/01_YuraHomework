@@ -38,15 +38,16 @@ public:
 	float	m_fLastDamageTime;
 	float	m_fDamageTimeGap;		//무적타임	
 public:
-	void SetPosition(float xPos, float yPos, DWORD left, DWORD top, DWORD width, DWORD height);
+	void SetPosition(float xPos, float yPos);
+	void SetPosition(float xPos, float yPos, DWORD texLeft, DWORD texTop, DWORD texRight, DWORD texBottom);
 
 	//텍스쳐좌표와 버텍스 좌표 관련 함수.
-	void SetTexUV(float _u, float _v);
+	void SetTexUV(float texMaxU, float texMaxV);
 
 	D3DXVECTOR3 Generate(float x, float y);
 	D3DXVECTOR2 UVGenerate(float _u, float _v);
 	
-	void SetVertexData();
+	void UpdateVertexData();
 
 	void SetDirectionSpeed(int dirX, int dirY, float speed);
 
@@ -56,6 +57,9 @@ public:
 	virtual bool Render();
 	virtual bool Release();
 
+	virtual bool Create(ID3D11Device* pd3dDevice, float _texMaxU, float _texMaxV, 
+						float xPos, float yPos, DWORD left, DWORD top, DWORD width, DWORD height,
+						T_STR szShaderName, T_STR szTexName, T_STR VSFunc = L"VS", T_STR PSFunc = L"PS");
 
 	//FadeIn & FadeOut
 	virtual bool FadeOut() { return true; }

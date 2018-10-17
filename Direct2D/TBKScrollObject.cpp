@@ -1,28 +1,10 @@
 #include "TBKScrollObject.h"
 
-bool TBKScrollObject::Init()
+bool TBKScrollObject::Create(ID3D11Device* pd3dDevice, float texMaxU, float texMaxV, float xPos, float yPos, DWORD left, DWORD top, DWORD right, DWORD bottom,
+	T_STR szShaderName, T_STR szTexName, T_STR VSFunc, T_STR PSFunc)
 {
-	TBKObject::Init();
-	m_TopObject.Init();
-
-	return true;
-}
-
-void TBKScrollObject::SetPosition(float xPos, float yPos, DWORD left, DWORD top, DWORD width, DWORD height)
-{
-	TBKObject::SetPosition(xPos, yPos, left, top, width, height);
-	m_TopObject.SetPosition(xPos, -300, left, top, width, height);
-}
-void TBKScrollObject::SetTexUV(float _u, float _v)
-{
-	TBKObject::SetTexUV(_u, _v);
-	m_TopObject.SetTexUV(_u, _v);
-}
-
-bool TBKScrollObject::Create(ID3D11Device* pd3dDevice, T_STR szShaderName, T_STR szTexName)
-{
-	m_TopObject.Create(pd3dDevice, szShaderName, szTexName);
-	TBKObject::Create(pd3dDevice, szShaderName, szTexName);
+	m_TopObject.Create(pd3dDevice, texMaxU, texMaxV, xPos, yPos, left, top, right, bottom, szShaderName, szTexName, VSFunc, PSFunc);
+	TBKObject::Create(pd3dDevice, texMaxU, texMaxV, xPos, yPos, left, top, right, bottom, szShaderName, szTexName, VSFunc, PSFunc);
 	return true;
 }
 

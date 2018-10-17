@@ -4,9 +4,9 @@
 #define GPU
 bool xObject_2D::Init()
 {
-	m_constantData.r = (rand() % 255) / 255.0f;
-	m_constantData.g = (rand() % 255) / 255.0f;
-	m_constantData.b = (rand() % 255) / 255.0f;
+	m_constantData.r = 0.0f;
+	m_constantData.g = 0.0f;
+	m_constantData.b = 0.0f;
 	m_constantData.a = 1;
 	m_constantData.fTime[0] = g_fGameTimer;
 	m_constantData.fTime[1] = 1.0f;
@@ -24,20 +24,16 @@ bool xObject_2D::Frame()
 	fAngle += g_fSecPerFrame;
 
 	ID3D11DeviceContext* pContext = g_pContext;
-
-	//float g_fTimeX : packoffset(c1.x);			//:packoffset(c1.x);
-	//float g_iIndex : packoffset(c1.y);			//:packoffset(c1.y);
-	//float g_scale : packoffset(c1.z);			//:packoffset(c1.z);
-	//float g_angle : packoffset(c1.w);			//:packoffset(c1.w);
+	
 #ifdef GPU
 	//gpu update
-	m_constantData.r = cosf(g_fGameTimer) * 0.5f + 0.5f;
-	m_constantData.g = sinf(g_fGameTimer) * 0.5f + 0.5f;
-	m_constantData.b = cosf(g_fGameTimer) * 0.5f + 0.5f;
+	m_constantData.r = 0.0f;
+	m_constantData.g = 0.0f;
+	m_constantData.b = 0.0f;
 	m_constantData.a = 1;
 	m_constantData.fTime[0] = g_fGameTimer;
 	m_constantData.fTime[1] = 0.0f;
-	m_constantData.fTime[2] = 1.0f;
+	m_constantData.fTime[2] = m_fScale;
 	m_constantData.fTime[3] = 1.0f;
 	//m_constantData.fTime[3] = fAngle;
 	pContext->UpdateSubresource(m_pConstantBuffer, 0, NULL, &m_constantData, 0, 0);
@@ -52,13 +48,13 @@ bool xObject_2D::Frame()
 	if (SUCCEEDED(hr = pContext->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &address)))
 	{
 		VS_CB* cb = (VS_CB*)address.pData;
-		cb->r = cosf(g_fGameTimer) * 0.5f + 0.5f;
-		cb->g = sinf(g_fGameTimer) * 0.5f + 0.5f;
-		cb->b = cosf(g_fGameTimer) * 0.5f + 0.5f;
+		cb->r = 0.0f;
+		cb->g = 0.0f;
+		cb->b = 0.0f;
 		cb->a = 1.0f;
 		cb->fTime[0] = g_fGameTimer;
 		cb->fTime[1] = 0.0f;
-		cb->fTime[2] = 1.0f;
+		cb->fTime[2] = m_fScale;
 		cb->fTime[3] = 1.0f;
 		//cb->fTime[3] = fAngle;
 		pContext->Unmap(m_pConstantBuffer, 0);
@@ -111,7 +107,7 @@ bool xObject_2D::Render()
 	//텍스쳐
 	g_pContext->PSSetShaderResources(0, 1, &(m_pTexture->m_pTexSRV));
 	g_pContext->PSSetSamplers(0, 1, &(m_pTexture->m_pSamplerState));
-	g_pContext->DrawIndexed(6, 0, 0);
+	g_pContext->DrawIndexed(m_indexList.size(), 0, 0);
 
 	return true;
 }
@@ -133,19 +129,11 @@ bool xObject_2D::Release()
 
 	return true;
 }
-bool xObject_2D::Create(ID3D11Device* pd3dDevice, T_STR szShaderName, T_STR szTexName)
-{
-	CreateVertexBuffer(pd3dDevice);
-	CreateIndexBuffer(pd3dDevice);
-	CreateConstantBuffer(pd3dDevice);
-	CreateShader(pd3dDevice, szShaderName);
-	CreateInputLayout(pd3dDevice);
-	CreateTexture(pd3dDevice, szTexName);
-	SetRasterizerState(pd3dDevice);
-	SetBlendState(pd3dDevice);
-	return true;
-}
 
+void xObject_2D::SetScale(float scale)
+{
+	m_fScale = scale;
+}
 HRESULT xObject_2D::CreateVertexBuffer(ID3D11Device* pd3dDevice)
 {
 	HRESULT hr = S_OK;
@@ -181,7 +169,7 @@ HRESULT xObject_2D::CreateVertexBuffer(ID3D11Device* pd3dDevice)
 											//GPU상에 메모리를 셋팅하고 할당함.
 	D3D11_SUBRESOURCE_DATA initialData;
 	ZeroMemory(&initialData, sizeof(initialData));
-	initialData.pSysMem = &(m_verList[0]);
+	initialData.pSysMem = &(m_verList.at(0));
 
 	if (FAILED(hr = pd3dDevice->CreateBuffer(&bd, &initialData, &m_pVertexBuffer)))
 	{
@@ -192,12 +180,12 @@ HRESULT xObject_2D::CreateVertexBuffer(ID3D11Device* pd3dDevice)
 HRESULT xObject_2D::CreateIndexBuffer(ID3D11Device* pd3dDevice)
 {
 	HRESULT hr = S_OK;
-	m_indexList[0] = 0;
-	m_indexList[1] = 1;
-	m_indexList[2] = 2;
-	m_indexList[3] = 2;
-	m_indexList[4] = 1;
-	m_indexList[5] = 3;
+	m_indexList.push_back(0);
+	m_indexList.push_back(1);
+	m_indexList.push_back(2);
+	m_indexList.push_back(2);
+	m_indexList.push_back(1);
+	m_indexList.push_back(3);
 
 	/*DWORD indices[] =
 	{
@@ -206,7 +194,7 @@ HRESULT xObject_2D::CreateIndexBuffer(ID3D11Device* pd3dDevice)
 	};*/
 
 	//GPU상에 메모리를 할당함
-	int iNumCount = sizeof(m_indexList) / sizeof(m_indexList[0]);
+	int iNumCount = sizeof(m_indexList) / sizeof(m_indexList.at(0));
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
@@ -218,7 +206,7 @@ HRESULT xObject_2D::CreateIndexBuffer(ID3D11Device* pd3dDevice)
 	D3D11_SUBRESOURCE_DATA InitialData;
 	ZeroMemory(&InitialData, sizeof(InitialData));
 
-	InitialData.pSysMem = &(m_indexList[0]);
+	InitialData.pSysMem = &(m_indexList.at(0));
 	if (FAILED(hr = pd3dDevice->CreateBuffer(&bd, &InitialData, &m_pIndexBuffer)))
 	{
 		return hr;
@@ -370,6 +358,7 @@ HRESULT xObject_2D::SetRasterizerState(ID3D11Device *pd3dDevice, D3D11_FILL_MODE
 }
 xObject_2D::xObject_2D()
 {
+	m_fScale = 1.0f;
 }
 
 
