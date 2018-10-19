@@ -46,8 +46,8 @@ public:
 
 	D3DXVECTOR3 Generate(float x, float y);
 	D3DXVECTOR2 UVGenerate(float _u, float _v);
-	
-	void UpdateVertexData();
+	void SetVertexData();
+	void UpdateVertexDataPosition();
 
 	void SetDirectionSpeed(int dirX, int dirY, float speed);
 

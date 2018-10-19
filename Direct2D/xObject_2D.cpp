@@ -36,6 +36,7 @@ bool xObject_2D::Frame()
 	m_constantData.fTime[2] = m_fScale;
 	m_constantData.fTime[3] = 1.0f;
 	//m_constantData.fTime[3] = fAngle;
+	pContext->UpdateSubresource(m_pVertexBuffer, 0, NULL, &m_verList[0], 0, 0);
 	pContext->UpdateSubresource(m_pConstantBuffer, 0, NULL, &m_constantData, 0, 0);
 #endif
 #ifdef CPU

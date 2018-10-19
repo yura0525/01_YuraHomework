@@ -70,9 +70,10 @@ D3DXVECTOR2 xObject::UVGenerate(float _u, float _v)
 	return uvRet;
 }
 
-void xObject::UpdateVertexData()
+void xObject::SetVertexData()
 {
 	m_verList.resize(4);
+
 	D3DXVECTOR3 pos = Generate(m_posDraw.x, m_posDraw.y);
 	D3DXVECTOR2 uv = UVGenerate(m_rtDraw.left, m_rtDraw.top);
 	m_verList[0].p = D3DXVECTOR3(pos.x, pos.y, 0.0f);
@@ -98,6 +99,21 @@ void xObject::UpdateVertexData()
 	m_verList[3].c = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
+void xObject::UpdateVertexDataPosition()
+{
+	D3DXVECTOR3 pos = Generate(m_posDraw.x, m_posDraw.y);
+	m_verList[0].p = D3DXVECTOR3(pos.x, pos.y, 0.0f);
+
+	pos = Generate(m_posDraw.x + m_rtDraw.right, m_posDraw.y);
+	m_verList[1].p = D3DXVECTOR3(pos.x, pos.y, 0.0f);
+
+	pos = Generate(m_posDraw.x, m_posDraw.y + m_rtDraw.bottom);
+	m_verList[2].p = D3DXVECTOR3(pos.x, pos.y, 0.0f);
+
+	pos = Generate(m_posDraw.x + m_rtDraw.right, m_posDraw.y + m_rtDraw.bottom);
+	m_verList[3].p = D3DXVECTOR3(pos.x, pos.y, 0.0f);
+}
+
 void xObject::SetDirectionSpeed(int dirX, int dirY, float speed)
 {
 	m_fDir[0] = dirX;
@@ -112,7 +128,6 @@ bool xObject::Init()
 
 	m_fLastDamageTime = g_fGameTimer;
 	m_iHP = 1;
-	
 	return true;
 }
 bool xObject::Frame()
@@ -127,7 +142,7 @@ bool xObject::Frame()
 	m_rtCollision.right = m_rtCollision.left + m_rtDraw.right;
 	m_rtCollision.bottom = m_rtCollision.top + m_rtDraw.bottom;
 
-	UpdateVertexData();
+	UpdateVertexDataPosition();
 	return true;
 }
 bool xObject::Render()
@@ -148,7 +163,7 @@ bool xObject::Create(ID3D11Device* pd3dDevice, float texMaxU, float texMaxV, flo
 	Init();
 	SetTexUV(texMaxU, texMaxV);
 	SetPosition(xPos, yPos, left, top, width, height);
-	UpdateVertexData();
+	SetVertexData();
 
 	CreateVertexBuffer(pd3dDevice);
 	CreateIndexBuffer(pd3dDevice);

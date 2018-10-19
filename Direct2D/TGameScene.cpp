@@ -19,7 +19,6 @@ bool TGameScene::Init()
 	m_BackGround.Create(g_pd3dDevice, 800, 600, (g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 800, 600,
 		L"vertexshader.txt", L"../../data/background_00.png");
 
-	m_Hero.SetScale(0.5f);
 	m_Hero.Create(g_pd3dDevice, 298, 207, 300, 300, 0, 0, 298, 207, L"vertexshader.txt", L"../../data/Hero.png");
 	m_Hero.SetMAXHP(g_HeroMAXHP);
 
