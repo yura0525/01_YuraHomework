@@ -1,13 +1,4 @@
 #include "TBKObject.h"
-
-bool TBKObject::Render()
-{
-	/*if (FadeIn())
-		RenderScroll();*/
-
-	return xObject::Render();
-}
-
 bool TBKObject::FadeOut()
 {
 	//블렌딩하는 부분

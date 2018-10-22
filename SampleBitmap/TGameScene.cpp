@@ -14,15 +14,15 @@ bool TGameScene::Init()
 	m_NPCGap = 55;
 	m_bEndSceneStart = false;
 
-	I_EffectMgr.GameDataLoad(L"../../data/SpriteList.txt");
+	I_EffectMgr.GameDataLoad(L"../data/Resource/SpriteList.txt");
 
 	m_BackGround.Init();
 	m_BackGround.SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 800, 600);
-	m_BackGround.Load(L"../../data/bk.bmp");
+	m_BackGround.Load(L"../data/Resource/bk.bmp");
 
 	m_Hero.Init();
 	m_Hero.SetPosition(300, 300, 90, 2, 42, 58);
-	m_Hero.Load(L"../../data/bitmap1.bmp", L"../../data/bitmap2.bmp");
+	m_Hero.Load(L"../data/Resource/bitmap1.bmp", L"../data/Resource/bitmap2.bmp");
 	m_Hero.SetMAXHP(g_HeroMAXHP);
 
 	//NPCList
@@ -33,7 +33,7 @@ bool TGameScene::Init()
 		pNPCObject->SetPosition((m_NPCGap / 2) + (m_NPCGap * iNPC), 0, 46, 62, 68, 80);
 		
 		pNPCObject->SetMAXHP(1);
-		pNPCObject->Load(L"../../data/bitmap1.bmp", L"../../data/bitmap2.bmp");
+		pNPCObject->Load(L"../data/Resource/bitmap1.bmp", L"../data/Resource/bitmap2.bmp");
 		pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
 		m_NPCList.push_back(pNPCObject);
@@ -176,7 +176,7 @@ void TGameScene::NPCRegenAlarm()
 	{
 		TNPCObject* pNPCObject = new TNPCObject;
 		pNPCObject->Init();
-		pNPCObject->Load(L"../../data/bitmap1.bmp", L"../../data/bitmap2.bmp");
+		pNPCObject->Load(L"../data/Resource/bitmap1.bmp", L"../data/Resource/bitmap2.bmp");
 		pNPCObject->SetMAXHP(1);
 		pNPCObject->SetPosition((m_NPCGap / 2) + (m_NPCGap * iNPC), 0, 46, 62, 68, 80);
 		pNPCObject->m_fAttackRadius = 30 + rand() % 100;

@@ -103,7 +103,7 @@ void TEffectMgr::AddEffect(POINT pos)
 	TEffectObject* pObj = new TEffectObject();
 	pObj->Init();
 	pObj->SetPosition(pos.x, pos.y, 1, 142, 41, 42);
-	pObj->Load(L"../../data/bitmap1.bmp", L"../../data/bitmap2.bmp");
+	pObj->Load(L"../data/Resource/bitmap1.bmp", L"../data/Resource/bitmap2.bmp");
 	pObj->m_iIndexSprite = rand() % m_rtSpriteList.size();
 	pObj->SetDirectionSpeed(0.0f, -1.0f, 500.0f);
 	m_effectObjList.push_back(pObj);

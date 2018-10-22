@@ -63,12 +63,6 @@ float4 GetPos(in float3 pos)
 	return float4(vPos, 1.0f);					//스위즐링.	
 }
 
-//float4 VS(in float3 pos:POSITION) : SV_POSITION
-//{
-//	float4 vPos = GetPos(pos);
-//	return vPos;
-//}
-
 VS_OUTPUT VS(VS_INPUT input)
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;			//0으로 초기화
@@ -123,9 +117,6 @@ float4 GetColor(uint index)
 
 float4 PS(PS_INPUT input) : SV_Target
 {
-	//float4 fColor = GetColor(g_iIndex);
-	//return fColor;
-
 	float4 fTexColor = g_txDiffuse.Sample(g_SamState, input.tex);
 	float4 fColorR	= fTexColor;
 	
@@ -135,30 +126,4 @@ float4 PS(PS_INPUT input) : SV_Target
 	}
 
 	return fColorR;
-	//return input.color * fTexColor;
 }
-
-float4 PS2(PS_INPUT input) : SV_Target
-{
-	//float4 fColor = GetColor(g_iIndex);
-	//return fColor;
-
-	float4 fTexColor	= g_txDiffuse.Sample(g_SamState, input.tex);
-	float4 fColorR		= fTexColor;
-	return input.color * fTexColor;
-}
-
-float4 PS3(PS_INPUT input) : SV_Target
-{
-	//float4 fColor = GetColor(g_iIndex);
-	//return fColor;
-
-	float4 fTexColor	= g_txDiffuse.Sample(g_SamState, input.tex);
-	float4 fColorR		= GetColor(g_iIndex);
-	return fColorR * fTexColor;
-}
-//float4 PS(in float4 pos:SV_POSITION) : SV_Target
-//{
-//	float4 fColor = GetColor(g_iIndex);
-//	return fColor;
-//}

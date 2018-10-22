@@ -3,12 +3,6 @@
 class TBKObject : public xObject
 {
 public:
-	bool Frame()
-	{
-		return true;
-	}
-	bool Render();
-	bool RenderScroll();
 
 	virtual bool FadeOut() override;
 	virtual bool FadeIn() override;

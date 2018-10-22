@@ -95,10 +95,10 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../dx/include;../../include_3D</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../data/dx/include;../data/include_3D</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>../../lib;../../dx/Lib/x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../data/lib;../data/dx/Lib/x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

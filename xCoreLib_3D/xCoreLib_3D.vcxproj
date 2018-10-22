@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>../../output/xCoreLib_3D/</OutDir>
+    <OutDir>../data/lib_3D/</OutDir>
     <IntDir>../../output/xCoreLib_3D/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -93,16 +93,16 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../dx/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../data/dx/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy "*.h" "../include_3D"
+      <Command>copy "*.h" "../data/include_3D"
 
-copy "*.lib" "../lib_3D"</Command>
+copy "*.lib" "../data/lib_3D"</Command>
     </PostBuildEvent>
     <Lib>
       <OutputFile>xCoreLib_3D.lib</OutputFile>

@@ -13,7 +13,7 @@ public:
 	{
 		xCore::Init();
 		m_Object.Init();
-		m_Object.Create(m_pd3dDevice, L"vertexshader.txt", L"../../data/bk.bmp");
+		m_Object.Create(m_pd3dDevice, L"vertexshader.txt", L"../data/Resource/bk.bmp");
 		return true;
 	}
 	bool Frame()

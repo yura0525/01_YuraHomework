@@ -10,15 +10,15 @@ bool TEndScene::Init()
 
 	m_BackGround.Init();
 	m_BackGround.SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 800, 600);
-	m_BackGround.Load(L"../../data/RAINBOW.bmp");
+	m_BackGround.Load(L"../data/Resource/RAINBOW.bmp");
 
 
 	m_BtnStart.Init();
 	m_BtnStart.SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 334, 79);
-	m_BtnStart.LoadUI(L"../../data/end.bmp", NULL, 0);
-	m_BtnStart.LoadUI(L"../../data/end.bmp", NULL, 1);
-	m_BtnStart.LoadUI(L"../../data/end.bmp", NULL, 2);
-	m_BtnStart.LoadUI(L"../../data/end.bmp", NULL, 3);
+	m_BtnStart.LoadUI(L"../data/Resource/end.bmp", NULL, 0);
+	m_BtnStart.LoadUI(L"../data/Resource/end.bmp", NULL, 1);
+	m_BtnStart.LoadUI(L"../data/Resource/end.bmp", NULL, 2);
+	m_BtnStart.LoadUI(L"../data/Resource/end.bmp", NULL, 3);
 
 	return true;
 }

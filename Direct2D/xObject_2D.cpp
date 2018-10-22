@@ -195,11 +195,9 @@ HRESULT xObject_2D::CreateIndexBuffer(ID3D11Device* pd3dDevice)
 	};*/
 
 	//GPU상에 메모리를 할당함
-	int iNumCount = sizeof(m_indexList) / sizeof(m_indexList.at(0));
-
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
-	bd.ByteWidth = 6 * sizeof(DWORD);
+	bd.ByteWidth = m_indexList.size() * sizeof(DWORD);
 	bd.Usage = D3D11_USAGE_DEFAULT;				//GPU에 메모리를 할당해라. 기본이 GPU메모리. GPU는 READ/WRITE 가능.CPU는 접근불가능하다.
 												//D3D11_USAGE_STAGING만이 CPU가 접근가능하다. 단점은 느리다.
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;		//인덱스 버퍼
