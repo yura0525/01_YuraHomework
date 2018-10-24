@@ -154,11 +154,6 @@ bool xWindow::SetWindow(HINSTANCE hInstance, const TCHAR *pTitleName,
 	GetClientRect(m_hWnd, &m_rtClient);
 	g_rtClient = m_rtClient;
 
-	TCHAR	csBuffer[256];
-	_stprintf_s(csBuffer, L"#######xWindow::SetWindow g_rtClient.right = %d, g_rtClient.bottom = %d\n",
-		g_rtClient.right, g_rtClient.bottom);
-
-	OutputDebugString(csBuffer);
 	CenterWindow();
 
 	ShowWindow(m_hWnd, SW_SHOW);

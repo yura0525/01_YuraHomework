@@ -9,8 +9,8 @@ bool TNPCObject::Frame()
 		SetDead();
 	}
 
-	//m_pos.x += m_fDir[0] * m_fSpeed * g_fSecPerFrame;
-	//m_pos.y += m_fDir[1] * m_fSpeed * g_fSecPerFrame;
+	m_pos.x += m_fDir[0] * m_fSpeed * g_fSecPerFrame;
+	m_pos.y += m_fDir[1] * m_fSpeed * g_fSecPerFrame;
 
 	//위치값이나 충돌박스 수정.
 	return xObject::Frame();

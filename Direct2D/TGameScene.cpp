@@ -21,19 +21,19 @@ bool TGameScene::Init()
 	m_Hero.Create(g_pd3dDevice, 150, 100, 300, 300, 0, 0, 150, 100, L"vertexshader.txt", L"../data/Resource/Hero.png");
 	m_Hero.SetMAXHP(g_HeroMAXHP);
 
-	//NPCList
-	int NPCXPos = 0;
+	/*TCHAR	m_csBuffer[256];*/
 	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
 	{
 		TNPCObject* pNPCObject = new TNPCObject;
-		NPCXPos = (m_NPCGap / 2) + (m_NPCGap * iNPC);
-		pNPCObject->Create(g_pd3dDevice, 346, 200, NPCXPos, 50, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
+		int NPCXPos = (m_NPCGap / 2) + (m_NPCGap * iNPC);
 
+		pNPCObject->Create(g_pd3dDevice, 347, 201, NPCXPos, 50, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
 		pNPCObject->SetMAXHP(1);
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
 		m_NPCList.push_back(pNPCObject);
 	}
+	
 	return true;
 }
 
@@ -52,8 +52,6 @@ bool TGameScene::Frame()
 	m_BackGround.Frame();
 	m_Hero.Frame();
 
-	TCHAR	m_csBuffer[256];
-
 	list<TNPCObject*>::iterator iter;
 	int iNPC = 0;
 	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++, iNPC++)
@@ -64,10 +62,6 @@ bool TGameScene::Frame()
 		{
 			pNPCObject->ProcessDamage(-1);
 		}
-
-		_stprintf_s(m_csBuffer, L"TGameScene::Frame()!!!!!!!! iNPC: %d, pNPCObject->m_pos.x : %f, pNPCObject->m_pos.y : %f, m_iHP : %d\n",
-			iNPC, pNPCObject->m_pos.x, pNPCObject->m_pos.y, pNPCObject->m_iHP);
-		OutputDebugString(m_csBuffer);
 
 		if (!(pNPCObject->IsDead()))
 			pNPCObject->Frame();
@@ -141,12 +135,14 @@ bool TGameScene::Reset()
 
 	list<TNPCObject*>::iterator iter;
 	int iNPC = 0;
-	int NPCXPos = 0;
-	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++)
+	
+	//NPCList
+	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++, iNPC++)
 	{
 		TNPCObject* pNPCObject = (*iter);
-		NPCXPos = (m_NPCGap / 2) + (m_NPCGap * iNPC);
-		pNPCObject->Create(g_pd3dDevice, 346, 200, NPCXPos, 50, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
+		int NPCXPos = (m_NPCGap / 2) + (m_NPCGap * iNPC);
+
+		pNPCObject->SetPosition(NPCXPos, 50, 87, 0, 174, 100);
 		pNPCObject->SetMAXHP(1);
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
@@ -181,7 +177,13 @@ void TGameScene::NPCRegenAlarm()
 	{
 		TNPCObject* pNPCObject = new TNPCObject;
 		NPCXPos = (m_NPCGap / 2) + (m_NPCGap * iNPC);
-		pNPCObject->Create(g_pd3dDevice, 346, 200, NPCXPos, 50, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
+
+		pNPCObject->Create(g_pd3dDevice, 347, 201, NPCXPos, 50, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
+
+		TCHAR	m_csBuffer[256];
+		_stprintf_s(m_csBuffer, L"TGameScene::NPCRegenAlarm()!!!!!!!! iNPC[%d], pNPCObject->m_pos.x : %f, m_iHP : %d\n",
+			iNPC, pNPCObject->m_pos.x, pNPCObject->m_iHP);
+		OutputDebugString(m_csBuffer);
 		pNPCObject->SetMAXHP(1);
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);

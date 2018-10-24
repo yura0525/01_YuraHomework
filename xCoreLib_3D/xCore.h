@@ -44,6 +44,9 @@ public:
 	virtual bool PostRender();
 	virtual bool Render();
 	virtual bool Release();
+public:
+	virtual void NPCRegenAlarm() { }
+	virtual void GameEndTimeAlarm() { }
 
 public:
 	xCore();

@@ -161,7 +161,7 @@ HRESULT xObject_2D::CreateVertexBuffer(ID3D11Device* pd3dDevice)
 	//GPU상에 메모리를 할당함.
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
-	bd.ByteWidth = 4 * sizeof(P3VERTEX);		//36바이트
+	bd.ByteWidth = m_verList.size() * sizeof(P3VERTEX);		//36바이트
 	bd.Usage = D3D11_USAGE_DEFAULT;							//GPU에 메모리를 할당해라. 기본이 GPU메모리. GPU는 READ/WRITE 가능.CPU는 접근불가능하다.
 															//D3D11_USAGE_STAGING만이 CPU가 접근가능하다. 단점은 느리다.
 
@@ -181,6 +181,7 @@ HRESULT xObject_2D::CreateVertexBuffer(ID3D11Device* pd3dDevice)
 HRESULT xObject_2D::CreateIndexBuffer(ID3D11Device* pd3dDevice)
 {
 	HRESULT hr = S_OK;
+	m_indexList.clear();
 	m_indexList.push_back(0);
 	m_indexList.push_back(1);
 	m_indexList.push_back(2);

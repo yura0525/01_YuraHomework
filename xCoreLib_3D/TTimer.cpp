@@ -1,4 +1,5 @@
 #include "TTimer.h"
+#include "xCore.h"
 
 float g_fSecPerFrame = 0.0f;
 float g_fGameTimer = 0.0f;
@@ -40,6 +41,19 @@ bool TTimer::Frame()
 		//OutputDebugString(m_csBuffer);
 	}
 
+	if ((0.0f < m_fNPCRegenTimeGap) && ((m_fNPCRegenStartTime + m_fNPCRegenTimeGap) < m_fGameTime))
+	{
+		m_pOwner->NPCRegenAlarm();
+		m_fNPCRegenStartTime += m_fNPCRegenTimeGap;
+	}
+
+	if ((0.0f < m_fGameTimeGap) && ((m_fGameStartTime + m_fGameTimeGap) < m_fGameTime))
+	{
+		//이벤트를 알려주는 함수.
+		m_pOwner->GameEndTimeAlarm();
+		m_fGameStartTime += m_fGameTimeGap;
+	}
+
 	m_iFrameCount++;
 	m_BeforeTick = m_CurrentTime;
 	
@@ -79,8 +93,9 @@ void TTimer::GameStartTime(float fGameTimeGap)
 	m_fGameTimeGap = fGameTimeGap;
 }
 
-TTimer::TTimer()
+TTimer::TTimer(xCore * pOwner)
 {
+	m_pOwner = pOwner;
 	m_iFramePerSecond = 0;
 	m_iFrameCount = 0;
 	m_fSecPerFrame = 0.0f;

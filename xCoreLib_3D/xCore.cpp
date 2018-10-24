@@ -166,7 +166,7 @@ bool xCore::GameRelease()
 	Release();
 	return true;
 }
-xCore::xCore()
+xCore::xCore() : m_Timer(this)
 {
 }
 
