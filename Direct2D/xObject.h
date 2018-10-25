@@ -55,7 +55,6 @@ public:
 	virtual bool Init();
 	virtual bool Frame();
 	virtual bool Render();
-	virtual bool Release();
 
 	virtual bool Create(ID3D11Device* pd3dDevice, float _texMaxU, float _texMaxV, 
 						float xPos, float yPos, DWORD left, DWORD top, DWORD width, DWORD height,
@@ -71,7 +70,6 @@ public:
 	void SetDead() { m_iHP = 0; }
 	void SetMAXHP(int hp) { m_iHP = hp; }
 	void ProcessDamage(int damage);
-
 public:
 	xObject();
 	virtual ~xObject();

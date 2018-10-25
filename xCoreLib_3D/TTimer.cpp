@@ -37,8 +37,8 @@ bool TTimer::Frame()
 
 		//출력창에 출력하는 함수 
 		//유니코드일때 버퍼의 내용을 채우는 함수(_stprintf_s)
-		_stprintf_s(m_csBuffer, L"FPS: %d, TIME : %10.4f SPF : %10.4f", m_iFramePerSecond, m_fGameTime, m_fSecPerFrame);
-		//OutputDebugString(m_csBuffer);
+		_stprintf_s(m_csBuffer, L"FPS: %d, TIME : %10.4f SPF : %10.4f\n", m_iFramePerSecond, m_fGameTime, m_fSecPerFrame);
+		OutputDebugString(m_csBuffer);
 	}
 
 	if ((0.0f < m_fNPCRegenTimeGap) && ((m_fNPCRegenStartTime + m_fNPCRegenTimeGap) < m_fGameTime))

@@ -121,9 +121,7 @@ bool xObject_2D::Release()
 	SAFE_RELEASE(m_pVertexBuffer);
 	SAFE_RELEASE(m_pIndexBuffer);
 	SAFE_RELEASE(m_pConstantBuffer);
-	SAFE_RELEASE(m_pShader);
 	SAFE_RELEASE(m_pVertexLayout);
-	SAFE_RELEASE(m_pTexture);
 	SAFE_RELEASE(m_pAlphaBlend);
 	SAFE_RELEASE(m_pRSWireFrame);
 	SAFE_RELEASE(m_pRSSolid);
@@ -138,25 +136,6 @@ void xObject_2D::SetScale(float scale)
 HRESULT xObject_2D::CreateVertexBuffer(ID3D11Device* pd3dDevice)
 {
 	HRESULT hr = S_OK;
-
-	//정점의 저장순서 : 시계방향
-	//반시계방향으로 그리면 안나온다.
-	/*m_verList.resize(4);
-	m_verList[0].x = -0.5f; m_verList[0].y = 0.5f;	m_verList[0].z = 0.5f;
-	m_verList[0].r = 1.0f;	m_verList[0].g = 0.0f;	m_verList[0].b = 0.0f;
-	m_verList[0].u = 0.0f; m_verList[0].v = 0.0f;
-
-	m_verList[1].x = 0.5f;	m_verList[1].y = 0.5f;	m_verList[1].z = 0.5f;
-	m_verList[1].r = 0.0f;	m_verList[1].g = 1.0f;	m_verList[1].b = 0.0f;
-	m_verList[1].u = 1.0f;	m_verList[1].v = 0.0f;
-
-	m_verList[2].x = -0.5f; m_verList[2].y = -0.5f; m_verList[2].z = 0.5f;
-	m_verList[2].r = 0.0f;	m_verList[2].g = 0.0f;	m_verList[2].b = 1.0f;
-	m_verList[2].u = 0.0f; m_verList[2].v = 1.0f;
-
-	m_verList[3].x = 0.5f;  m_verList[3].y = -0.5f; m_verList[3].z = 0.5f;
-	m_verList[3].r = 1.0f;  m_verList[3].g = 1.0f;	m_verList[3].b = 1.0f;
-	m_verList[3].u = 1.0f;  m_verList[3].v = 1.0f;*/
 
 	//GPU상에 메모리를 할당함.
 	D3D11_BUFFER_DESC bd;
@@ -272,9 +251,9 @@ HRESULT xObject_2D::CreateInputLayout(ID3D11Device *pd3dDevice)
 		//5번째 전달인자인 0에서부터 DXGI_FORMAT_R32G32B32_FLOAT만큼인 float 3개를 꺼낸다.
 		{ "POSITION", 0,  DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		//5번째 전달인자인 12바이트에서부터 DXGI_FORMAT_R32G32B32A32_FLOAT float 4개를 꺼낸다.
-	{ "COLOR", 0,  DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA,0 },
-	//5번째 전달인자인 28바이트에서 DXGI_FORMAT_R32G32_FLOAT float2개를 꺼낸다.
-	{ "TEXCOORD", 0,  DXGI_FORMAT_R32G32_FLOAT, 0, 28,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		{ "COLOR", 0,  DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA,0 },
+		//5번째 전달인자인 28바이트에서 DXGI_FORMAT_R32G32_FLOAT float2개를 꺼낸다.
+		{ "TEXCOORD", 0,  DXGI_FORMAT_R32G32_FLOAT, 0, 28,D3D11_INPUT_PER_VERTEX_DATA,0 },
 	};
 	int iNum = sizeof(layout) / sizeof(layout[0]);
 
@@ -286,6 +265,9 @@ HRESULT xObject_2D::CreateInputLayout(ID3D11Device *pd3dDevice)
 	//layout.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	//layout.InstanceDataStepRate = 0;
 	ID3DBlob* pBlobVS = m_pShader->m_pBlobVS;
+	if (pBlobVS == NULL)
+		return false;
+
 	pd3dDevice->CreateInputLayout(layout, iNum, pBlobVS->GetBufferPointer(), pBlobVS->GetBufferSize(), &m_pVertexLayout);
 	return S_OK;
 }
@@ -310,34 +292,6 @@ HRESULT xObject_2D::SetBlendState(ID3D11Device *pd3dDevice)
 
 	bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 	pd3dDevice->CreateBlendState(&bd, (ID3D11BlendState**)&m_pAlphaBlend);
-
-	////2)
-	//bd.RenderTarget[0].BlendEnable = false;
-	//bd.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	//bd.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	//bd.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-
-	////FinalAlpha = destAlpha * DescBlendAlpha + srcAlpha * SrcBlendAlpha;
-	//bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	//bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-	//bd.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-
-	//bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-	//m_pd3dDevice->CreateBlendState(&bd, (ID3D11BlendState**)&m_pAlphaBlend2);
-
-	////3)
-	//bd.RenderTarget[0].BlendEnable = true;
-	//bd.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	//bd.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	//bd.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-
-	////FinalAlpha = destAlpha * DescBlendAlpha + srcAlpha * SrcBlendAlpha;
-	//bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	//bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-	//bd.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-
-	//bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-	//m_pd3dDevice->CreateBlendState(&bd, (ID3D11BlendState**)&m_pAlphaBlend3);
 	return hr;
 }
 

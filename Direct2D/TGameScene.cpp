@@ -5,6 +5,7 @@
 const int g_NPCWidthGap = 55;
 const int g_HeroMAXHP = 100;
 const int g_NPCMoveSpeed = 100.0f;
+
 bool TGameScene::Init()
 {
 	m_bNextSceneStart = false;
@@ -15,25 +16,26 @@ bool TGameScene::Init()
 
 	I_EffectMgr.GameDataLoad(L"../data/Resource/SpriteList.txt");
 
-	m_BackGround.Create(g_pd3dDevice, 450, 600, (g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 800, 600,
+	m_BackGround = make_shared<TBKScrollObject>();
+	m_BackGround->Create(g_pd3dDevice, 450, 600, (g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 800, 600,
 		L"vertexshader.txt", L"../data/Resource/background_00.png");
 
-	m_Hero.Create(g_pd3dDevice, 150, 100, 300, 300, 0, 0, 150, 100, L"vertexshader.txt", L"../data/Resource/Hero.png");
-	m_Hero.SetMAXHP(g_HeroMAXHP);
+	m_Hero = make_shared<THeroObject>();
+	m_Hero->Create(g_pd3dDevice, 150, 100, 300, 300, 0, 0, 150, 100, L"vertexshader.txt", L"../data/Resource/Hero.png");
 
-	/*TCHAR	m_csBuffer[256];*/
+	int NPCXPos = 0, NPCYPos = 50;
 	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
 	{
 		TNPCObject* pNPCObject = new TNPCObject;
-		int NPCXPos = (m_NPCGap / 2) + (m_NPCGap * iNPC);
+		NPCXPos = (m_NPCGap / 2) + (m_NPCGap * iNPC);
 
-		pNPCObject->Create(g_pd3dDevice, 347, 201, NPCXPos, 50, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
+		pNPCObject->Create(g_pd3dDevice, 347, 201, NPCXPos, NPCYPos, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
 		pNPCObject->SetMAXHP(1);
+
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
 		m_NPCList.push_back(pNPCObject);
 	}
-	
 	return true;
 }
 
@@ -41,7 +43,7 @@ bool TGameScene::Frame()
 {
 	if (I_Input.m_KeyState[DIK_F1] )
 	{
-		m_Hero.m_bDebugRect = !m_Hero.m_bDebugRect;
+		m_Hero->m_bDebugRect = !(m_Hero->m_bDebugRect);
 
 		list<TNPCObject*>::iterator iter;
 		for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++)
@@ -49,8 +51,8 @@ bool TGameScene::Frame()
 			(*iter)->m_bDebugRect = !( (*iter)->m_bDebugRect );
 		}
 	}
-	m_BackGround.Frame();
-	m_Hero.Frame();
+	m_BackGround->Frame();
+	m_Hero->Frame();
 
 	list<TNPCObject*>::iterator iter;
 	int iNPC = 0;
@@ -62,21 +64,17 @@ bool TGameScene::Frame()
 		{
 			pNPCObject->ProcessDamage(-1);
 		}
-
-		if (!(pNPCObject->IsDead()))
-			pNPCObject->Frame();
-
+		
+		pNPCObject->Frame();
 
 		//Hero가 NPC에 맞는거 처리.
-		if (TCollision::RectInRect(m_Hero.m_rtCollision, pNPCObject->m_rtCollision))
+		if (TCollision::RectInRect(m_Hero->m_rtCollision, pNPCObject->m_rtCollision))
 		{
-			m_Hero.ProcessDamage(-1);
-		}
-			
+			m_Hero->ProcessDamage(-1);
+		}		
 	}
 
 	DeleteNPCList();
-
 	I_EffectMgr.Frame();
 
 	////주인공이 NPC총알에 맞는거 처리.
@@ -89,7 +87,7 @@ bool TGameScene::Frame()
 
 
 	//주인공이 죽으면 게임끝
-	if (m_Hero.IsDead())
+	if (m_Hero->IsDead())
 		m_bEndSceneStart = true;
 
 	return true;
@@ -97,13 +95,13 @@ bool TGameScene::Frame()
 
 bool TGameScene::Render()
 {
-	m_BackGround.Render();
-	m_Hero.Render();
+	m_BackGround->Render();
+	m_Hero->Render();
+
 	list<TNPCObject*>::iterator iter;
 	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++)
 	{
-		if( !((*iter)->IsDead()) )
-			(*iter)->Render();
+		(*iter)->Render();
 	}
 
 	I_EffectMgr.Render();
@@ -113,8 +111,8 @@ bool TGameScene::Render()
 }
 bool TGameScene::Release()
 {
-	m_BackGround.Release();
-	m_Hero.Release();
+	m_BackGround->Release();
+	m_Hero->Release();
 
 	list<TNPCObject*>::iterator iter;
 	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++)
@@ -133,28 +131,33 @@ bool TGameScene::Reset()
 	m_bNextSceneStart = false;
 	m_bEndSceneStart = false;
 
-	list<TNPCObject*>::iterator iter;
-	int iNPC = 0;
-	
+	m_Hero->SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2));
+	m_Hero->SetMAXHP(g_HeroMAXHP);
+
 	//NPCList
+	int iNPC = 0, NPCXPos = 0, NPCYPos = 50;
+	list<TNPCObject*>::iterator iter;
 	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++, iNPC++)
 	{
 		TNPCObject* pNPCObject = (*iter);
-		int NPCXPos = (m_NPCGap / 2) + (m_NPCGap * iNPC);
+		NPCXPos = (m_NPCGap / 2) + (m_NPCGap * iNPC);
 
-		pNPCObject->SetPosition(NPCXPos, 50, 87, 0, 174, 100);
+		pNPCObject->SetPosition(NPCXPos, NPCYPos);
 		pNPCObject->SetMAXHP(1);
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
 	}
+
 	return true;
 }
 
 void TGameScene::DeleteNPCList()
 {
 	list<TNPCObject*>::iterator iter;
-	for (iter = m_NPCList.begin(); iter != m_NPCList.end();)
+	int iNPC = 0;
+	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); )
 	{
+		TNPCObject* pNPCObject = (*iter);
 		if ((*iter)->IsDead())
 		{
 			(*iter)->Release();
@@ -162,29 +165,24 @@ void TGameScene::DeleteNPCList()
 			iter = m_NPCList.erase(iter);
 		}
 		else
+		{
 			iter++;
+		}	
 	}
-
 }
 
 void TGameScene::NPCRegenAlarm()
 {
 	//몹 재생성.
-	list<TNPCObject*>::iterator iter;
-	int iNPC = 0;
-	int NPCXPos = 0;
+	int NPCXPos = 0, NPCYPos = 50;
 	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
 	{
 		TNPCObject* pNPCObject = new TNPCObject;
 		NPCXPos = (m_NPCGap / 2) + (m_NPCGap * iNPC);
 
-		pNPCObject->Create(g_pd3dDevice, 347, 201, NPCXPos, 50, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
-
-		TCHAR	m_csBuffer[256];
-		_stprintf_s(m_csBuffer, L"TGameScene::NPCRegenAlarm()!!!!!!!! iNPC[%d], pNPCObject->m_pos.x : %f, m_iHP : %d\n",
-			iNPC, pNPCObject->m_pos.x, pNPCObject->m_iHP);
-		OutputDebugString(m_csBuffer);
+		pNPCObject->Create(g_pd3dDevice, 347, 201, NPCXPos, NPCYPos, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
 		pNPCObject->SetMAXHP(1);
+
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
 		m_NPCList.push_back(pNPCObject);

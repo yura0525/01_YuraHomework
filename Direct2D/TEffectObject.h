@@ -15,6 +15,8 @@ public:
 
 public:
 	bool Frame();
+	void SpriteRender();
+
 public:
 	TEffectObject();
 	virtual ~TEffectObject();

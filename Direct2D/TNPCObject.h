@@ -5,6 +5,7 @@
 class TNPCObject : public xObject
 {
 public:
+	bool Init();
 	bool Frame();
 public:
 	TNPCObject();

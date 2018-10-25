@@ -17,8 +17,9 @@ enum eBulletType
 class TGameScene : public TScene
 {
 public:
-	TBKScrollObject		m_BackGround;
-	THeroObject			m_Hero;
+	shared_ptr<TBKScrollObject>	m_BackGround;
+	shared_ptr<THeroObject>		m_Hero;
+
 	list<TNPCObject*>	m_NPCList;
 
 	float				m_fAngle;

@@ -2,6 +2,7 @@
 #include "xInput.h"
 
 const int g_NPCDamageTimeGap = 0.5f;
+
 void xObject::SetPosition(float xPos, float yPos)
 {
 	m_pos.x = xPos;
@@ -18,6 +19,7 @@ void xObject::SetPosition(float xPos, float yPos)
 	m_iMaxDistance = sqrt((m_rtDraw.right * m_rtDraw.right)
 		+ (m_rtDraw.bottom * m_rtDraw.bottom));
 }
+
 void xObject::SetPosition(float xPos, float yPos, DWORD texLeft, DWORD texTop, DWORD texRight, DWORD texBottom)
 {
 	m_pos.x = xPos;
@@ -152,10 +154,6 @@ bool xObject::Render()
 
 	return xObject_2D::Render();
 }
-bool xObject::Release()
-{
-	return xObject_2D::Release();
-}
 
 bool xObject::Create(ID3D11Device* pd3dDevice, float texMaxU, float texMaxV, float xPos, float yPos, DWORD left, DWORD top, DWORD width, DWORD height,
 	T_STR szShaderName, T_STR szTexName, T_STR VSFunc, T_STR PSFunc)
@@ -180,18 +178,16 @@ bool xObject::IsDead()
 {
 	return ((0 < m_iHP) ? false : true);
 }
+
 void xObject::ProcessDamage(int damage)
 {
 	//ProcessDamage가 여러번 처리되는걸 막는다.
-	TCHAR	m_csBuffer[256];
 	if ((m_fLastDamageTime + m_fDamageTimeGap) < g_fGameTimer)
 	{
 		m_fLastDamageTime += m_fDamageTimeGap;
 
 		m_iHP = m_iHP + damage;
 		m_iHP = max(0, m_iHP);
-		_stprintf_s(m_csBuffer, L"ProcessDamage()!!!!!!!! m_iHP: %d damage : %d\n", m_iHP, damage);
-		OutputDebugString(m_csBuffer);
 	}
 }
 

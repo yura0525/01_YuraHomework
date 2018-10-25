@@ -18,6 +18,9 @@ bool xShader::Load(ID3D11Device* pd3dDevice, T_STR szFileName, C_STR vs, C_STR p
 		return false;
 	}
 
+	if (m_pBlobVS == NULL)
+		return false;
+
 	//셰이더 컴파일된 결과(오브젝트파일, 목적파일)
 	V_RETURN(m_pd3dDevice->CreateVertexShader(m_pBlobVS->GetBufferPointer(), m_pBlobVS->GetBufferSize(), NULL, &m_pVS));
 
