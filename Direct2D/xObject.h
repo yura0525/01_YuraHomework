@@ -42,13 +42,14 @@ public:
 	void SetPosition(float xPos, float yPos, DWORD texLeft, DWORD texTop, DWORD texRight, DWORD texBottom);
 
 	//텍스쳐좌표와 버텍스 좌표 관련 함수.
-	void SetTexUV(float texMaxU, float texMaxV);
-
+	void SetTexureUV(DWORD texLeft, DWORD texTop, DWORD texRight, DWORD texBottom);
+	void SetMaxTexureUV(float texMaxU, float texMaxV);
+	
 	D3DXVECTOR3 Generate(float x, float y);
 	D3DXVECTOR2 UVGenerate(float _u, float _v);
-	void SetVertexData();
+	void CreateVertexData();
 	void UpdateVertexDataPosition();
-	void UpdateVertexDataTexture();
+	void UpdateTextureData();
 	void SetDirectionSpeed(int dirX, int dirY, float speed);
 
 

@@ -45,7 +45,26 @@ void xObject::SetPosition(float xPos, float yPos, DWORD texLeft, DWORD texTop, D
 		+ (m_rtDraw.bottom * m_rtDraw.bottom));
 }
 
-void xObject::SetTexUV(float texMaxU, float texMaxV)
+void xObject::SetTexureUV(DWORD texLeft, DWORD texTop, DWORD texRight, DWORD texBottom)
+{
+	m_rtDraw.left = texLeft;
+	m_rtDraw.top = texTop;
+	m_rtDraw.right = (texRight - texLeft);
+	m_rtDraw.bottom = (texBottom - texTop);
+
+	m_posDraw.x = m_pos.x - (m_rtDraw.right / 2);
+	m_posDraw.y = m_pos.y - (m_rtDraw.bottom / 2);
+
+	m_rtCollision.left = m_posDraw.x;
+	m_rtCollision.top = m_posDraw.y;
+	m_rtCollision.right = m_rtCollision.left + m_rtDraw.right;
+	m_rtCollision.bottom = m_rtCollision.top + m_rtDraw.bottom;
+
+	m_iMaxDistance = sqrt((m_rtDraw.right * m_rtDraw.right)
+		+ (m_rtDraw.bottom * m_rtDraw.bottom));
+}
+
+void xObject::SetMaxTexureUV(float texMaxU, float texMaxV)
 {
 	m_MaxTexUV.u = texMaxU;
 	m_MaxTexUV.v = texMaxV;
@@ -72,32 +91,16 @@ D3DXVECTOR2 xObject::UVGenerate(float _u, float _v)
 	return uvRet;
 }
 
-void xObject::SetVertexData()
+void xObject::CreateVertexData()
 {
 	m_verList.resize(4);
 
-	D3DXVECTOR3 pos = Generate(m_posDraw.x, m_posDraw.y);
-	D3DXVECTOR2 uv = UVGenerate(m_rtDraw.left, m_rtDraw.top);
-	m_verList[0].p = D3DXVECTOR3(pos.x, pos.y, 0.0f);
-	m_verList[0].t = D3DXVECTOR2(uv.u, uv.v);
-	m_verList[0].c = D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
+	UpdateVertexDataPosition();
+	UpdateTextureData();
 
-	pos = Generate(m_posDraw.x + m_rtDraw.right, m_posDraw.y);
-	uv = UVGenerate(m_rtDraw.left + m_rtDraw.right, m_rtDraw.top);
-	m_verList[1].p = D3DXVECTOR3(pos.x, pos.y, 0.0f);
-	m_verList[1].t = D3DXVECTOR2(uv.u, uv.v);
-	m_verList[1].c = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
-
-	pos = Generate(m_posDraw.x, m_posDraw.y + m_rtDraw.bottom);
-	uv = UVGenerate(m_rtDraw.left, m_rtDraw.top + m_rtDraw.bottom);
-	m_verList[2].p = D3DXVECTOR3(pos.x, pos.y, 0.0f);
-	m_verList[2].t = D3DXVECTOR2(uv.u, uv.v);
-	m_verList[2].c = D3DXVECTOR4(0.0f, 0.0f, 1.0f, 1.0f);
-
-	pos = Generate(m_posDraw.x + m_rtDraw.right, m_posDraw.y + m_rtDraw.bottom);
-	uv = UVGenerate(m_rtDraw.left + m_rtDraw.right, m_rtDraw.top + m_rtDraw.bottom);
-	m_verList[3].p = D3DXVECTOR3(pos.x, pos.y, 0.0f);
-	m_verList[3].t = D3DXVECTOR2(uv.u, uv.v);
+	m_verList[0].c = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_verList[1].c = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_verList[2].c = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 	m_verList[3].c = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
@@ -114,6 +117,21 @@ void xObject::UpdateVertexDataPosition()
 
 	pos = Generate(m_posDraw.x + m_rtDraw.right, m_posDraw.y + m_rtDraw.bottom);
 	m_verList[3].p = D3DXVECTOR3(pos.x, pos.y, 0.0f);
+}
+
+void xObject::UpdateTextureData()
+{
+	D3DXVECTOR2 uv = UVGenerate(m_rtDraw.left, m_rtDraw.top);
+	m_verList[0].t = D3DXVECTOR2(uv.u, uv.v);
+
+	uv = UVGenerate(m_rtDraw.left + m_rtDraw.right, m_rtDraw.top);
+	m_verList[1].t = D3DXVECTOR2(uv.u, uv.v);
+
+	uv = UVGenerate(m_rtDraw.left, m_rtDraw.top + m_rtDraw.bottom);
+	m_verList[2].t = D3DXVECTOR2(uv.u, uv.v);
+
+	uv = UVGenerate(m_rtDraw.left + m_rtDraw.right, m_rtDraw.top + m_rtDraw.bottom);
+	m_verList[3].t = D3DXVECTOR2(uv.u, uv.v);
 }
 
 void xObject::SetDirectionSpeed(int dirX, int dirY, float speed)
@@ -134,8 +152,6 @@ bool xObject::Init()
 }
 bool xObject::Frame()
 {
-	xObject_2D::Frame();
-
 	m_posDraw.x = m_pos.x - (m_rtDraw.right / 2);
 	m_posDraw.y = m_pos.y - (m_rtDraw.bottom / 2);
 
@@ -145,7 +161,8 @@ bool xObject::Frame()
 	m_rtCollision.bottom = m_rtCollision.top + m_rtDraw.bottom;
 
 	UpdateVertexDataPosition();
-	return true;
+	UpdateTextureData();
+	return xObject_2D::Frame();
 }
 bool xObject::Render()
 {
@@ -159,9 +176,9 @@ bool xObject::Create(ID3D11Device* pd3dDevice, float texMaxU, float texMaxV, flo
 	T_STR szShaderName, T_STR szTexName, T_STR VSFunc, T_STR PSFunc)
 {
 	Init();
-	SetTexUV(texMaxU, texMaxV);
+	SetMaxTexureUV(texMaxU, texMaxV);
 	SetPosition(xPos, yPos, left, top, width, height);
-	SetVertexData();
+	CreateVertexData();
 
 	CreateVertexBuffer(pd3dDevice);
 	CreateIndexBuffer(pd3dDevice);

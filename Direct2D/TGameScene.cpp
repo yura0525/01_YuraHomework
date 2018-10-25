@@ -5,7 +5,7 @@
 const int g_NPCWidthGap = 55;
 const int g_HeroMAXHP = 100;
 const int g_NPCMoveSpeed = 100.0f;
-
+const int g_NPCYPos = 50.0f;
 bool TGameScene::Init()
 {
 	m_bNextSceneStart = false;
@@ -23,13 +23,13 @@ bool TGameScene::Init()
 	m_Hero = make_shared<THeroObject>();
 	m_Hero->Create(g_pd3dDevice, 150, 100, 300, 300, 0, 0, 150, 100, L"vertexshader.txt", L"../data/Resource/Hero.png");
 
-	int NPCXPos = 0, NPCYPos = 50;
+	int NPCXPos = 0;
 	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
 	{
 		TNPCObject* pNPCObject = new TNPCObject;
 		NPCXPos = (m_NPCGap / 2) + (m_NPCGap * iNPC);
 
-		pNPCObject->Create(g_pd3dDevice, 347, 201, NPCXPos, NPCYPos, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
+		pNPCObject->Create(g_pd3dDevice, 347, 201, NPCXPos, g_NPCYPos, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
 		pNPCObject->SetMAXHP(1);
 
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
@@ -135,14 +135,14 @@ bool TGameScene::Reset()
 	m_Hero->SetMAXHP(g_HeroMAXHP);
 
 	//NPCList
-	int iNPC = 0, NPCXPos = 0, NPCYPos = 50;
+	int iNPC = 0, NPCXPos = 0;
 	list<TNPCObject*>::iterator iter;
 	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++, iNPC++)
 	{
 		TNPCObject* pNPCObject = (*iter);
 		NPCXPos = (m_NPCGap / 2) + (m_NPCGap * iNPC);
 
-		pNPCObject->SetPosition(NPCXPos, NPCYPos);
+		pNPCObject->SetPosition(NPCXPos, g_NPCYPos);
 		pNPCObject->SetMAXHP(1);
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
@@ -165,22 +165,20 @@ void TGameScene::DeleteNPCList()
 			iter = m_NPCList.erase(iter);
 		}
 		else
-		{
 			iter++;
-		}	
 	}
 }
 
 void TGameScene::NPCRegenAlarm()
 {
 	//¸÷ Àç»ý¼º.
-	int NPCXPos = 0, NPCYPos = 50;
+	int NPCXPos = 0;
 	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
 	{
 		TNPCObject* pNPCObject = new TNPCObject;
 		NPCXPos = (m_NPCGap / 2) + (m_NPCGap * iNPC);
 
-		pNPCObject->Create(g_pd3dDevice, 347, 201, NPCXPos, NPCYPos, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
+		pNPCObject->Create(g_pd3dDevice, 347, 201, NPCXPos, g_NPCYPos, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
 		pNPCObject->SetMAXHP(1);
 
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;

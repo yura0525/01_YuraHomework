@@ -1,9 +1,9 @@
 #pragma once
 #include "xStd.h"
-#include "TNPCObject.h"
+#include "xObject.h"
 typedef std::vector<RECT> RECT_ARRAY;
 
-class TEffectObject : public TNPCObject
+class TEffectObject : public xObject
 {
 public:
 	int		m_iCurrentSprite;
@@ -14,8 +14,8 @@ public:
 	float	m_fOffSet;
 
 public:
+	bool Init();
 	bool Frame();
-	void SpriteRender();
 
 public:
 	TEffectObject();

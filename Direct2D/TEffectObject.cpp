@@ -3,6 +3,20 @@
 #include "xInput.h"
 
 const float g_EffectTimeGap = 0.1f;
+bool TEffectObject::Init()
+{
+	m_iCurrentSprite = 0;
+	m_iIndexSprite = 0;
+	m_fSpriteTime = 1.0f;
+	m_fLifeTime = 10.0f;
+	m_fOffSet = 1.0f;
+
+	m_fDir[0] = 0.0f;
+	m_fDir[1] = 1.0f;
+	m_fSpeed = 100.0f;
+
+	return xObject::Init();
+}
 bool TEffectObject::Frame()
 {
 	if (IsDead())	return true;
@@ -38,13 +52,10 @@ bool TEffectObject::Frame()
 	m_rtCollision.right = m_rtCollision.left + m_rtDraw.right;
 	m_rtCollision.bottom = m_rtCollision.top + m_rtDraw.bottom;
 
-	return true;
+	return xObject::Frame();
 }
 
-void TEffectObject::SpriteRender()
-{
-	//스프라이트 구현해야함.
-}
+//스프라이트 Render로 구현해야한다.
 
 TEffectObject::TEffectObject()
 {
@@ -106,10 +117,12 @@ void TEffectMgr::AddEffect(POINT pos)
 {
 	TEffectObject* pObj = new TEffectObject();
 	pObj->Create(g_pd3dDevice, 400, 300, pos.x, pos.y, 0, 142, 42, 42, L"vertexshader.txt", L"../data/Resource/bitmap0.bmp");
-	pObj->m_iIndexSprite = rand() % m_rtSpriteList.size();
+	//pObj->m_iIndexSprite = rand() % m_rtSpriteList.size();
+	pObj->m_iIndexSprite = 0;
 	pObj->SetDirectionSpeed(0.0f, -1.0f, 500.0f);
 	m_effectObjList.push_back(pObj);
 }
+
 bool TEffectMgr::IsCollision(RECT rt)
 {
 	list<TEffectObject*>::iterator iter;
@@ -123,7 +136,6 @@ bool TEffectMgr::IsCollision(RECT rt)
 	}
 	return false;
 }
-
 
 bool TEffectMgr::Frame()
 {
@@ -166,11 +178,14 @@ bool TEffectMgr::Frame()
 		{
 			RECT rt = m_rtSpriteList[pEffectObject->m_iIndexSprite][pEffectObject->m_iCurrentSprite];
 			pEffectObject->m_rtDraw = rt;
+			pEffectObject->SetTexureUV(rt.left, rt.top, rt.right, rt.bottom);
+
 			pEffectObject->Frame();
 		}
 	}
 	return true;
 }
+
 bool TEffectMgr::Render()
 {
 	list<TEffectObject*>::iterator iter;
@@ -180,6 +195,7 @@ bool TEffectMgr::Render()
 	}
 	return true;
 }
+
 bool TEffectMgr::Release()
 {
 	list<TEffectObject*>::iterator iter;
