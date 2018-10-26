@@ -1,5 +1,6 @@
 #pragma once
 #include "xStd.h"
+class xCore;
 
 /*
 1) 1프레임의 경과 시간 = m_fSecPerFrame
@@ -9,6 +10,7 @@
 class TTimer
 {
 public:
+	xCore * m_pOwner;					//Owner
 	LARGE_INTEGER	m_Frequency;		// 초당 주파수 
 	LARGE_INTEGER	m_CurrentTime;		// 현재 시간 
 	LARGE_INTEGER	m_FPS;				//(FPS 체크 타이머)
@@ -39,7 +41,7 @@ public:
 	void NPCRegenTime(float fNPCRegenTimeGap);
 	void GameStartTime(float fGameTimeGap);
 public:
-	TTimer();
+	TTimer(xCore * m_pOwner);
 	virtual ~TTimer();
 };
 

@@ -136,6 +136,8 @@ bool TEffectMgr::IsCollision(RECT rt)
 
 bool TEffectMgr::Frame()
 {
+	m_fAngle += g_fSecPerFrame * 100.0f;
+
 	if (I_Input.m_CurrentMouseState.rgbButtons[0] == KEY_PUSH)
 	{
 		static float fAddTime = 0.0f;
@@ -176,6 +178,7 @@ bool TEffectMgr::Frame()
 			RECT rt = m_rtSpriteList[pEffectObject->m_iIndexSprite][pEffectObject->m_iCurrentSprite];
 			pEffectObject->SetTexureUV(rt.left, rt.top, rt.right, rt.bottom);
 
+			pEffectObject->m_fAngle = m_fAngle;
 			pEffectObject->Frame();
 		}
 	}

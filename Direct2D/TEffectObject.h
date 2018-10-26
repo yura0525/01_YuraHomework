@@ -29,6 +29,9 @@ public:
 	std::vector<RECT_ARRAY>			m_rtSpriteList;
 
 	std::list<TEffectObject*>		m_effectObjList;
+
+public:
+	float							m_fAngle;
 public:
 	bool SpriteDataLoad(const TCHAR* pszFileName);
 	void AddEffect(POINT pos);
