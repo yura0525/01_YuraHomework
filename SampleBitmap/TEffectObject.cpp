@@ -61,7 +61,7 @@ TEffectObject::~TEffectObject()
 }
 
 
-bool TEffectMgr::GameDataLoad(const TCHAR* pszFileName)
+bool TEffectMgr::SpriteDataLoad(const TCHAR* pszFileName)
 {
 	TCHAR pBuffer[256] = { 0, };
 	TCHAR pTemp[256] = { 0, };

@@ -26,12 +26,11 @@ class TEffectMgr : public TSingleton<TEffectMgr>
 {
 public:
 	friend class TSingleton<TEffectMgr>;
-	float							m_fAngle;
 	std::vector<RECT_ARRAY>			m_rtSpriteList;
 
 	std::list<TEffectObject*>		m_effectObjList;
 public:
-	bool GameDataLoad(const TCHAR* pszFileName);
+	bool SpriteDataLoad(const TCHAR* pszFileName);
 	void AddEffect(POINT pos);
 	bool IsCollision(RECT rt);
 

@@ -35,6 +35,7 @@ public:
 public:
 	void DeleteNPCList();
 	void NPCRegenAlarm();
+	bool NPCDataLoad(const TCHAR* pszFileName);
 public:
 	TGameScene();
 	virtual ~TGameScene();

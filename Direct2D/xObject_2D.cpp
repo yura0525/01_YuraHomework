@@ -34,7 +34,7 @@ bool xObject_2D::Frame()
 	m_constantData.fTime[0] = g_fGameTimer;
 	m_constantData.fTime[1] = 0.0f;
 	m_constantData.fTime[2] = m_fScale;
-	m_constantData.fTime[3] = 1.0f;
+	m_constantData.fTime[3] = m_fAngle;
 	//m_constantData.fTime[3] = fAngle;
 	pContext->UpdateSubresource(m_pVertexBuffer, 0, NULL, &m_verList[0], 0, 0);
 	pContext->UpdateSubresource(m_pConstantBuffer, 0, NULL, &m_constantData, 0, 0);
@@ -66,10 +66,6 @@ bool xObject_2D::Frame()
 }
 bool xObject_2D::PreRender()
 {
-	return true;
-}
-bool xObject_2D::Render()
-{
 	if (g_pContext == NULL)
 		return false;
 
@@ -82,13 +78,16 @@ bool xObject_2D::Render()
 
 	//F1키를 누르면 와이어 프레임이 보이게함.
 	if (I_Input.m_KeyState[DIK_F1])
-	{
 		g_pContext->RSSetState(m_pRSWireFrame);
-	}
 	else
-	{
 		g_pContext->RSSetState(m_pRSSolid);
-	}
+
+	return true;
+}
+bool xObject_2D::Render()
+{
+	
+	PreRender();
 
 	UINT offset = 0;
 	UINT stride = sizeof(P3VERTEX);
@@ -108,12 +107,13 @@ bool xObject_2D::Render()
 	//텍스쳐
 	g_pContext->PSSetShaderResources(0, 1, &(m_pTexture->m_pTexSRV));
 	g_pContext->PSSetSamplers(0, 1, &(m_pTexture->m_pSamplerState));
-	g_pContext->DrawIndexed(m_indexList.size(), 0, 0);
-
+	
+	PostRender();
 	return true;
 }
 bool xObject_2D::PostRender()
 {
+	g_pContext->DrawIndexed(m_indexList.size(), 0, 0);
 	return true;
 }
 bool xObject_2D::Release()
@@ -126,13 +126,14 @@ bool xObject_2D::Release()
 	SAFE_RELEASE(m_pRSWireFrame);
 	SAFE_RELEASE(m_pRSSolid);
 
+	//m_pTexture와 m_pShader는 오브젝트마다 생성이 아니라 
+	//xTexManager, xShaderManager 코드에서 1개만 생성해서 필요할때 찾아준다.
+	//때문에 Release해주면 안된다. 아래 주석을 풀면 안된다.
+	//SAFE_RELEASE(m_pTexture);
+	//SAFE_RELEASE(m_pShader);
 	return true;
 }
 
-void xObject_2D::SetScale(float scale)
-{
-	m_fScale = scale;
-}
 HRESULT xObject_2D::CreateVertexBuffer(ID3D11Device* pd3dDevice)
 {
 	HRESULT hr = S_OK;
@@ -235,12 +236,14 @@ HRESULT xObject_2D::CreateShader(ID3D11Device *pd3dDevice, T_STR szShaderName)
 	m_pShader = I_ShaderMgr.GetPtr(iIndex);
 	return S_OK;
 }
+
 HRESULT xObject_2D::CreateTexture(ID3D11Device *pd3dDevice, T_STR szTextureName)
 {
 	int iIndex = I_TextureMgr.Load(pd3dDevice, szTextureName);
 	m_pTexture = I_TextureMgr.GetPtr(iIndex);
 	return S_OK;
 }
+
 HRESULT xObject_2D::CreateInputLayout(ID3D11Device *pd3dDevice)
 {
 	//InputLayout.
@@ -265,7 +268,7 @@ HRESULT xObject_2D::CreateInputLayout(ID3D11Device *pd3dDevice)
 	//layout.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	//layout.InstanceDataStepRate = 0;
 	ID3DBlob* pBlobVS = m_pShader->m_pBlobVS;
-	if (pBlobVS == NULL)
+	if (m_pShader == NULL || pBlobVS == NULL)
 		return false;
 
 	pd3dDevice->CreateInputLayout(layout, iNum, pBlobVS->GetBufferPointer(), pBlobVS->GetBufferSize(), &m_pVertexLayout);
@@ -313,6 +316,7 @@ HRESULT xObject_2D::SetRasterizerState(ID3D11Device *pd3dDevice, D3D11_FILL_MODE
 xObject_2D::xObject_2D()
 {
 	m_fScale = 1.0f;
+	m_fAngle = 0.0f;
 }
 
 

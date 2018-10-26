@@ -104,6 +104,9 @@ public:
 
 	void NPCRegenAlarm()
 	{
+		TCHAR m_csBuffer[256];
+		_stprintf_s(m_csBuffer, L"Sample::NPCRegenAlarm();!!!!!!\n");
+		OutputDebugString(m_csBuffer);
 		m_pGameScene->NPCRegenAlarm();
 	}
 

@@ -14,7 +14,8 @@ bool TGameScene::Init()
 	
 	m_bEndSceneStart = false;
 
-	I_EffectMgr.GameDataLoad(L"../data/Resource/SpriteList.txt");
+	I_EffectMgr.SpriteDataLoad(L"../data/Resource/SpriteList.txt");
+	I_NPCMgr.SpriteDataLoad(L"../data/Resource/monsterList.txt");
 
 	m_BackGround = make_shared<TBKScrollObject>();
 	m_BackGround->Create(g_pd3dDevice, 450, 600, (g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 800, 600,
@@ -173,12 +174,15 @@ void TGameScene::NPCRegenAlarm()
 {
 	//¸÷ Àç»ý¼º.
 	int NPCXPos = 0;
+	TCHAR m_csBuffer[256];
+	_stprintf_s(m_csBuffer, L"TGameScene::NPCRegenAlarm();!!!!!!\n");
+	OutputDebugString(m_csBuffer);
 	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
 	{
 		TNPCObject* pNPCObject = new TNPCObject;
 		NPCXPos = (m_NPCGap / 2) + (m_NPCGap * iNPC);
 
-		pNPCObject->Create(g_pd3dDevice, 347, 201, NPCXPos, g_NPCYPos, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
+		pNPCObject->Create(g_pd3dDevice, 347, 201, NPCXPos, 50.0f, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
 		pNPCObject->SetMAXHP(1);
 
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
@@ -186,6 +190,7 @@ void TGameScene::NPCRegenAlarm()
 		m_NPCList.push_back(pNPCObject);
 	}
 }
+
 TGameScene::TGameScene()
 {
 	m_iSceneID = GAME_SCENE_PLAY;

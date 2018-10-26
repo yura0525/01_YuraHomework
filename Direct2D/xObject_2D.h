@@ -63,8 +63,11 @@ struct VS_CB
 class xObject_2D
 {
 public:
-	VS_CB						m_constantData;
 	float						m_fScale;
+	float						m_fAngle;
+public:
+	VS_CB						m_constantData;
+	
 	ID3D11Buffer*				m_pVertexBuffer;
 	ID3D11Buffer*				m_pIndexBuffer;
 	ID3D11Buffer*				m_pConstantBuffer;
@@ -95,8 +98,6 @@ public:
 	virtual bool Render();
 	virtual bool PostRender();
 	virtual bool Release();
-
-	virtual void SetScale(float scale);
 
 public:
 	virtual HRESULT CreateVertexBuffer(ID3D11Device* pd3dDevice);

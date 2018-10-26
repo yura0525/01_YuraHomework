@@ -43,6 +43,9 @@ bool TTimer::Frame()
 
 	if ((0.0f < m_fNPCRegenTimeGap) && ((m_fNPCRegenStartTime + m_fNPCRegenTimeGap) < m_fGameTime))
 	{
+		_stprintf_s(m_csBuffer, L"m_pOwner->NPCRegenAlarm();!!!!!!\n");
+		OutputDebugString(m_csBuffer);
+
 		m_pOwner->NPCRegenAlarm();
 		m_fNPCRegenStartTime += m_fNPCRegenTimeGap;
 	}

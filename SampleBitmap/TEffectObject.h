@@ -29,7 +29,7 @@ public:
 
 	std::list<TEffectObject*>		m_effectObjList;
 public:
-	bool GameDataLoad(const TCHAR* pszFileName);
+	bool SpriteDataLoad(const TCHAR* pszFileName);
 	void AddEffect(POINT pos);
 	bool IsCollision(RECT rt);
 

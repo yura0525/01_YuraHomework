@@ -14,7 +14,7 @@ bool TGameScene::Init()
 	m_NPCGap = 55;
 	m_bEndSceneStart = false;
 
-	I_EffectMgr.GameDataLoad(L"../data/Resource/SpriteList.txt");
+	I_EffectMgr.SpriteDataLoad(L"../data/Resource/SpriteList.txt");
 
 	m_BackGround.Init();
 	m_BackGround.SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 800, 600);

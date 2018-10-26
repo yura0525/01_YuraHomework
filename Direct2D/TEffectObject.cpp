@@ -55,8 +55,6 @@ bool TEffectObject::Frame()
 	return xObject::Frame();
 }
 
-//스프라이트 Render로 구현해야한다.
-
 TEffectObject::TEffectObject()
 {
 	m_iCurrentSprite = 0;
@@ -76,7 +74,7 @@ TEffectObject::~TEffectObject()
 }
 
 
-bool TEffectMgr::GameDataLoad(const TCHAR* pszFileName)
+bool TEffectMgr::SpriteDataLoad(const TCHAR* pszFileName)
 {
 	TCHAR pBuffer[256] = { 0, };
 	TCHAR pTemp[256] = { 0, };
@@ -117,8 +115,7 @@ void TEffectMgr::AddEffect(POINT pos)
 {
 	TEffectObject* pObj = new TEffectObject();
 	pObj->Create(g_pd3dDevice, 400, 300, pos.x, pos.y, 0, 142, 42, 42, L"vertexshader.txt", L"../data/Resource/bitmap0.bmp");
-	//pObj->m_iIndexSprite = rand() % m_rtSpriteList.size();
-	pObj->m_iIndexSprite = 0;
+	pObj->m_iIndexSprite = rand() % m_rtSpriteList.size();
 	pObj->SetDirectionSpeed(0.0f, -1.0f, 500.0f);
 	m_effectObjList.push_back(pObj);
 }
@@ -177,7 +174,6 @@ bool TEffectMgr::Frame()
 		if (!m_rtSpriteList.empty())
 		{
 			RECT rt = m_rtSpriteList[pEffectObject->m_iIndexSprite][pEffectObject->m_iCurrentSprite];
-			pEffectObject->m_rtDraw = rt;
 			pEffectObject->SetTexureUV(rt.left, rt.top, rt.right, rt.bottom);
 
 			pEffectObject->Frame();
@@ -227,7 +223,6 @@ void TEffectMgr::DeleteEffectList()
 
 TEffectMgr::TEffectMgr()
 {
-	m_fAngle = 0.0f;
 }
 
 
