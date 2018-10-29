@@ -4,6 +4,7 @@
 
 POINT	g_pHeroPos;
 const int g_HeroDamageTimeGap = 2.0f;
+const int g_HeroMAXHP = 100;
 
 bool THeroObject::Frame()
 {
@@ -99,4 +100,39 @@ THeroObject::THeroObject()
 
 THeroObject::~THeroObject()
 {
+}
+
+bool THeroMgr::Init()
+{
+	return m_Hero.Create(g_pd3dDevice, 150, 100, 300, 300, 0, 0, 150, 100, L"vertexshader.txt", L"../data/Resource/Hero.png");
+}
+bool THeroMgr::Frame()
+{
+	return m_Hero.Frame();
+}
+
+bool THeroMgr::Render()
+{
+	return m_Hero.Render();
+}
+
+bool THeroMgr::Release()
+{
+	return m_Hero.Release();
+}
+
+void THeroMgr::Reset()
+{
+	m_Hero.SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2));
+	m_Hero.SetMAXHP(g_HeroMAXHP);
+}
+
+THeroMgr::THeroMgr()
+{
+
+}
+
+THeroMgr::~THeroMgr()
+{
+
 }

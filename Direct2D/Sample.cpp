@@ -62,7 +62,6 @@ public:
 			{
 				if ((m_pCurrentScene->m_bEndSceneStart) || (m_iLevel > 3))
 				{
-					m_pCurrentScene->SetNPCCount(g_iMaxNPCCount);
 					m_pCurrentScene->Reset();
 					m_iLevel = 1;
 					m_pCurrentScene = m_pEndScene.get();
@@ -71,7 +70,6 @@ public:
 				else
 				{
 					m_pCurrentScene = m_pGameScene.get();
-					m_pCurrentScene->SetNPCCount(g_iMaxNPCCount);
 					++m_iLevel;
 					m_pCurrentScene->Reset();
 					m_Timer.NPCRegenTime(g_NPCRegenTime);
@@ -104,10 +102,7 @@ public:
 
 	void NPCRegenAlarm()
 	{
-		TCHAR m_csBuffer[256];
-		_stprintf_s(m_csBuffer, L"Sample::NPCRegenAlarm();!!!!!!\n");
-		OutputDebugString(m_csBuffer);
-		m_pGameScene->NPCRegenAlarm();
+		I_NPCMgr.NPCRegenAlarm();
 	}
 
 	void GameEndTimeAlarm()

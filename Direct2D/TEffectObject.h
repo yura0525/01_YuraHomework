@@ -32,15 +32,17 @@ public:
 
 public:
 	float							m_fAngle;
+
+public:
+	bool Init();
+	bool Frame();
+	bool Render();
+	bool Release();
+	
 public:
 	bool SpriteDataLoad(const TCHAR* pszFileName);
 	void AddEffect(POINT pos);
 	bool IsCollision(RECT rt);
-
-public:
-	bool Frame();
-	bool Render();
-	bool Release();
 	void DeleteEffectList();
 
 protected:

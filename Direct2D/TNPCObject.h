@@ -17,8 +17,22 @@ class TNPCMgr : public TSingleton<TNPCMgr>
 {
 public:
 	friend class TSingleton<TNPCMgr>;
-	std::vector<RECT_ARRAY>			m_rtSpriteList;
 
+	list<TNPCObject*>				m_NPCList;
+	std::vector<RECT_ARRAY>			m_rtSpriteList;
+public:
+	int								m_iMaxNPCCount;
+
+public:
+	bool Init();
+	bool Frame();
+	bool Render();
+	bool Release();
+
+public:
+	void Reset();
+	void NPCRegenAlarm();
+	void DeleteNPCList();
 public:
 	bool SpriteDataLoad(const TCHAR* pszFileName);
 

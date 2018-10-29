@@ -17,26 +17,16 @@ enum eBulletType
 class TGameScene : public TScene
 {
 public:
-	shared_ptr<TBKScrollObject>	m_BackGround;
-	shared_ptr<THeroObject>		m_Hero;
+	TBKScrollObject		m_BackGround;
 
-	list<TNPCObject*>	m_NPCList;
-
-	float				m_fAngle;
-public:
-	int					m_NPCGap;
 public:
 	bool Init();
 	bool Frame();
 	bool Render();
 	bool Release();
 	bool Reset();
+public:
 
-public:
-	void DeleteNPCList();
-	void NPCRegenAlarm();
-	bool NPCDataLoad(const TCHAR* pszFileName);
-public:
 	TGameScene();
 	virtual ~TGameScene();
 };

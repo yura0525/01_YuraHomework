@@ -1,8 +1,15 @@
 #include "TNPCObject.h"
+#include "THeroObject.h"
+#include "TEffectObject.h"
+
+const int g_iMaxNPCCount = 15;
+const int g_NPCMoveSpeed = 150.0f;
+const int g_NPCWidthGap = 55;
+const int g_NPCYPos = 50.0f;
 
 bool TNPCObject::Init()
 {
-	m_fSpeed = 150.0f;			//NPC 이동 속도
+	m_fSpeed = g_NPCMoveSpeed;			//NPC 이동 속도
 	m_iHP = 1;
 	m_fDir[0] = 0.0f;
 	m_fDir[1] = 1.0f;
@@ -31,7 +38,7 @@ bool TNPCObject::Frame()
 
 TNPCObject::TNPCObject()
 {
-	m_fSpeed = 150.0f;			//NPC 이동 속도
+	m_fSpeed = g_NPCMoveSpeed;			//NPC 이동 속도
 	m_iHP = 1;
 	m_fDir[0] = 0.0f;
 	m_fDir[1] = 1.0f;
@@ -42,6 +49,125 @@ TNPCObject::~TNPCObject()
 {
 }
 
+bool TNPCMgr::Init()
+{
+	//SpriteDataLoad(L"../data/Resource/monsterList.txt");
+	int NPCXPos = 0;
+	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
+	{
+		TNPCObject* pNPCObject = new TNPCObject;
+		NPCXPos = (g_NPCWidthGap / 2) + (g_NPCWidthGap * iNPC);
+
+		pNPCObject->Create(g_pd3dDevice, 347, 201, NPCXPos, g_NPCYPos, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
+		pNPCObject->SetMAXHP(1);
+
+		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
+		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
+		m_NPCList.push_back(pNPCObject);
+	}
+	return true;
+}
+
+bool TNPCMgr::Frame()
+{
+	list<TNPCObject*>::iterator iter;
+	int iNPC = 0;
+	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++, iNPC++)
+	{
+		TNPCObject* pNPCObject = (*iter);
+
+		//NPC가 Hero의 총알에 맞는 처리
+		if (I_EffectMgr.IsCollision(pNPCObject->m_rtCollision))
+		{
+			pNPCObject->ProcessDamage(-1);
+		}
+
+		pNPCObject->Frame();
+
+		//Hero가 NPC에 맞는거 처리.
+		if (TCollision::RectInRect(I_HeroMgr.m_Hero.m_rtCollision, pNPCObject->m_rtCollision))
+		{
+			I_HeroMgr.m_Hero.ProcessDamage(-1);
+		}
+	}
+
+	DeleteNPCList();
+	return true;
+}
+
+bool TNPCMgr::Render()
+{
+	list<TNPCObject*>::iterator iter;
+	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++)
+	{
+		(*iter)->Render();
+	}
+	return true;
+}
+
+bool TNPCMgr::Release()
+{
+	list<TNPCObject*>::iterator iter;
+	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++)
+	{
+		(*iter)->Release();
+		delete (*iter);
+	}
+	m_NPCList.clear();
+	return true;
+}
+
+void TNPCMgr::Reset()
+{
+	//NPCList
+	int iNPC = 0, NPCXPos = 0;
+	list<TNPCObject*>::iterator iter;
+	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++, iNPC++)
+	{
+		TNPCObject* pNPCObject = (*iter);
+		NPCXPos = (g_NPCWidthGap / 2) + (g_NPCWidthGap * iNPC);
+
+		pNPCObject->SetPosition(NPCXPos, g_NPCYPos);
+		pNPCObject->SetMAXHP(1);
+		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
+		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
+	}
+}
+void TNPCMgr::DeleteNPCList()
+{
+	list<TNPCObject*>::iterator iter;
+	int iNPC = 0;
+	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); )
+	{
+		TNPCObject* pNPCObject = (*iter);
+		if ((*iter)->IsDead())
+		{
+			(*iter)->Release();
+			delete (*iter);
+			iter = m_NPCList.erase(iter);
+		}
+		else
+			iter++;
+	}
+}
+
+void TNPCMgr::NPCRegenAlarm()
+{
+	//몹 재생성.
+	int NPCXPos = 0;
+	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
+	{
+		TNPCObject* pNPCObject = new TNPCObject;
+		NPCXPos = (g_NPCWidthGap / 2) + (g_NPCWidthGap * iNPC);
+
+		pNPCObject->Create(g_pd3dDevice, 347, 201, NPCXPos, 50.0f, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
+		pNPCObject->SetMAXHP(1);
+
+		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
+		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
+		m_NPCList.push_back(pNPCObject);
+	}
+}
 
 bool TNPCMgr::SpriteDataLoad(const TCHAR* pszFileName)
 {

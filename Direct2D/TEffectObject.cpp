@@ -74,64 +74,10 @@ TEffectObject::~TEffectObject()
 }
 
 
-bool TEffectMgr::SpriteDataLoad(const TCHAR* pszFileName)
+bool TEffectMgr::Init()
 {
-	TCHAR pBuffer[256] = { 0, };
-	TCHAR pTemp[256] = { 0, };
-
-	int iNumSprite = 0;
-	FILE* fp_src;
-
-	_wfopen_s(&fp_src, pszFileName, _T("rt"));
-
-	if (fp_src == NULL) return false;
-
-	_fgetts(pBuffer, _countof(pBuffer), fp_src);
-	_stscanf_s(pBuffer, _T("%s%d%s"), pTemp, _countof(pTemp), &iNumSprite);
-
-	m_rtSpriteList.resize(iNumSprite);
-
-	for (int iCnt = 0; iCnt < iNumSprite; iCnt++)
-	{
-		int iNumFrame = 0;
-		_fgetts(pBuffer, _countof(pBuffer), fp_src);
-		_stscanf_s(pBuffer, _T("%s%d"), pTemp, _countof(pTemp), &iNumFrame);
-
-		RECT rt;
-		for (int iFrame = 0; iFrame < iNumFrame; iFrame++)
-		{
-			_fgetts(pBuffer, _countof(pBuffer), fp_src);
-			_stscanf_s(pBuffer, _T("%s %d %d %d %d"), pTemp, _countof(pTemp), &rt.left, &rt.top, &rt.right, &rt.bottom);
-
-			m_rtSpriteList[iCnt].push_back(rt);
-		}
-	}
-	fclose(fp_src);
-
+	SpriteDataLoad(L"../data/Resource/SpriteList.txt");
 	return true;
-}
-
-void TEffectMgr::AddEffect(POINT pos)
-{
-	TEffectObject* pObj = new TEffectObject();
-	pObj->Create(g_pd3dDevice, 400, 300, pos.x, pos.y, 0, 142, 42, 42, L"vertexshader.txt", L"../data/Resource/bitmap0.bmp");
-	pObj->m_iIndexSprite = rand() % m_rtSpriteList.size();
-	pObj->SetDirectionSpeed(0.0f, -1.0f, 500.0f);
-	m_effectObjList.push_back(pObj);
-}
-
-bool TEffectMgr::IsCollision(RECT rt)
-{
-	list<TEffectObject*>::iterator iter;
-	TCHAR	m_csBuffer[256];
-	for (iter = m_effectObjList.begin(); iter != m_effectObjList.end(); iter++)
-	{
-		if (TCollision::RectInRect(rt, (*iter)->m_rtCollision))
-		{
-			return true;
-		}
-	}
-	return false;
 }
 
 bool TEffectMgr::Frame()
@@ -207,6 +153,67 @@ bool TEffectMgr::Release()
 	m_effectObjList.clear();
 	return true;
 }
+
+bool TEffectMgr::SpriteDataLoad(const TCHAR* pszFileName)
+{
+	TCHAR pBuffer[256] = { 0, };
+	TCHAR pTemp[256] = { 0, };
+
+	int iNumSprite = 0;
+	FILE* fp_src;
+
+	_wfopen_s(&fp_src, pszFileName, _T("rt"));
+
+	if (fp_src == NULL) return false;
+
+	_fgetts(pBuffer, _countof(pBuffer), fp_src);
+	_stscanf_s(pBuffer, _T("%s%d%s"), pTemp, _countof(pTemp), &iNumSprite);
+
+	m_rtSpriteList.resize(iNumSprite);
+
+	for (int iCnt = 0; iCnt < iNumSprite; iCnt++)
+	{
+		int iNumFrame = 0;
+		_fgetts(pBuffer, _countof(pBuffer), fp_src);
+		_stscanf_s(pBuffer, _T("%s%d"), pTemp, _countof(pTemp), &iNumFrame);
+
+		RECT rt;
+		for (int iFrame = 0; iFrame < iNumFrame; iFrame++)
+		{
+			_fgetts(pBuffer, _countof(pBuffer), fp_src);
+			_stscanf_s(pBuffer, _T("%s %d %d %d %d"), pTemp, _countof(pTemp), &rt.left, &rt.top, &rt.right, &rt.bottom);
+
+			m_rtSpriteList[iCnt].push_back(rt);
+		}
+	}
+	fclose(fp_src);
+
+	return true;
+}
+
+void TEffectMgr::AddEffect(POINT pos)
+{
+	TEffectObject* pObj = new TEffectObject();
+	pObj->Create(g_pd3dDevice, 400, 300, pos.x, pos.y, 0, 142, 42, 42, L"vertexshader.txt", L"../data/Resource/bitmap0.bmp");
+	pObj->m_iIndexSprite = rand() % m_rtSpriteList.size();
+	pObj->SetDirectionSpeed(0.0f, -1.0f, 500.0f);
+	m_effectObjList.push_back(pObj);
+}
+
+bool TEffectMgr::IsCollision(RECT rt)
+{
+	list<TEffectObject*>::iterator iter;
+	TCHAR	m_csBuffer[256];
+	for (iter = m_effectObjList.begin(); iter != m_effectObjList.end(); iter++)
+	{
+		if (TCollision::RectInRect(rt, (*iter)->m_rtCollision))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 
 void TEffectMgr::DeleteEffectList()
 {

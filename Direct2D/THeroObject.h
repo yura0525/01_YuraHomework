@@ -16,3 +16,24 @@ public:
 	virtual ~THeroObject();
 };
 
+class THeroMgr : public TSingleton<THeroMgr>
+{
+public:
+	friend class TSingleton<THeroMgr>;
+
+	THeroObject		m_Hero;
+public:
+	bool Init();
+	bool Frame();
+	bool Render();
+	bool Release();
+public:
+	void Reset();
+
+protected:
+	THeroMgr();
+public:
+	~THeroMgr();
+};
+
+#define I_HeroMgr THeroMgr::GetInstance()
