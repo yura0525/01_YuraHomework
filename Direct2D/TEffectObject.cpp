@@ -4,7 +4,7 @@
 #include "TNPCObject.h"
 #include "xInput.h"
 
-const float g_EffectTimeGap = 0.3f;
+const float g_EffectTimeGap = 0.1f;
 bool TEffectObject::Init()
 {
 	m_iCurrentSprite = 0;
@@ -14,7 +14,7 @@ bool TEffectObject::Init()
 	m_fOffSet = 1.0f;
 
 	m_fDir[0] = 0.0f;
-	m_fDir[1] = 1.0f;
+	m_fDir[1] = -1.0f;
 	m_fSpeed = 100.0f;
 
 	return xObject::Init();
@@ -31,7 +31,6 @@ bool TEffectObject::Frame()
 		SetDead();
 	}
 
-	//int iHalfX = m_rtDraw.right / 2;
 	int iHalfY = m_rtDraw.bottom / 2;
 
 	if ((m_pos.y + iHalfY) > g_rtClient.bottom)
@@ -46,14 +45,6 @@ bool TEffectObject::Frame()
 	m_pos.x += m_fDir[0] * m_fSpeed * g_fSecPerFrame;
 	m_pos.y += m_fDir[1] * m_fSpeed * g_fSecPerFrame;
 
-	//m_posDraw.x = m_pos.x - iHalfX;
-	//m_posDraw.y = m_pos.y - iHalfY;
-
-	//m_rtCollision.left = m_posDraw.x;
-	//m_rtCollision.top = m_posDraw.y;
-	//m_rtCollision.right = m_rtCollision.left + m_rtDraw.right;
-	//m_rtCollision.bottom = m_rtCollision.top + m_rtDraw.bottom;
-
 	return xObject::Frame();
 }
 
@@ -66,7 +57,7 @@ TEffectObject::TEffectObject(xObject*	pOwner) : m_pOwner(pOwner)
 	m_fOffSet = 1.0f;
 
 	m_fDir[0] = 0.0f;
-	m_fDir[1] = 1.0f;
+	m_fDir[1] = -1.0f;
 	m_fSpeed = 100.0f;
 }
 
@@ -124,7 +115,7 @@ bool TEffectMgr::Frame()
 		if (!m_rtSpriteList.empty())
 		{
 			RECT rt = m_rtSpriteList[pEffectObject->m_iIndexSprite][pEffectObject->m_iCurrentSprite];
-			pEffectObject->SetTexureUV(rt.left, rt.top, rt.right, rt.bottom);
+			pEffectObject->SetTexture(rt.left, rt.top, rt.right, rt.bottom);
 
 			pEffectObject->m_fAngle = m_fAngle;
 			pEffectObject->Frame();
@@ -171,6 +162,8 @@ bool TEffectMgr::Release()
 
 bool TEffectMgr::SpriteDataLoad(const TCHAR* pszFileName)
 {
+	m_rtSpriteList.clear();
+
 	TCHAR pBuffer[256] = { 0, };
 	TCHAR pTemp[256] = { 0, };
 
@@ -192,6 +185,8 @@ bool TEffectMgr::SpriteDataLoad(const TCHAR* pszFileName)
 		_fgetts(pBuffer, _countof(pBuffer), fp_src);
 		_stscanf_s(pBuffer, _T("%s%d"), pTemp, _countof(pTemp), &iNumFrame);
 
+		m_rtSpriteList[iCnt].clear();
+
 		RECT rt;
 		for (int iFrame = 0; iFrame < iNumFrame; iFrame++)
 		{
@@ -209,9 +204,18 @@ bool TEffectMgr::SpriteDataLoad(const TCHAR* pszFileName)
 void TEffectMgr::AddEffectByHero()
 {
 	TEffectObject* pObj = new TEffectObject(&(I_HeroMgr.m_Hero));
-	pObj->Create(g_pd3dDevice, 400, 300, g_pHeroPos.x, g_pHeroPos.y, 0, 142, 42, 183, L"vertexshader.txt", L"../data/Resource/effect.bmp");
+	
 	//pObj->m_iIndexSprite = rand() % m_rtSpriteList.size();
-	pObj->m_iIndexSprite = 0;
+	pObj->m_iIndexSprite = 1;
+	if ( (pObj->m_iIndexSprite) >= m_rtSpriteList.size() )
+		return;
+
+	if (m_rtSpriteList[pObj->m_iIndexSprite].empty())
+		return;
+
+	pObj->Create(g_pd3dDevice, 400, 300, g_pHeroPos.x, g_pHeroPos.y, 
+		m_rtSpriteList[pObj->m_iIndexSprite][0].left, m_rtSpriteList[pObj->m_iIndexSprite][0].top, 
+		m_rtSpriteList[pObj->m_iIndexSprite][0].right, m_rtSpriteList[pObj->m_iIndexSprite][0].bottom, L"vertexshader.txt", L"../data/Resource/effect.bmp");
 	pObj->SetDirectionSpeed(0.0f, -1.0f, 500.0f);
 	m_effectObjListByHero.push_back(pObj);
 }
@@ -225,7 +229,7 @@ void TEffectMgr::AddEffectByNPC(TNPCObject* pOwner)
 	m_effectObjListByNPC.push_back(pObj);
 }
 
-bool TEffectMgr::IsCollision(RECT rt, bool isHeroEffect)
+bool TEffectMgr::IsCollisionAndDeleteList(RECT rt, bool isHeroEffect)
 {
 	list<TEffectObject*>::iterator iter;
 
@@ -235,6 +239,8 @@ bool TEffectMgr::IsCollision(RECT rt, bool isHeroEffect)
 		{
 			if (TCollision::RectInRect(rt, (*iter)->m_rtCollision))
 			{
+				//충돌되었으면 m_effectObjListByHero에서 삭제한다.
+				m_effectObjListByHero.erase(iter);
 				return true;
 			}
 		}

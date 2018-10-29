@@ -20,21 +20,18 @@ void xObject::SetPosition(float xPos, float yPos)
 		+ (m_rtDraw.bottom * m_rtDraw.bottom));
 }
 
-void xObject::SetPosition(float xPos, float yPos, DWORD texLeft, DWORD texTop, DWORD texRight, DWORD texBottom)
+void xObject::SetPosition(float xPos, float yPos, DWORD texLeft, DWORD texTop, DWORD width, DWORD height)
 {
 	m_pos.x = xPos;
 	m_pos.y = yPos;
 
 	m_rtDraw.left = texLeft;
 	m_rtDraw.top = texTop;
-	m_rtDraw.right = (texRight - texLeft);
-	m_rtDraw.bottom = (texBottom - texTop);
+	m_rtDraw.right = width;
+	m_rtDraw.bottom = height;
 
 	m_posDraw.x = m_pos.x - (m_rtDraw.right / 2);
 	m_posDraw.y = m_pos.y - (m_rtDraw.bottom / 2);
-
-	m_fDir[0] = 0.0f;								//NPC는 위에서 아래로만 움직인다.
-	m_fDir[1] = 1.0f;
 
 	m_rtCollision.left = m_posDraw.x;
 	m_rtCollision.top = m_posDraw.y;
@@ -45,23 +42,9 @@ void xObject::SetPosition(float xPos, float yPos, DWORD texLeft, DWORD texTop, D
 		+ (m_rtDraw.bottom * m_rtDraw.bottom));
 }
 
-void xObject::SetTexureUV(DWORD texLeft, DWORD texTop, DWORD texRight, DWORD texBottom)
+void xObject::SetTexture(DWORD texLeft, DWORD texTop, DWORD width, DWORD height)
 {
-	m_rtDraw.left = texLeft;
-	m_rtDraw.top = texTop;
-	m_rtDraw.right = (texRight - texLeft);
-	m_rtDraw.bottom = (texBottom - texTop);
-
-	m_posDraw.x = m_pos.x - (m_rtDraw.right / 2);
-	m_posDraw.y = m_pos.y - (m_rtDraw.bottom / 2);
-
-	m_rtCollision.left = m_posDraw.x;
-	m_rtCollision.top = m_posDraw.y;
-	m_rtCollision.right = m_rtCollision.left + m_rtDraw.right;
-	m_rtCollision.bottom = m_rtCollision.top + m_rtDraw.bottom;
-
-	m_iMaxDistance = sqrt((m_rtDraw.right * m_rtDraw.right)
-		+ (m_rtDraw.bottom * m_rtDraw.bottom));
+	SetPosition(m_pos.x, m_pos.y, texLeft, texTop, width, height);
 }
 
 void xObject::SetMaxTexureUV(float texMaxU, float texMaxV)
@@ -217,8 +200,8 @@ xObject::xObject()
 	m_MaxTexUV.u = 0.0f;
 	m_MaxTexUV.v = 0.0f;
 
-	m_fDir[0] = 1.0f;
-	m_fDir[1] = 1.0f;
+	m_fDir[0] = 0.0f;
+	m_fDir[1] = 0.0f;
 
 	m_fSpeed = 100.0f;
 	m_fAttackRadius = 200.0f;

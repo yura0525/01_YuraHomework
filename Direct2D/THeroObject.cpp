@@ -3,8 +3,9 @@
 #include "TCollision.h"
 
 POINT	g_pHeroPos;
-const int g_HeroDamageTimeGap = 2.0f;
-const int g_HeroMAXHP = 100;
+const int g_HERO_DAMAGE_TIME_GAP = 2.0f;
+const int g_Hero_MAXHP = 100;
+const int g_INIT_HERO_POSX = 550;
 
 bool THeroObject::Frame()
 {
@@ -15,35 +16,31 @@ bool THeroObject::Frame()
 	if (g_Input.bFront)
 	{
 		m_pos.y += -1 * g_fSecPerFrame * 300.0f;
-		if ((m_pos.y - iHalfY) < g_rtClient.top)
-		{
-			m_pos.y = g_rtClient.top + iHalfY;
-		}
 	}
 	if (g_Input.bBack)
 	{
 		m_pos.y += 1 * g_fSecPerFrame * 300.0f;
-		if ((m_pos.y + iHalfY) > g_rtClient.bottom)
-		{
-			m_pos.y = g_rtClient.bottom - iHalfY;
-		}
 	}
 	if (g_Input.bLeft)
 	{
 		m_pos.x += -1 * g_fSecPerFrame * 300.0f;
-		if ((m_pos.x - iHalfX) < g_rtClient.left)
-		{
-			m_pos.x = g_rtClient.left + iHalfY;
-		}
 	}
 	if (g_Input.bRight)
 	{
 		m_pos.x += 1 * g_fSecPerFrame * 300.0f;
-		if ((m_pos.x + iHalfX) > g_rtClient.right)
-		{
-			m_pos.x = g_rtClient.right - iHalfX;
-		}
 	}
+
+	if ((m_pos.y - iHalfY) < g_rtClient.top)
+		m_pos.y = g_rtClient.top + iHalfY;
+
+	if ((m_pos.y + iHalfY) > g_rtClient.bottom)
+		m_pos.y = g_rtClient.bottom - iHalfY;
+
+	if ((m_pos.x - iHalfX) < g_rtClient.left)
+		m_pos.x = g_rtClient.left + iHalfX;
+
+	if ((m_pos.x + iHalfX) > g_rtClient.right)
+		m_pos.x = g_rtClient.right - iHalfX;
 
 	//위치값이나 충돌박스 수정.
 	return xObject::Frame();
@@ -95,7 +92,7 @@ THeroObject::THeroObject()
 {
 	bFadeStart = false;
 	m_fLastDamageTime = g_fGameTimer;
-	m_fDamageTimeGap = g_HeroDamageTimeGap;
+	m_fDamageTimeGap = g_HERO_DAMAGE_TIME_GAP;
 }
 
 THeroObject::~THeroObject()
@@ -104,7 +101,7 @@ THeroObject::~THeroObject()
 
 bool THeroMgr::Init()
 {
-	return m_Hero.Create(g_pd3dDevice, 150, 100, 300, 300, 0, 0, 150, 100, L"vertexshader.txt", L"../data/Resource/Hero.png");
+	return m_Hero.Create(g_pd3dDevice, 150, 100, (g_rtClient.right / 2), g_INIT_HERO_POSX, 0, 0, 150, 100, L"vertexshader.txt", L"../data/Resource/Hero.png");
 }
 bool THeroMgr::Frame()
 {
@@ -123,8 +120,8 @@ bool THeroMgr::Release()
 
 void THeroMgr::Reset()
 {
-	m_Hero.SetPosition((g_rtClient.right / 2), (g_rtClient.bottom / 2));
-	m_Hero.SetMAXHP(g_HeroMAXHP);
+	m_Hero.SetPosition((g_rtClient.right / 2), g_INIT_HERO_POSX);
+	m_Hero.SetMAXHP(g_Hero_MAXHP);
 }
 
 THeroMgr::THeroMgr()

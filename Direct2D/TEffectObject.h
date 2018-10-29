@@ -45,7 +45,7 @@ public:
 	bool SpriteDataLoad(const TCHAR* pszFileName);
 	void AddEffectByHero();
 	void AddEffectByNPC(TNPCObject* pOwner);
-	bool IsCollision(RECT rt, bool isHeroEffect = true);
+	bool IsCollisionAndDeleteList(RECT rt, bool isHeroEffect = true);
 	void DeleteEffectList();
 
 protected:

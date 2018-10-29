@@ -3,14 +3,15 @@
 #include "TEffectObject.h"
 #include <time.h>
 
-const int g_iMaxNPCCount = 10;
-const int g_NPCMoveSpeed = 150.0f;
+const int g_iMAX_NPC_Count = 9;
+const int g_MOVE_NPC_SPEED = 150.0f;
 const int g_NPCWidthGap = 84;
-const int g_NPCYPos = 50.0f;
+const int g_INIT_NPC_POSY = -50.0f;
+const int g_INIT_NPC_POSX = 25.0f;
 
 bool TNPCObject::Init()
 {
-	m_fSpeed = g_NPCMoveSpeed;			//NPC 이동 속도
+	m_fSpeed = g_MOVE_NPC_SPEED;			//NPC 이동 속도
 	m_iHP = 1;
 	m_fDir[0] = 0.0f;
 	m_fDir[1] = 1.0f;
@@ -40,7 +41,7 @@ bool TNPCObject::Frame()
 TNPCObject::TNPCObject(eNPCTYPE eType)
 {
 	m_eNPCType = eType;
-	m_fSpeed = g_NPCMoveSpeed;			//NPC 이동 속도
+	m_fSpeed = g_MOVE_NPC_SPEED;			//NPC 이동 속도
 	m_iHP = 1;
 	m_fDir[0] = 0.0f;
 	m_fDir[1] = 1.0f;
@@ -54,41 +55,6 @@ TNPCObject::~TNPCObject()
 bool TNPCMgr::Init()
 {
 	SpriteDataLoad(L"../data/Resource/NPCList.txt");
-
-	int NPCXPos = 0;
-	eNPCTYPE eType;
-	srand(time(NULL));
-
-	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
-	{
-		eType = (eNPCTYPE)(rand() % eMaxDragon);
-		TNPCObject* pNPCObject = new TNPCObject(eType);
-
-		pNPCObject->m_iIndexSprite = (int)eType;
-
-		if (m_rtSpriteList.empty())
-			return false;
-
-		RECT rt = m_rtSpriteList[0][pNPCObject->m_iIndexSprite];
-
-		NPCXPos = (g_NPCWidthGap / 2) + (g_NPCWidthGap * iNPC);
-
-		pNPCObject->Create(g_pd3dDevice, 609, 100, NPCXPos, g_NPCYPos, 
-			rt.left, rt.top, rt.right, rt.bottom,
-			L"vertexshader.txt", L"../data/Resource/dragon.png");
-
-		TCHAR	csBuffer[256];
-		_stprintf_s(csBuffer, L"TNPCMgr::Init() eType = %d , NPCXPos = %d, g_NPCYPos  = %d, rt.left = %d, rt.top = %d, rt.right = %d, rt.bottom = %d\n",
-			eType, NPCXPos, g_NPCYPos, rt.left, rt.top, rt.right, rt.bottom);
-
-		OutputDebugString(csBuffer);
-
-		pNPCObject->SetMAXHP(eType);
-
-		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
-		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
-		m_NPCList.push_back(pNPCObject);
-	}
 	return true;
 }
 
@@ -101,7 +67,7 @@ bool TNPCMgr::Frame()
 		TNPCObject* pNPCObject = (*iter);
 
 		//NPC가 Hero의 총알에 맞는 처리
-		if (I_EffectMgr.IsCollision(pNPCObject->m_rtCollision, true))
+		if (I_EffectMgr.IsCollisionAndDeleteList(pNPCObject->m_rtCollision, true))
 		{
 			pNPCObject->ProcessDamage(-1);
 		}
@@ -149,9 +115,9 @@ void TNPCMgr::Reset()
 	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++, iNPC++)
 	{
 		TNPCObject* pNPCObject = (*iter);
-		NPCXPos = (g_NPCWidthGap / 2) + (g_NPCWidthGap * iNPC);
+		NPCXPos = g_INIT_NPC_POSX + (g_NPCWidthGap / 2) + (g_NPCWidthGap * iNPC);
 
-		pNPCObject->SetPosition(NPCXPos, g_NPCYPos);
+		pNPCObject->SetPosition(NPCXPos, g_INIT_NPC_POSY);
 		pNPCObject->SetMAXHP(pNPCObject->m_eNPCType);
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
@@ -179,34 +145,25 @@ void TNPCMgr::NPCRegenAlarm()
 {
 	//몹 재생성.
 	int NPCXPos = 0;
-	eNPCTYPE eType;
 	srand(time(NULL));
 
-	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
+	for (int iNPC = 0; iNPC < g_iMAX_NPC_Count; iNPC++)
 	{
-		eType = (eNPCTYPE)(rand() % eMaxDragon);
-		//eType = eGoldDragon;
+		//eNPCTYPE으로 HP값을 셋팅하므로 1부터 하게 했다.
+		eNPCTYPE eType = (eNPCTYPE)(rand() % eMaxDragon);
 		TNPCObject* pNPCObject = new TNPCObject(eType);
-
-		pNPCObject->m_iIndexSprite = (int)eType;
 
 		if (m_rtSpriteList.empty())
 			return;
 
-		RECT rt = m_rtSpriteList[0][pNPCObject->m_iIndexSprite];
+		RECT rt = m_rtSpriteList[0][eType];
 
-		NPCXPos = (g_NPCWidthGap / 2) + (g_NPCWidthGap * iNPC);
+		NPCXPos = g_INIT_NPC_POSX + (g_NPCWidthGap / 2) + (g_NPCWidthGap * iNPC);
 
-		pNPCObject->Create(g_pd3dDevice, 609, 100, NPCXPos, g_NPCYPos,
+		pNPCObject->Create(g_pd3dDevice, 609, 100, NPCXPos, g_INIT_NPC_POSY,
 			rt.left, rt.top, rt.right, rt.bottom,
 			L"vertexshader.txt", L"../data/Resource/dragon.png");
-		pNPCObject->SetMAXHP(eType);
-
-		TCHAR	csBuffer[256];
-		_stprintf_s(csBuffer, L"TNPCMgr::NPCRegenAlarm() eType = %d , NPCXPos = %d, g_NPCYPos  = %d, rt.left = %d, rt.top = %d, rt.right = %d, rt.bottom = %d\n",
-			eType, NPCXPos, g_NPCYPos, rt.left, rt.top, rt.right, rt.bottom);
-
-		OutputDebugString(csBuffer);
+		pNPCObject->SetMAXHP(eType + 1);
 
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
@@ -216,6 +173,8 @@ void TNPCMgr::NPCRegenAlarm()
 
 bool TNPCMgr::SpriteDataLoad(const TCHAR* pszFileName)
 {
+	m_rtSpriteList.clear();
+
 	TCHAR pBuffer[256] = { 0, };
 	TCHAR pTemp[256] = { 0, };
 
@@ -236,6 +195,8 @@ bool TNPCMgr::SpriteDataLoad(const TCHAR* pszFileName)
 		int iNumFrame = 0;
 		_fgetts(pBuffer, _countof(pBuffer), fp_src);
 		_stscanf_s(pBuffer, _T("%s%d"), pTemp, _countof(pTemp), &iNumFrame);
+
+		m_rtSpriteList[iCnt].clear();
 
 		RECT rt;
 		for (int iFrame = 0; iFrame < iNumFrame; iFrame++)

@@ -18,7 +18,6 @@ class TNPCObject : public xObject
 {
 public:
 	eNPCTYPE	m_eNPCType;
-	int			m_iIndexSprite;
 public:
 	bool Init();
 	bool Frame();

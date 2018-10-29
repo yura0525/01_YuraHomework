@@ -39,10 +39,10 @@ public:
 	float	m_fDamageTimeGap;		//무적타임	
 public:
 	void SetPosition(float xPos, float yPos);
-	void SetPosition(float xPos, float yPos, DWORD texLeft, DWORD texTop, DWORD texRight, DWORD texBottom);
+	void SetPosition(float xPos, float yPos, DWORD texLeft, DWORD texTop, DWORD width, DWORD height);
+	void SetTexture(DWORD texLeft, DWORD texTop, DWORD width, DWORD height);
 
 	//텍스쳐좌표와 버텍스 좌표 관련 함수.
-	void SetTexureUV(DWORD texLeft, DWORD texTop, DWORD texRight, DWORD texBottom);
 	void SetMaxTexureUV(float texMaxU, float texMaxV);
 	
 	D3DXVECTOR3 Generate(float x, float y);
