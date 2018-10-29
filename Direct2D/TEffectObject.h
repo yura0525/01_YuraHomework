@@ -6,30 +6,32 @@ typedef std::vector<RECT> RECT_ARRAY;
 class TEffectObject : public xObject
 {
 public:
-	int		m_iCurrentSprite;
-	int		m_iIndexSprite;
+	xObject*	m_pOwner;
+	int			m_iCurrentSprite;
+	int			m_iIndexSprite;
 
-	float	m_fSpriteTime;
-	float	m_fLifeTime;
-	float	m_fOffSet;
+	float		m_fSpriteTime;
+	float		m_fLifeTime;
+	float		m_fOffSet;
 
 public:
 	bool Init();
 	bool Frame();
 
 public:
-	TEffectObject();
+	TEffectObject(xObject*	pOwner);
 	virtual ~TEffectObject();
 };
 
+class TNPCObject;
 class TEffectMgr : public TSingleton<TEffectMgr>
 {
 public:
 	friend class TSingleton<TEffectMgr>;
 	std::vector<RECT_ARRAY>			m_rtSpriteList;
 
-	std::list<TEffectObject*>		m_effectObjList;
-
+	std::list<TEffectObject*>		m_effectObjListByHero;
+	std::list<TEffectObject*>		m_effectObjListByNPC;
 public:
 	float							m_fAngle;
 
@@ -41,8 +43,9 @@ public:
 	
 public:
 	bool SpriteDataLoad(const TCHAR* pszFileName);
-	void AddEffect(POINT pos);
-	bool IsCollision(RECT rt);
+	void AddEffectByHero();
+	void AddEffectByNPC(TNPCObject* pOwner);
+	bool IsCollision(RECT rt, bool isHeroEffect = true);
 	void DeleteEffectList();
 
 protected:

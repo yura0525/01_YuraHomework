@@ -1,10 +1,11 @@
 #include "TNPCObject.h"
 #include "THeroObject.h"
 #include "TEffectObject.h"
+#include <time.h>
 
-const int g_iMaxNPCCount = 15;
+const int g_iMaxNPCCount = 10;
 const int g_NPCMoveSpeed = 150.0f;
-const int g_NPCWidthGap = 55;
+const int g_NPCWidthGap = 84;
 const int g_NPCYPos = 50.0f;
 
 bool TNPCObject::Init()
@@ -36,8 +37,9 @@ bool TNPCObject::Frame()
 	return xObject::Frame();
 }
 
-TNPCObject::TNPCObject()
+TNPCObject::TNPCObject(eNPCTYPE eType)
 {
+	m_eNPCType = eType;
 	m_fSpeed = g_NPCMoveSpeed;			//NPC 이동 속도
 	m_iHP = 1;
 	m_fDir[0] = 0.0f;
@@ -51,15 +53,37 @@ TNPCObject::~TNPCObject()
 
 bool TNPCMgr::Init()
 {
-	//SpriteDataLoad(L"../data/Resource/monsterList.txt");
+	SpriteDataLoad(L"../data/Resource/NPCList.txt");
+
 	int NPCXPos = 0;
+	eNPCTYPE eType;
+	srand(time(NULL));
+
 	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
 	{
-		TNPCObject* pNPCObject = new TNPCObject;
+		eType = (eNPCTYPE)(rand() % eMaxDragon);
+		TNPCObject* pNPCObject = new TNPCObject(eType);
+
+		pNPCObject->m_iIndexSprite = (int)eType;
+
+		if (m_rtSpriteList.empty())
+			return false;
+
+		RECT rt = m_rtSpriteList[0][pNPCObject->m_iIndexSprite];
+
 		NPCXPos = (g_NPCWidthGap / 2) + (g_NPCWidthGap * iNPC);
 
-		pNPCObject->Create(g_pd3dDevice, 347, 201, NPCXPos, g_NPCYPos, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
-		pNPCObject->SetMAXHP(1);
+		pNPCObject->Create(g_pd3dDevice, 609, 100, NPCXPos, g_NPCYPos, 
+			rt.left, rt.top, rt.right, rt.bottom,
+			L"vertexshader.txt", L"../data/Resource/dragon.png");
+
+		TCHAR	csBuffer[256];
+		_stprintf_s(csBuffer, L"TNPCMgr::Init() eType = %d , NPCXPos = %d, g_NPCYPos  = %d, rt.left = %d, rt.top = %d, rt.right = %d, rt.bottom = %d\n",
+			eType, NPCXPos, g_NPCYPos, rt.left, rt.top, rt.right, rt.bottom);
+
+		OutputDebugString(csBuffer);
+
+		pNPCObject->SetMAXHP(eType);
 
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
@@ -77,7 +101,7 @@ bool TNPCMgr::Frame()
 		TNPCObject* pNPCObject = (*iter);
 
 		//NPC가 Hero의 총알에 맞는 처리
-		if (I_EffectMgr.IsCollision(pNPCObject->m_rtCollision))
+		if (I_EffectMgr.IsCollision(pNPCObject->m_rtCollision, true))
 		{
 			pNPCObject->ProcessDamage(-1);
 		}
@@ -128,7 +152,7 @@ void TNPCMgr::Reset()
 		NPCXPos = (g_NPCWidthGap / 2) + (g_NPCWidthGap * iNPC);
 
 		pNPCObject->SetPosition(NPCXPos, g_NPCYPos);
-		pNPCObject->SetMAXHP(1);
+		pNPCObject->SetMAXHP(pNPCObject->m_eNPCType);
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
 	}
@@ -155,13 +179,34 @@ void TNPCMgr::NPCRegenAlarm()
 {
 	//몹 재생성.
 	int NPCXPos = 0;
+	eNPCTYPE eType;
+	srand(time(NULL));
+
 	for (int iNPC = 0; iNPC < g_iMaxNPCCount; iNPC++)
 	{
-		TNPCObject* pNPCObject = new TNPCObject;
+		eType = (eNPCTYPE)(rand() % eMaxDragon);
+		//eType = eGoldDragon;
+		TNPCObject* pNPCObject = new TNPCObject(eType);
+
+		pNPCObject->m_iIndexSprite = (int)eType;
+
+		if (m_rtSpriteList.empty())
+			return;
+
+		RECT rt = m_rtSpriteList[0][pNPCObject->m_iIndexSprite];
+
 		NPCXPos = (g_NPCWidthGap / 2) + (g_NPCWidthGap * iNPC);
 
-		pNPCObject->Create(g_pd3dDevice, 347, 201, NPCXPos, 50.0f, 87, 0, 174, 100, L"vertexshader.txt", L"../data/Resource/dragon.png");
-		pNPCObject->SetMAXHP(1);
+		pNPCObject->Create(g_pd3dDevice, 609, 100, NPCXPos, g_NPCYPos,
+			rt.left, rt.top, rt.right, rt.bottom,
+			L"vertexshader.txt", L"../data/Resource/dragon.png");
+		pNPCObject->SetMAXHP(eType);
+
+		TCHAR	csBuffer[256];
+		_stprintf_s(csBuffer, L"TNPCMgr::NPCRegenAlarm() eType = %d , NPCXPos = %d, g_NPCYPos  = %d, rt.left = %d, rt.top = %d, rt.right = %d, rt.bottom = %d\n",
+			eType, NPCXPos, g_NPCYPos, rt.left, rt.top, rt.right, rt.bottom);
+
+		OutputDebugString(csBuffer);
 
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);

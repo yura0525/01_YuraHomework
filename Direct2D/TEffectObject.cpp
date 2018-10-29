@@ -1,8 +1,10 @@
 #include "TEffectObject.h"
 #include "TCollision.h"
+#include "THeroObject.h"
+#include "TNPCObject.h"
 #include "xInput.h"
 
-const float g_EffectTimeGap = 0.1f;
+const float g_EffectTimeGap = 0.3f;
 bool TEffectObject::Init()
 {
 	m_iCurrentSprite = 0;
@@ -29,7 +31,7 @@ bool TEffectObject::Frame()
 		SetDead();
 	}
 
-	int iHalfX = m_rtDraw.right / 2;
+	//int iHalfX = m_rtDraw.right / 2;
 	int iHalfY = m_rtDraw.bottom / 2;
 
 	if ((m_pos.y + iHalfY) > g_rtClient.bottom)
@@ -44,18 +46,18 @@ bool TEffectObject::Frame()
 	m_pos.x += m_fDir[0] * m_fSpeed * g_fSecPerFrame;
 	m_pos.y += m_fDir[1] * m_fSpeed * g_fSecPerFrame;
 
-	m_posDraw.x = m_pos.x - iHalfX;
-	m_posDraw.y = m_pos.y - iHalfY;
+	//m_posDraw.x = m_pos.x - iHalfX;
+	//m_posDraw.y = m_pos.y - iHalfY;
 
-	m_rtCollision.left = m_posDraw.x;
-	m_rtCollision.top = m_posDraw.y;
-	m_rtCollision.right = m_rtCollision.left + m_rtDraw.right;
-	m_rtCollision.bottom = m_rtCollision.top + m_rtDraw.bottom;
+	//m_rtCollision.left = m_posDraw.x;
+	//m_rtCollision.top = m_posDraw.y;
+	//m_rtCollision.right = m_rtCollision.left + m_rtDraw.right;
+	//m_rtCollision.bottom = m_rtCollision.top + m_rtDraw.bottom;
 
 	return xObject::Frame();
 }
 
-TEffectObject::TEffectObject()
+TEffectObject::TEffectObject(xObject*	pOwner) : m_pOwner(pOwner)
 {
 	m_iCurrentSprite = 0;
 	m_iIndexSprite = 0;
@@ -91,7 +93,7 @@ bool TEffectMgr::Frame()
 
 		if (fAddTime >= g_EffectTimeGap)
 		{
-			AddEffect(g_pHeroPos);
+			AddEffectByHero();
 			fAddTime -= g_EffectTimeGap;
 		}
 	}
@@ -99,7 +101,7 @@ bool TEffectMgr::Frame()
 	DeleteEffectList();
 
 	list<TEffectObject*>::iterator iter;
-	for (iter = m_effectObjList.begin(); iter != m_effectObjList.end(); iter++)
+	for (iter = m_effectObjListByHero.begin(); iter != m_effectObjListByHero.end(); iter++)
 	{
 		TEffectObject* pEffectObject = (*iter);
 		pEffectObject->m_fOffSet = 1.0f / m_rtSpriteList[pEffectObject->m_iIndexSprite].size();
@@ -134,7 +136,12 @@ bool TEffectMgr::Frame()
 bool TEffectMgr::Render()
 {
 	list<TEffectObject*>::iterator iter;
-	for (iter = m_effectObjList.begin(); iter != m_effectObjList.end(); iter++)
+	for (iter = m_effectObjListByHero.begin(); iter != m_effectObjListByHero.end(); iter++)
+	{
+		(*iter)->Render();
+	}
+
+	for (iter = m_effectObjListByNPC.begin(); iter != m_effectObjListByNPC.end(); iter++)
 	{
 		(*iter)->Render();
 	}
@@ -143,14 +150,22 @@ bool TEffectMgr::Render()
 
 bool TEffectMgr::Release()
 {
+	//m_effectObjListByHero
 	list<TEffectObject*>::iterator iter;
-	for (iter = m_effectObjList.begin(); iter != m_effectObjList.end(); iter++)
+	for (iter = m_effectObjListByHero.begin(); iter != m_effectObjListByHero.end(); iter++)
 	{
 		(*iter)->Release();
 		delete (*iter);
 	}
+	m_effectObjListByHero.clear();
 
-	m_effectObjList.clear();
+	//m_effectObjListByNPC
+	for (iter = m_effectObjListByNPC.begin(); iter != m_effectObjListByNPC.end(); iter++)
+	{
+		(*iter)->Release();
+		delete (*iter);
+	}
+	m_effectObjListByNPC.clear();
 	return true;
 }
 
@@ -191,24 +206,47 @@ bool TEffectMgr::SpriteDataLoad(const TCHAR* pszFileName)
 	return true;
 }
 
-void TEffectMgr::AddEffect(POINT pos)
+void TEffectMgr::AddEffectByHero()
 {
-	TEffectObject* pObj = new TEffectObject();
-	pObj->Create(g_pd3dDevice, 400, 300, pos.x, pos.y, 0, 142, 42, 42, L"vertexshader.txt", L"../data/Resource/bitmap0.bmp");
-	pObj->m_iIndexSprite = rand() % m_rtSpriteList.size();
+	TEffectObject* pObj = new TEffectObject(&(I_HeroMgr.m_Hero));
+	pObj->Create(g_pd3dDevice, 400, 300, g_pHeroPos.x, g_pHeroPos.y, 0, 142, 42, 183, L"vertexshader.txt", L"../data/Resource/effect.bmp");
+	//pObj->m_iIndexSprite = rand() % m_rtSpriteList.size();
+	pObj->m_iIndexSprite = 0;
 	pObj->SetDirectionSpeed(0.0f, -1.0f, 500.0f);
-	m_effectObjList.push_back(pObj);
+	m_effectObjListByHero.push_back(pObj);
 }
 
-bool TEffectMgr::IsCollision(RECT rt)
+void TEffectMgr::AddEffectByNPC(TNPCObject* pOwner)
+{
+	TEffectObject* pObj = new TEffectObject(pOwner);
+	pObj->Create(g_pd3dDevice, 400, 300, pOwner->m_pos.x, pOwner->m_pos.y, 0, 142, 42, 183, L"vertexshader.txt", L"../data/Resource/effect.bmp");
+	pObj->m_iIndexSprite = 1;
+	pObj->SetDirectionSpeed(0.0f, -1.0f, 500.0f);
+	m_effectObjListByNPC.push_back(pObj);
+}
+
+bool TEffectMgr::IsCollision(RECT rt, bool isHeroEffect)
 {
 	list<TEffectObject*>::iterator iter;
-	TCHAR	m_csBuffer[256];
-	for (iter = m_effectObjList.begin(); iter != m_effectObjList.end(); iter++)
+
+	if (isHeroEffect)
 	{
-		if (TCollision::RectInRect(rt, (*iter)->m_rtCollision))
+		for (iter = m_effectObjListByHero.begin(); iter != m_effectObjListByHero.end(); iter++)
 		{
-			return true;
+			if (TCollision::RectInRect(rt, (*iter)->m_rtCollision))
+			{
+				return true;
+			}
+		}
+	}
+	else
+	{
+		for (iter = m_effectObjListByNPC.begin(); iter != m_effectObjListByNPC.end(); iter++)
+		{
+			if (TCollision::RectInRect(rt, (*iter)->m_rtCollision))
+			{
+				return true;
+			}
 		}
 	}
 	return false;
@@ -218,13 +256,25 @@ bool TEffectMgr::IsCollision(RECT rt)
 void TEffectMgr::DeleteEffectList()
 {
 	list<TEffectObject*>::iterator iter;
-	for (iter = m_effectObjList.begin(); iter != m_effectObjList.end();)
+	for (iter = m_effectObjListByHero.begin(); iter != m_effectObjListByHero.end();)
 	{
 		if ((*iter)->IsDead())
 		{
 			(*iter)->Release();
 			delete (*iter);
-			iter = m_effectObjList.erase(iter);
+			iter = m_effectObjListByHero.erase(iter);
+		}
+		else
+			iter++;
+	}
+
+	for (iter = m_effectObjListByNPC.begin(); iter != m_effectObjListByNPC.end();)
+	{
+		if ((*iter)->IsDead())
+		{
+			(*iter)->Release();
+			delete (*iter);
+			iter = m_effectObjListByNPC.erase(iter);
 		}
 		else
 			iter++;

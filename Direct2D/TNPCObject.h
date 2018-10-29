@@ -2,14 +2,28 @@
 #include "xStd.h"
 #include "xObject.h"
 typedef std::vector<RECT> RECT_ARRAY;
+enum eNPCTYPE
+{
+	eGoldDragon,
+	ePinkDragon,
+	eGreenDragon,
+	eBlueDragon,
+	eRedDragon,
+	ePurpleDragon,
+	eBlackDragon,
+	eMaxDragon,
+};
 
 class TNPCObject : public xObject
 {
 public:
+	eNPCTYPE	m_eNPCType;
+	int			m_iIndexSprite;
+public:
 	bool Init();
 	bool Frame();
 public:
-	TNPCObject();
+	TNPCObject(eNPCTYPE eType);
 	virtual ~TNPCObject();
 };
 
