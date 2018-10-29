@@ -161,6 +161,7 @@
     <ClCompile Include="TFSMMgr.cpp" />
     <ClCompile Include="TGameScene.cpp" />
     <ClCompile Include="THeroObject.cpp" />
+    <ClCompile Include="THPBarObject.cpp" />
     <ClCompile Include="TLobbyScene.cpp" />
     <ClCompile Include="TMoveAction.cpp" />
     <ClCompile Include="TNPCObject.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="TFSMMgr.h" />
     <ClInclude Include="TGameScene.h" />
     <ClInclude Include="THeroObject.h" />
+    <ClInclude Include="THPBarObject.h" />
     <ClInclude Include="TLobbyScene.h" />
     <ClInclude Include="TMoveAction.h" />
     <ClInclude Include="TNPCObject.h" />

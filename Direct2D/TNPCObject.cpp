@@ -3,9 +3,9 @@
 #include "TEffectObject.h"
 #include <time.h>
 
-const int g_iMAX_NPC_Count = 9;
+const int g_iMAX_NPC_COUNT = 9;
 const int g_MOVE_NPC_SPEED = 150.0f;
-const int g_NPCWidthGap = 84;
+const int g_NPC_WIDTH_GAP = 84;
 const int g_INIT_NPC_POSY = -50.0f;
 const int g_INIT_NPC_POSX = 25.0f;
 
@@ -77,7 +77,7 @@ bool TNPCMgr::Frame()
 		//Hero가 NPC에 맞는거 처리.
 		if (TCollision::RectInRect(I_HeroMgr.m_Hero.m_rtCollision, pNPCObject->m_rtCollision))
 		{
-			I_HeroMgr.m_Hero.ProcessDamage(-1);
+			I_HeroMgr.ProcessDamage(-1);
 		}
 	}
 
@@ -115,7 +115,7 @@ void TNPCMgr::Reset()
 	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++, iNPC++)
 	{
 		TNPCObject* pNPCObject = (*iter);
-		NPCXPos = g_INIT_NPC_POSX + (g_NPCWidthGap / 2) + (g_NPCWidthGap * iNPC);
+		NPCXPos = g_INIT_NPC_POSX + (g_NPC_WIDTH_GAP / 2) + (g_NPC_WIDTH_GAP * iNPC);
 
 		pNPCObject->SetPosition(NPCXPos, g_INIT_NPC_POSY);
 		pNPCObject->SetMAXHP(pNPCObject->m_eNPCType);
@@ -147,7 +147,7 @@ void TNPCMgr::NPCRegenAlarm()
 	int NPCXPos = 0;
 	srand(time(NULL));
 
-	for (int iNPC = 0; iNPC < g_iMAX_NPC_Count; iNPC++)
+	for (int iNPC = 0; iNPC < g_iMAX_NPC_COUNT; iNPC++)
 	{
 		//eNPCTYPE으로 HP값을 셋팅하므로 1부터 하게 했다.
 		eNPCTYPE eType = (eNPCTYPE)(rand() % eMaxDragon);
@@ -158,7 +158,7 @@ void TNPCMgr::NPCRegenAlarm()
 
 		RECT rt = m_rtSpriteList[0][eType];
 
-		NPCXPos = g_INIT_NPC_POSX + (g_NPCWidthGap / 2) + (g_NPCWidthGap * iNPC);
+		NPCXPos = g_INIT_NPC_POSX + (g_NPC_WIDTH_GAP / 2) + (g_NPC_WIDTH_GAP * iNPC);
 
 		pNPCObject->Create(g_pd3dDevice, 609, 100, NPCXPos, g_INIT_NPC_POSY,
 			rt.left, rt.top, rt.right, rt.bottom,

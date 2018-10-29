@@ -34,6 +34,7 @@ public:
 
 	//HP에 관한 변수들
 public:
+	int		m_iMAXHP;
 	int		m_iHP;
 	float	m_fLastDamageTime;
 	float	m_fDamageTimeGap;		//무적타임	
@@ -69,7 +70,7 @@ public:
 	//데미지 관련 처리
 	bool IsDead();
 	void SetDead() { m_iHP = 0; }
-	void SetMAXHP(int hp) { m_iHP = hp; }
+	void SetMAXHP(int hp) { m_iMAXHP = m_iHP = hp; }
 	void ProcessDamage(int damage);
 public:
 	xObject();

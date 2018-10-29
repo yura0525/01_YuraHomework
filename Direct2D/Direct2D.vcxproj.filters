@@ -111,6 +111,9 @@
     <ClCompile Include="TBKScrollObject.cpp">
       <Filter>Object</Filter>
     </ClCompile>
+    <ClCompile Include="THPBarObject.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="xTexManager.h">
@@ -186,6 +189,9 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="TBKScrollObject.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="THPBarObject.h">
       <Filter>Object</Filter>
     </ClInclude>
   </ItemGroup>
