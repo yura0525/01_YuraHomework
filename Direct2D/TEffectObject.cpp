@@ -4,7 +4,6 @@
 #include "TNPCObject.h"
 #include "xInput.h"
 
-const float g_EffectTimeGap = 0.1f;
 bool TEffectObject::Init()
 {
 	m_iCurrentSprite = 0;
@@ -82,10 +81,10 @@ bool TEffectMgr::Frame()
 		static float fAddTime = 0.0f;
 		fAddTime += g_fSecPerFrame;
 
-		if (fAddTime >= g_EffectTimeGap)
+		if (fAddTime >= g_EFFECT_TIME_GAP)
 		{
 			AddEffectByHero();
-			fAddTime -= g_EffectTimeGap;
+			fAddTime -= g_EFFECT_TIME_GAP;
 		}
 	}
 

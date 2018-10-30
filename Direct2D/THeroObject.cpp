@@ -3,10 +3,7 @@
 #include "TCollision.h"
 
 POINT	g_pHeroPos;
-const int g_HERO_DAMAGE_TIME_GAP = 2.0f;
-const int g_HERO_MAXHP = 10;
-const int g_INIT_HERO_POSY = 550;
-const int g_INIT_HERO_HP_POSY = 70;
+
 bool THeroObject::Frame()
 {
 	int iHalfX = m_rtDraw.right / 2;
@@ -39,6 +36,9 @@ bool THeroObject::Frame()
 	if ((m_pos.x + iHalfX) > g_rtClient.right)
 		m_pos.x = g_rtClient.right - iHalfX;
 
+	g_pHeroPos.x = m_pos.x;
+	g_pHeroPos.y = m_pos.y;
+
 	//위치값이나 충돌박스 수정.
 	return xObject::Frame();
 }
@@ -58,8 +58,6 @@ bool THeroObject::Render()
 		bFadeStart = true;
 	}*/
 
-	g_pHeroPos.x = m_pos.x;
-	g_pHeroPos.y = m_pos.y;
 	return true;
 }
 bool THeroObject::FadeOut()
@@ -98,14 +96,14 @@ THeroObject::~THeroObject()
 
 bool THeroMgr::Init()
 {
-	m_HPBar.Create(g_pd3dDevice, 150, 100, (g_rtClient.right / 2), (g_INIT_HERO_POSY - g_INIT_HERO_HP_POSY),
+	m_HPBar.SetOwner(&m_Hero);
+	m_HPBar.Create(g_pd3dDevice, 100, 27, (g_rtClient.right / 2), (g_INIT_HERO_POSY + g_INIT_HERO_HP_POSY),
 		0, 0, 100, 27, L"vertexshader.txt", L"../data/Resource/HPBK.png");
+	
 	m_Hero.Create(g_pd3dDevice, 150, 100, (g_rtClient.right / 2), g_INIT_HERO_POSY, 
 		0, 0, 150, 100, L"vertexshader.txt", L"../data/Resource/Hero.png");
 
 	m_Hero.SetMAXHP(g_HERO_MAXHP);
-	m_HPBar.SetMAXHP(g_HERO_MAXHP);
-
 	return true;
 }
 bool THeroMgr::Frame()
@@ -129,18 +127,17 @@ bool THeroMgr::Release()
 void THeroMgr::ProcessDamage(int damage)
 {
 	m_Hero.ProcessDamage(damage);
-	m_HPBar.ProcessDamage(damage);
 }
 
 void THeroMgr::Reset()
 {
 	m_Hero.SetPosition((g_rtClient.right / 2), g_INIT_HERO_POSY);
 	m_Hero.SetMAXHP(g_HERO_MAXHP);
+
 	m_HPBar.SetPosition((g_rtClient.right / 2), (g_INIT_HERO_POSY - g_INIT_HERO_HP_POSY));
-	m_HPBar.SetMAXHP(g_HERO_MAXHP);
 }
 
-THeroMgr::THeroMgr()
+THeroMgr::THeroMgr() : m_HPBar(NULL)
 {
 
 }

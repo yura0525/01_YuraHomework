@@ -1,13 +1,8 @@
 #include "TNPCObject.h"
 #include "THeroObject.h"
 #include "TEffectObject.h"
+#include "THPBarObject.h"
 #include <time.h>
-
-const int g_iMAX_NPC_COUNT = 9;
-const int g_MOVE_NPC_SPEED = 150.0f;
-const int g_NPC_WIDTH_GAP = 84;
-const int g_INIT_NPC_POSY = -50.0f;
-const int g_INIT_NPC_POSX = 25.0f;
 
 bool TNPCObject::Init()
 {
@@ -15,6 +10,10 @@ bool TNPCObject::Init()
 	m_iHP = 1;
 	m_fDir[0] = 0.0f;
 	m_fDir[1] = 1.0f;
+
+	m_HPBar.SetOwner(this);
+	m_HPBar.Init();
+	
 	return xObject::Init();
 }
 
@@ -31,6 +30,8 @@ bool TNPCObject::Frame()
 		return false;
 	}
 
+	m_HPBar.Frame();
+
 	m_pos.x += m_fDir[0] * m_fSpeed * g_fSecPerFrame;
 	m_pos.y += m_fDir[1] * m_fSpeed * g_fSecPerFrame;
 
@@ -38,7 +39,19 @@ bool TNPCObject::Frame()
 	return xObject::Frame();
 }
 
-TNPCObject::TNPCObject(eNPCTYPE eType)
+bool TNPCObject::Render()
+{
+	m_HPBar.Render();
+	return xObject::Render();
+}
+
+bool TNPCObject::Release()
+{
+	m_HPBar.Release();
+	return xObject::Release();
+}
+
+TNPCObject::TNPCObject(eNPCTYPE eType) : m_HPBar(NULL)
 {
 	m_eNPCType = eType;
 	m_fSpeed = g_MOVE_NPC_SPEED;			//NPC 이동 속도
@@ -119,6 +132,8 @@ void TNPCMgr::Reset()
 
 		pNPCObject->SetPosition(NPCXPos, g_INIT_NPC_POSY);
 		pNPCObject->SetMAXHP(pNPCObject->m_eNPCType);
+
+		pNPCObject->m_HPBar.SetPosition(NPCXPos, (g_INIT_NPC_POSY + g_INIT_HERO_HP_POSY));
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
 	}
@@ -156,14 +171,18 @@ void TNPCMgr::NPCRegenAlarm()
 		if (m_rtSpriteList.empty())
 			return;
 
-		RECT rt = m_rtSpriteList[0][eType];
+		pNPCObject->Init();
 
+		RECT rt = m_rtSpriteList[0][eType];
 		NPCXPos = g_INIT_NPC_POSX + (g_NPC_WIDTH_GAP / 2) + (g_NPC_WIDTH_GAP * iNPC);
 
 		pNPCObject->Create(g_pd3dDevice, 609, 100, NPCXPos, g_INIT_NPC_POSY,
 			rt.left, rt.top, rt.right, rt.bottom,
 			L"vertexshader.txt", L"../data/Resource/dragon.png");
 		pNPCObject->SetMAXHP(eType + 1);
+
+		pNPCObject->m_HPBar.Create(g_pd3dDevice, 100, 27, NPCXPos, (g_INIT_NPC_POSY + g_INIT_HERO_HP_POSY),
+			0, 0, 100, 27, L"vertexshader.txt", L"../data/Resource/HPBK.png");
 
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);

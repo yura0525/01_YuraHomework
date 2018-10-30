@@ -1,6 +1,7 @@
 #pragma once
 #include "xStd.h"
-#include "xObject.h"
+#include "THPBarObject.h"
+
 typedef std::vector<RECT> RECT_ARRAY;
 enum eNPCTYPE
 {
@@ -17,10 +18,14 @@ enum eNPCTYPE
 class TNPCObject : public xObject
 {
 public:
-	eNPCTYPE	m_eNPCType;
+	eNPCTYPE		m_eNPCType;
+	THPBarObject	m_HPBar;
 public:
 	bool Init();
 	bool Frame();
+	bool Render();
+	bool Release();
+
 public:
 	TNPCObject(eNPCTYPE eType);
 	virtual ~TNPCObject();

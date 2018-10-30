@@ -1,49 +1,46 @@
 #include "THPBarObject.h"
 
-const int g_HERO_DAMAGE_TIME_GAP = 2.0f;
 
 bool THPBarObject::Create(ID3D11Device* pd3dDevice, float texMaxU, float texMaxV, float xPos, float yPos, DWORD left, DWORD top, DWORD right, DWORD bottom,
 	T_STR szShaderName, T_STR szTexName, T_STR VSFunc, T_STR PSFunc)
 {
 	m_BKObject.Create(pd3dDevice, texMaxU, texMaxV, xPos, yPos, left, top, right, bottom, szShaderName, szTexName, VSFunc, PSFunc);
-	xObject::Create(pd3dDevice, texMaxU, texMaxV, xPos, yPos, left, top, 94, 25, szShaderName, 
+	xObject::Create(pd3dDevice, texMaxU, texMaxV, xPos, yPos, left, top, g_HPBAR_WIDTH, g_HPBAR_HEIGHT, szShaderName,
 		L"../data/Resource/HPBar.png", VSFunc, PSFunc);
+	
 	return true;
 }
 
 bool  THPBarObject::Frame()
 {
-	if (IsDead())
+	if (m_pOwner == NULL || m_pOwner->IsDead())
 		return true;
 
-	float percent = ((float)m_iHP / m_iMAXHP);
+	float percent = ((float)(m_pOwner->m_iHP) / (m_pOwner->m_iMAXHP));
 
-	//여기해야한다. 
-	/*m_rtDraw.right = m_rtDraw.right * percent;
-	SetTexture(m_rtDraw.left, m_rtDraw.top, m_rtDraw.right, m_rtDraw.bottom);
+	m_rtDraw.right = g_HPBAR_WIDTH * percent;
+	
+	float newXPos = m_pOwner->m_pos.x - ((g_HPBAR_WIDTH - m_rtDraw.right) /2);
+	float newYPos = m_pOwner->m_pos.y + g_INIT_HERO_HP_POSY;
 
-	TCHAR	csBuffer[256];
-	_stprintf_s(csBuffer, L"THPBarObject::FRAME() m_iHP = %d, m_iMAXHP  = %d, percent = %f, m_rtDraw.right = %d\n",
-		m_iHP, m_iMAXHP, percent, m_rtDraw.right);
+	SetPosition(newXPos, newYPos, m_rtDraw.left, m_rtDraw.top, m_rtDraw.right, m_rtDraw.bottom);
 
-	OutputDebugString(csBuffer);*/
-
+	m_BKObject.SetPosition(m_pOwner->m_pos.x, newYPos);
 	m_BKObject.Frame();
 	return xObject::Frame();
 }
 
 bool THPBarObject::Render()
 {
-	if (IsDead())
+	if (m_pOwner == NULL || m_pOwner->IsDead())
 		return true;
 
 	m_BKObject.Render();
 	return xObject::Render();
 }
 
-THPBarObject::THPBarObject()
+THPBarObject::THPBarObject(xObject* pOwner) : m_pOwner(pOwner)
 {
-	m_fDamageTimeGap = g_HERO_DAMAGE_TIME_GAP;
 }
 
 

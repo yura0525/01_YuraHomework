@@ -130,3 +130,22 @@ public:
 #ifndef SAFE_NEW_ARRAY_CLEAR
 #define NEW_ARRAY_CLEAR( A, B, C )	{ if (!A && C) A = new B[C]; if(A) memset( A, 0, sizeof(B)*C ); };
 #endif
+
+
+//상수 변수들
+const int g_iMAX_NPC_COUNT = 9;
+const float g_MOVE_NPC_SPEED = 150.0f;
+const int g_NPC_WIDTH_GAP = 84;
+
+const float g_INIT_NPC_POSY = -50.0f;
+const float g_INIT_NPC_POSX = 25.0f;
+
+const float g_HERO_DAMAGE_TIME_GAP = 2.0f;
+const int g_INIT_HERO_HP_POSY = -70;
+
+const int g_HERO_MAXHP = 10;
+const int g_INIT_HERO_POSY = 550;
+
+const float g_EFFECT_TIME_GAP = 0.1f;
+const int g_HPBAR_WIDTH = 94;
+const int g_HPBAR_HEIGHT = 25;

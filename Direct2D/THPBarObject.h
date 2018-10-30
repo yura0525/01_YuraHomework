@@ -3,7 +3,8 @@
 class THPBarObject : public xObject
 {
 public:
-	xObject		m_BKObject;
+	xObject		m_BKObject;	//HPBar 배경
+	xObject*	m_pOwner;	//HPBar의 주인.
 
 public:
 	bool Create(ID3D11Device* pd3dDevice, float _texMaxU, float _texMaxV,
@@ -12,12 +13,13 @@ public:
 
 	bool Frame();
 	bool Render();
-
 public:
-	void DecreaseHP(int hp);
-
+	void SetOwner(xObject* pOwner)
+	{
+		m_pOwner = pOwner;
+	}
 public:
-	THPBarObject();
+	THPBarObject(xObject* pOwner);
 	virtual ~THPBarObject();
 };
 
