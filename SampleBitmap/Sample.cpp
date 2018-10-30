@@ -14,8 +14,8 @@ using namespace std;
 //폴더내의 모든 .lib 파일을 ../../lib 경로로 복사한다.
 //copy "*.h" "../../include"
 //copy "*.lib" "../../lib"
-const float g_NPCRegenTime = 4.0f;
-const float g_TotalGameTime = 300.0f;
+const float g_NPC_REGENTIME = 4.0f;
+const float g_TOTAL_GAMETIME = 300.0f;
 class Sample : public TCore
 {
 public:
@@ -70,8 +70,8 @@ public:
 					m_pCurrentScene->SetNPCCount(g_iMaxNPCCount);
 					++m_iLevel;
 					m_pCurrentScene->Reset();
-					m_Timer.NPCRegenTime(g_NPCRegenTime);
-					m_Timer.GameStartTime(g_TotalGameTime);
+					m_Timer.NPCRegenTime(g_NPC_REGENTIME);
+					m_Timer.GameStartTime(g_TOTAL_GAMETIME);
 				}
 			}
 			break;

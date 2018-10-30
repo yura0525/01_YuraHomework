@@ -159,6 +159,7 @@
     <ClCompile Include="TEnemyState.cpp" />
     <ClCompile Include="TFiniteStateMachine.cpp" />
     <ClCompile Include="TFSMMgr.cpp" />
+    <ClCompile Include="TGameDataLoad.cpp" />
     <ClCompile Include="TGameScene.cpp" />
     <ClCompile Include="THeroObject.cpp" />
     <ClCompile Include="THPBarObject.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="TEnemyState.h" />
     <ClInclude Include="TFiniteStateMachine.h" />
     <ClInclude Include="TFSMMgr.h" />
+    <ClInclude Include="TGameDataLoad.h" />
     <ClInclude Include="TGameScene.h" />
     <ClInclude Include="THeroObject.h" />
     <ClInclude Include="THPBarObject.h" />

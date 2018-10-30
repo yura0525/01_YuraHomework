@@ -17,6 +17,7 @@ bool  TBKScrollObject::Frame()
 	fStepY = g_fSecPerFrame * m_fScrollSpeed;
 	fStepYSum += fStepY;
 
+	
 	m_SecondBKObject.m_pos.y += fStepY;
 	m_pos.y += fStepY;
 

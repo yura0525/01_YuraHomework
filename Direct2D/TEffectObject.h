@@ -13,7 +13,7 @@ public:
 	float		m_fSpriteTime;
 	float		m_fLifeTime;
 	float		m_fOffSet;
-
+	bool		m_IsHeroEffect;
 public:
 	bool Init();
 	bool Frame();

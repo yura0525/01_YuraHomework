@@ -114,6 +114,9 @@
     <ClCompile Include="THPBarObject.cpp">
       <Filter>Object</Filter>
     </ClCompile>
+    <ClCompile Include="TGameDataLoad.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="xTexManager.h">
@@ -192,6 +195,9 @@
       <Filter>Object</Filter>
     </ClInclude>
     <ClInclude Include="THPBarObject.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="TGameDataLoad.h">
       <Filter>Object</Filter>
     </ClInclude>
   </ItemGroup>

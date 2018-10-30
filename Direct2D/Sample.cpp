@@ -6,6 +6,8 @@
 #include "TLobbyScene.h"
 #include "TGameScene.h"
 #include "TEndScene.h"
+#include "TGameDataLoad.h"
+
 using namespace std;
 
 //TCoreLib의 빌드후 이벤트
@@ -13,8 +15,6 @@ using namespace std;
 //폴더내의 모든 .lib 파일을 ../../lib 경로로 복사한다.
 //copy "*.h" "../../include"
 //copy "*.lib" "../../lib"
-const float g_NPCRegenTime = 4.0f;
-const float g_TotalGameTime = 300.0f;
 
 class Sample : public xCore
 {
@@ -72,9 +72,9 @@ public:
 					m_pCurrentScene = m_pGameScene.get();
 					++m_iLevel;
 					m_pCurrentScene->Reset();
-					m_Timer.NPCRegenTime(g_NPCRegenTime);
-					m_Timer.NPCEffectTime(g_NPCRegenTime);
-					m_Timer.GameStartTime(g_TotalGameTime);
+					m_Timer.NPCRegenTime(I_GameDataLoad.g_NPC_REGENTIME);
+					m_Timer.NPCEffectTime(I_GameDataLoad.g_EFFECT_NPC_REGENTIME);
+					m_Timer.GameStartTime(I_GameDataLoad.g_TOTAL_GAMETIME);
 				}
 			}
 			break;

@@ -1,6 +1,7 @@
 #include "THeroObject.h"
 #include "xInput.h"
 #include "TCollision.h"
+#include "TGameDataLoad.h"
 
 POINT	g_pHeroPos;
 
@@ -87,7 +88,7 @@ THeroObject::THeroObject()
 {
 	bFadeStart = false;
 	m_fLastDamageTime = g_fGameTimer;
-	m_fDamageTimeGap = g_HERO_DAMAGE_TIME_GAP;
+	m_fDamageTimeGap = I_GameDataLoad.g_HERO_DAMAGE_TIME_GAP;
 }
 
 THeroObject::~THeroObject()
@@ -97,13 +98,13 @@ THeroObject::~THeroObject()
 bool THeroMgr::Init()
 {
 	m_HPBar.SetOwner(&m_Hero);
-	m_HPBar.Create(g_pd3dDevice, 100, 27, (g_rtClient.right / 2), (g_INIT_HERO_POSY + g_INIT_HERO_HP_POSY),
+	m_HPBar.Create(g_pd3dDevice, 100, 27, (g_rtClient.right / 2), (I_GameDataLoad.g_INIT_HERO_POSY + I_GameDataLoad.g_INIT_HERO_HP_GAP_POSY),
 		0, 0, 100, 27, L"vertexshader.txt", L"../data/Resource/HPBK.png");
 	
-	m_Hero.Create(g_pd3dDevice, 150, 100, (g_rtClient.right / 2), g_INIT_HERO_POSY, 
+	m_Hero.Create(g_pd3dDevice, 150, 100, (g_rtClient.right / 2), I_GameDataLoad.g_INIT_HERO_POSY,
 		0, 0, 150, 100, L"vertexshader.txt", L"../data/Resource/Hero.png");
 
-	m_Hero.SetMAXHP(g_HERO_MAXHP);
+	m_Hero.SetMAXHP(I_GameDataLoad.g_HERO_MAXHP);
 	return true;
 }
 bool THeroMgr::Frame()
@@ -131,10 +132,10 @@ void THeroMgr::ProcessDamage(int damage)
 
 void THeroMgr::Reset()
 {
-	m_Hero.SetPosition((g_rtClient.right / 2), g_INIT_HERO_POSY);
-	m_Hero.SetMAXHP(g_HERO_MAXHP);
+	m_Hero.SetPosition((g_rtClient.right / 2), I_GameDataLoad.g_INIT_HERO_POSY);
+	m_Hero.SetMAXHP(I_GameDataLoad.g_HERO_MAXHP);
 
-	m_HPBar.SetPosition((g_rtClient.right / 2), (g_INIT_HERO_POSY - g_INIT_HERO_HP_POSY));
+	m_HPBar.SetPosition((g_rtClient.right / 2), (I_GameDataLoad.g_INIT_HERO_POSY - I_GameDataLoad.g_INIT_HERO_HP_GAP_POSY));
 }
 
 THeroMgr::THeroMgr() : m_HPBar(NULL)

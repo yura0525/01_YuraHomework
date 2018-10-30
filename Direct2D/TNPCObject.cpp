@@ -2,10 +2,11 @@
 #include "THeroObject.h"
 #include "TEffectObject.h"
 #include "THPBarObject.h"
+#include "TGameDataLoad.h"
 
 bool TNPCObject::Init()
 {
-	m_fSpeed = g_MOVE_NPC_SPEED;			//NPC 이동 속도
+	m_fSpeed = I_GameDataLoad.g_MOVE_NPC_SPEED;			//NPC 이동 속도
 	m_iHP = 1;
 	m_fDir[0] = 0.0f;
 	m_fDir[1] = 1.0f;
@@ -53,7 +54,7 @@ bool TNPCObject::Release()
 TNPCObject::TNPCObject(eNPCTYPE eType) : m_HPBar(NULL)
 {
 	m_eNPCType = eType;
-	m_fSpeed = g_MOVE_NPC_SPEED;			//NPC 이동 속도
+	m_fSpeed = I_GameDataLoad.g_MOVE_NPC_SPEED;			//NPC 이동 속도
 	m_iHP = 1;
 	m_fDir[0] = 0.0f;
 	m_fDir[1] = 1.0f;
@@ -127,12 +128,12 @@ void TNPCMgr::Reset()
 	for (iter = m_NPCList.begin(); iter != m_NPCList.end(); iter++, iNPC++)
 	{
 		TNPCObject* pNPCObject = (*iter);
-		NPCXPos = g_INIT_NPC_POSX + (g_NPC_WIDTH_GAP / 2) + (g_NPC_WIDTH_GAP * iNPC);
+		NPCXPos = I_GameDataLoad.g_INIT_NPC_POSX + (I_GameDataLoad.g_NPC_WIDTH_GAP / 2) + (I_GameDataLoad.g_NPC_WIDTH_GAP * iNPC);
 
-		pNPCObject->SetPosition(NPCXPos, g_INIT_NPC_POSY);
+		pNPCObject->SetPosition(NPCXPos, I_GameDataLoad.g_INIT_NPC_POSY);
 		pNPCObject->SetMAXHP(pNPCObject->m_eNPCType);
 
-		pNPCObject->m_HPBar.SetPosition(NPCXPos, (g_INIT_NPC_POSY + g_INIT_HERO_HP_POSY));
+		pNPCObject->m_HPBar.SetPosition(NPCXPos, (I_GameDataLoad.g_INIT_NPC_POSY + I_GameDataLoad.g_INIT_HERO_HP_GAP_POSY));
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);
 	}
@@ -161,7 +162,7 @@ void TNPCMgr::NPCRegenAlarm()
 	int NPCXPos = 0;
 	srand(time(NULL));
 
-	for (int iNPC = 0; iNPC < g_iMAX_NPC_COUNT; iNPC++)
+	for (int iNPC = 0; iNPC < I_GameDataLoad.g_iMAX_NPC_COUNT; iNPC++)
 	{
 		//eNPCTYPE으로 HP값을 셋팅하므로 1부터 하게 했다.
 		eNPCTYPE eType = (eNPCTYPE)(rand() % eMaxDragon);
@@ -173,14 +174,14 @@ void TNPCMgr::NPCRegenAlarm()
 		pNPCObject->Init();
 
 		RECT rt = m_rtSpriteList[0][eType];
-		NPCXPos = g_INIT_NPC_POSX + (g_NPC_WIDTH_GAP / 2) + (g_NPC_WIDTH_GAP * iNPC);
+		NPCXPos = I_GameDataLoad.g_INIT_NPC_POSX + (I_GameDataLoad.g_NPC_WIDTH_GAP / 2) + (I_GameDataLoad.g_NPC_WIDTH_GAP * iNPC);
 
-		pNPCObject->Create(g_pd3dDevice, 609, 100, NPCXPos, g_INIT_NPC_POSY,
+		pNPCObject->Create(g_pd3dDevice, 609, 100, NPCXPos, I_GameDataLoad.g_INIT_NPC_POSY,
 			rt.left, rt.top, rt.right, rt.bottom,
 			L"vertexshader.txt", L"../data/Resource/dragon.png");
 		pNPCObject->SetMAXHP(eType + 1);
 
-		pNPCObject->m_HPBar.Create(g_pd3dDevice, 100, 27, NPCXPos, (g_INIT_NPC_POSY + g_INIT_HERO_HP_POSY),
+		pNPCObject->m_HPBar.Create(g_pd3dDevice, 100, 27, NPCXPos, (I_GameDataLoad.g_INIT_NPC_POSY + I_GameDataLoad.g_INIT_HERO_HP_GAP_POSY),
 			0, 0, 100, 27, L"vertexshader.txt", L"../data/Resource/HPBK.png");
 
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;

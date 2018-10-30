@@ -3,18 +3,16 @@
 #include "THeroObject.h"
 #include "TNPCObject.h"
 #include "xInput.h"
+#include "TGameDataLoad.h"
+
+float g_EFFECT_TIME_GAP = 0.15f;
 
 bool TEffectObject::Init()
 {
 	m_iCurrentSprite = 0;
-	m_iIndexSprite = 0;
 	m_fSpriteTime = 1.0f;
 	m_fLifeTime = 10.0f;
 	m_fOffSet = 1.0f;
-
-	m_fDir[0] = 0.0f;
-	m_fDir[1] = -1.0f;
-	m_fSpeed = 100.0f;
 
 	return xObject::Init();
 }
@@ -32,11 +30,11 @@ bool TEffectObject::Frame()
 
 	int iHalfY = m_rtDraw.bottom / 2;
 
-	if ((m_pos.y + iHalfY) > g_rtClient.bottom)
+	if (!m_IsHeroEffect && (m_pos.y + iHalfY) > g_rtClient.bottom)
 	{
 		SetDead();
 	}
-	if ((m_pos.y - iHalfY) < g_rtClient.top)
+	if (m_IsHeroEffect && (m_pos.y - iHalfY) < g_rtClient.top)
 	{
 		SetDead();
 	}
@@ -50,7 +48,6 @@ bool TEffectObject::Frame()
 TEffectObject::TEffectObject()
 {
 	m_iCurrentSprite = 0;
-	m_iIndexSprite = 0;
 	m_fSpriteTime = 1.0f;
 	m_fLifeTime = 10.0f;
 	m_fOffSet = 1.0f;
@@ -114,8 +111,37 @@ bool TEffectMgr::Frame()
 		if (!m_rtSpriteList.empty())
 		{
 			RECT rt = m_rtSpriteList[pEffectObject->m_iIndexSprite][pEffectObject->m_iCurrentSprite];
-			pEffectObject->SetTexture(rt.left, rt.top, rt.right, rt.bottom);
+			pEffectObject->SetPosition(pEffectObject->m_pos.x, pEffectObject->m_pos.y, rt.left, rt.top, rt.right, rt.bottom);
 
+			pEffectObject->m_fAngle = m_fAngle;
+			pEffectObject->Frame();
+		}
+	}
+
+	for (iter = m_effectObjListByNPC.begin(); iter != m_effectObjListByNPC.end(); iter++)
+	{
+		TEffectObject* pEffectObject = (*iter);
+		pEffectObject->m_fOffSet = 1.0f / m_rtSpriteList[pEffectObject->m_iIndexSprite].size();
+		pEffectObject->m_fSpriteTime += g_fSecPerFrame;
+
+		if (pEffectObject->m_fSpriteTime >= pEffectObject->m_fOffSet)
+		{
+			pEffectObject->m_iCurrentSprite++;
+			if (!m_rtSpriteList.empty())
+			{
+				if (pEffectObject->m_iCurrentSprite >= m_rtSpriteList[pEffectObject->m_iIndexSprite].size())
+				{
+					pEffectObject->m_iCurrentSprite = 0;
+				}
+			}
+
+			pEffectObject->m_fSpriteTime -= pEffectObject->m_fOffSet;
+		}
+
+		if (!m_rtSpriteList.empty())
+		{
+			RECT rt = m_rtSpriteList[pEffectObject->m_iIndexSprite][pEffectObject->m_iCurrentSprite];
+			pEffectObject->SetPosition(pEffectObject->m_pos.x, pEffectObject->m_pos.y, rt.left, rt.top, rt.right, rt.bottom);
 			pEffectObject->m_fAngle = m_fAngle;
 			pEffectObject->Frame();
 		}
@@ -203,19 +229,20 @@ bool TEffectMgr::SpriteDataLoad(const TCHAR* pszFileName)
 void TEffectMgr::AddEffectByHero()
 {
 	TEffectObject* pObj = new TEffectObject();
-	
-	int iHeroSpriteImageIndex = 0;
-	pObj->m_iIndexSprite = iHeroSpriteImageIndex;
+
+	pObj->m_iIndexSprite = I_GameDataLoad.g_EFFECT_HERO_SPRITE;
 	if ( (pObj->m_iIndexSprite) >= m_rtSpriteList.size() )
 		return;
 
 	if (m_rtSpriteList[pObj->m_iIndexSprite].empty())
 		return;
 
+	pObj->m_IsHeroEffect = true;
 	pObj->Create(g_pd3dDevice, 400, 300, g_pHeroPos.x, g_pHeroPos.y, 
-		m_rtSpriteList[pObj->m_iIndexSprite][iHeroSpriteImageIndex].left, m_rtSpriteList[pObj->m_iIndexSprite][iHeroSpriteImageIndex].top,
-		m_rtSpriteList[pObj->m_iIndexSprite][iHeroSpriteImageIndex].right, m_rtSpriteList[pObj->m_iIndexSprite][iHeroSpriteImageIndex].bottom, L"vertexshader.txt", L"../data/Resource/effect.bmp");
+		m_rtSpriteList[pObj->m_iIndexSprite][0].left, m_rtSpriteList[pObj->m_iIndexSprite][0].top,
+		m_rtSpriteList[pObj->m_iIndexSprite][0].right, m_rtSpriteList[pObj->m_iIndexSprite][0].bottom, L"vertexshader.txt", L"../data/Resource/effect.bmp");
 	pObj->SetDirectionSpeed(0.0f, -1.0f, 500.0f);
+
 	m_effectObjListByHero.push_back(pObj);
 }
 
@@ -223,18 +250,19 @@ void TEffectMgr::AddEffectByNPC(float xPos, float yPos)
 {
 	TEffectObject* pObj = new TEffectObject();
 
-	int iNPCSpriteImageIndex = 1;
-	pObj->m_iIndexSprite = iNPCSpriteImageIndex;
+	pObj->m_iIndexSprite = I_GameDataLoad.g_EFFECT_NPC_SPRITE;
 	if ((pObj->m_iIndexSprite) >= m_rtSpriteList.size())
 		return;
 
 	if (m_rtSpriteList[pObj->m_iIndexSprite].empty())
 		return;
 
+	pObj->m_IsHeroEffect = false;
 	pObj->Create(g_pd3dDevice, 400, 300, xPos, yPos,
-		m_rtSpriteList[pObj->m_iIndexSprite][iNPCSpriteImageIndex].left, m_rtSpriteList[pObj->m_iIndexSprite][iNPCSpriteImageIndex].top,
-		m_rtSpriteList[pObj->m_iIndexSprite][iNPCSpriteImageIndex].right, m_rtSpriteList[pObj->m_iIndexSprite][iNPCSpriteImageIndex].bottom, L"vertexshader.txt", L"../data/Resource/effect.bmp");
+		m_rtSpriteList[pObj->m_iIndexSprite][0].left, m_rtSpriteList[pObj->m_iIndexSprite][0].top,
+		m_rtSpriteList[pObj->m_iIndexSprite][0].right, m_rtSpriteList[pObj->m_iIndexSprite][0].bottom, L"vertexshader.txt", L"../data/Resource/effect.bmp");
 	pObj->SetDirectionSpeed(0.0f, 1.0f, 500.0f);
+
 	m_effectObjListByNPC.push_back(pObj);
 }
 
@@ -260,6 +288,8 @@ bool TEffectMgr::IsCollisionAndDeleteList(RECT rt, bool isHeroEffect)
 		{
 			if (TCollision::RectInRect(rt, (*iter)->m_rtCollision))
 			{
+				//충돌되었으면 m_effectObjListByNPC에서 삭제한다.
+				m_effectObjListByNPC.erase(iter);
 				return true;
 			}
 		}
@@ -300,14 +330,17 @@ void TEffectMgr::DeleteEffectList()
 void TEffectMgr::NPCEffectRegenAlarm()
 {
 	srand(time(NULL));
-	int effectCount = rand() / 4;
-	
-	//여기 하는중. 위치가 이상하다.
+	int effectCount = rand() % I_GameDataLoad.g_EFFECT_NPC_MAX_COUNT;
+
 	for (int i = 0; i < effectCount; i++)
 	{
-		float xPos = rand() / g_rtClient.right;
-		float yPos = rand() / g_rtClient.bottom;
-		AddEffectByNPC(xPos, yPos);
+		int posIndex = rand() % 15;
+		float xPos = posIndex * 45.0f;
+		AddEffectByNPC(xPos, I_GameDataLoad.g_INIT_NPC_POSY);
+
+		TCHAR	m_csBuffer[256];
+		_stprintf_s(m_csBuffer, L"\nTEffectMgr::NPCEffectRegenAlarm()!!! posIndex :%d, xPos: %f", posIndex, xPos);
+		OutputDebugString(m_csBuffer);
 	}
 }
 

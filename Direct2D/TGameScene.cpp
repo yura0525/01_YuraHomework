@@ -1,6 +1,7 @@
 #include "TGameScene.h"
 #include "xInput.h"
 #include "TCollision.h"
+#include "TGameDataLoad.h"
 
 bool TGameScene::Init()
 {
@@ -9,12 +10,14 @@ bool TGameScene::Init()
 	
 	m_bEndSceneStart = false;
 
+	I_GameDataLoad.Init();
+
 	m_BackGround.Create(g_pd3dDevice, 450, 600, (g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 800, 600,
 		L"vertexshader.txt", L"../data/Resource/background_00.png");
 
 	I_HeroMgr.Init();
-	I_EffectMgr.Init();
 	I_NPCMgr.Init();
+	I_EffectMgr.Init();
 
 	return true;
 }
@@ -30,14 +33,6 @@ bool TGameScene::Frame()
 	I_HeroMgr.Frame();
 	I_NPCMgr.Frame();
 	I_EffectMgr.Frame();
-
-	////주인공이 NPC총알에 맞는거 처리.
-	//for (int iObj = 0; iObj < m_NPCBulletList.size(); iObj++)
-	//{
-	//	m_NPCBulletList[iObj].Frame();
-	//	if (TCollision::RectInRect(m_Hero.m_rtCollision, m_NPCBulletList[iObj].m_rtCollision))
-	//		m_Hero.ProcessDamage(-1);
-	//}
 
 	return true;
 }
@@ -79,7 +74,6 @@ TGameScene::TGameScene()
 	m_iSceneID = GAME_SCENE_PLAY;
 	m_bNextSceneStart = false;
 
-	//NPC사이의 갭들
 	m_bEndSceneStart = false;
 }
 
