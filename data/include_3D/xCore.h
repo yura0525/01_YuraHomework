@@ -46,6 +46,7 @@ public:
 	virtual bool Release();
 public:
 	virtual void NPCRegenAlarm() { }
+	virtual void NPCEffectRegenAlarm() { }
 	virtual void GameEndTimeAlarm() { }
 
 public:

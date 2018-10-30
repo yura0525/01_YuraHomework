@@ -2,7 +2,6 @@
 #include "THeroObject.h"
 #include "TEffectObject.h"
 #include "THPBarObject.h"
-#include <time.h>
 
 bool TNPCObject::Init()
 {

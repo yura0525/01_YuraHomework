@@ -47,7 +47,7 @@ bool TEffectObject::Frame()
 	return xObject::Frame();
 }
 
-TEffectObject::TEffectObject(xObject*	pOwner) : m_pOwner(pOwner)
+TEffectObject::TEffectObject()
 {
 	m_iCurrentSprite = 0;
 	m_iIndexSprite = 0;
@@ -202,10 +202,10 @@ bool TEffectMgr::SpriteDataLoad(const TCHAR* pszFileName)
 
 void TEffectMgr::AddEffectByHero()
 {
-	TEffectObject* pObj = new TEffectObject(&(I_HeroMgr.m_Hero));
+	TEffectObject* pObj = new TEffectObject();
 	
-	//pObj->m_iIndexSprite = rand() % m_rtSpriteList.size();
-	pObj->m_iIndexSprite = 1;
+	int iHeroSpriteImageIndex = 0;
+	pObj->m_iIndexSprite = iHeroSpriteImageIndex;
 	if ( (pObj->m_iIndexSprite) >= m_rtSpriteList.size() )
 		return;
 
@@ -213,18 +213,28 @@ void TEffectMgr::AddEffectByHero()
 		return;
 
 	pObj->Create(g_pd3dDevice, 400, 300, g_pHeroPos.x, g_pHeroPos.y, 
-		m_rtSpriteList[pObj->m_iIndexSprite][0].left, m_rtSpriteList[pObj->m_iIndexSprite][0].top, 
-		m_rtSpriteList[pObj->m_iIndexSprite][0].right, m_rtSpriteList[pObj->m_iIndexSprite][0].bottom, L"vertexshader.txt", L"../data/Resource/effect.bmp");
+		m_rtSpriteList[pObj->m_iIndexSprite][iHeroSpriteImageIndex].left, m_rtSpriteList[pObj->m_iIndexSprite][iHeroSpriteImageIndex].top,
+		m_rtSpriteList[pObj->m_iIndexSprite][iHeroSpriteImageIndex].right, m_rtSpriteList[pObj->m_iIndexSprite][iHeroSpriteImageIndex].bottom, L"vertexshader.txt", L"../data/Resource/effect.bmp");
 	pObj->SetDirectionSpeed(0.0f, -1.0f, 500.0f);
 	m_effectObjListByHero.push_back(pObj);
 }
 
-void TEffectMgr::AddEffectByNPC(TNPCObject* pOwner)
+void TEffectMgr::AddEffectByNPC(float xPos, float yPos)
 {
-	TEffectObject* pObj = new TEffectObject(pOwner);
-	pObj->Create(g_pd3dDevice, 400, 300, pOwner->m_pos.x, pOwner->m_pos.y, 0, 142, 42, 183, L"vertexshader.txt", L"../data/Resource/effect.bmp");
-	pObj->m_iIndexSprite = 1;
-	pObj->SetDirectionSpeed(0.0f, -1.0f, 500.0f);
+	TEffectObject* pObj = new TEffectObject();
+
+	int iNPCSpriteImageIndex = 1;
+	pObj->m_iIndexSprite = iNPCSpriteImageIndex;
+	if ((pObj->m_iIndexSprite) >= m_rtSpriteList.size())
+		return;
+
+	if (m_rtSpriteList[pObj->m_iIndexSprite].empty())
+		return;
+
+	pObj->Create(g_pd3dDevice, 400, 300, xPos, yPos,
+		m_rtSpriteList[pObj->m_iIndexSprite][iNPCSpriteImageIndex].left, m_rtSpriteList[pObj->m_iIndexSprite][iNPCSpriteImageIndex].top,
+		m_rtSpriteList[pObj->m_iIndexSprite][iNPCSpriteImageIndex].right, m_rtSpriteList[pObj->m_iIndexSprite][iNPCSpriteImageIndex].bottom, L"vertexshader.txt", L"../data/Resource/effect.bmp");
+	pObj->SetDirectionSpeed(0.0f, 1.0f, 500.0f);
 	m_effectObjListByNPC.push_back(pObj);
 }
 
@@ -283,6 +293,21 @@ void TEffectMgr::DeleteEffectList()
 		}
 		else
 			iter++;
+	}
+}
+
+
+void TEffectMgr::NPCEffectRegenAlarm()
+{
+	srand(time(NULL));
+	int effectCount = rand() / 4;
+	
+	//여기 하는중. 위치가 이상하다.
+	for (int i = 0; i < effectCount; i++)
+	{
+		float xPos = rand() / g_rtClient.right;
+		float yPos = rand() / g_rtClient.bottom;
+		AddEffectByNPC(xPos, yPos);
 	}
 }
 

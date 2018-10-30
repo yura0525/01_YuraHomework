@@ -2,11 +2,11 @@
 #include "xStd.h"
 #include "xObject.h"
 typedef std::vector<RECT> RECT_ARRAY;
+class TNPCObject;
 
 class TEffectObject : public xObject
 {
 public:
-	xObject*	m_pOwner;
 	int			m_iCurrentSprite;
 	int			m_iIndexSprite;
 
@@ -19,11 +19,11 @@ public:
 	bool Frame();
 
 public:
-	TEffectObject(xObject*	pOwner);
+	TEffectObject();
 	virtual ~TEffectObject();
 };
 
-class TNPCObject;
+
 class TEffectMgr : public TSingleton<TEffectMgr>
 {
 public:
@@ -44,10 +44,11 @@ public:
 public:
 	bool SpriteDataLoad(const TCHAR* pszFileName);
 	void AddEffectByHero();
-	void AddEffectByNPC(TNPCObject* pOwner);
+	void AddEffectByNPC(float xPos, float yPos);
 	bool IsCollisionAndDeleteList(RECT rt, bool isHeroEffect = true);
 	void DeleteEffectList();
 
+	void NPCEffectRegenAlarm();
 protected:
 	TEffectMgr();
 public:

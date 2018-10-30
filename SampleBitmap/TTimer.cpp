@@ -21,8 +21,6 @@ bool TTimer::Frame()
 	m_fGameTime += m_fSecPerFrame;
 	g_fGameTime = m_fGameTime;
 
-	m_fNPCRegenTimer += m_fSecPerFrame;
-
 	m_fTimer += m_fSecPerFrame;
 	if (m_fTimer >= 1.0f)
 	{

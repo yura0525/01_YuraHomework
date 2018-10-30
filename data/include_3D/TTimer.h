@@ -27,10 +27,12 @@ public:
 
 	float	m_fNPCRegenStartTime;	//4)이벤트 시작 시간.(NPC생성)
 	float	m_fNPCRegenTimeGap;		//5)이벤트 설정 시간.
-	float	m_fNPCRegenTimer;
 
-	float	m_fGameStartTime;		//6)게임 시작 시간.
-	float	m_fGameTimeGap;			//7)게임 설정 시간.
+	float	m_fNPCEffectRegenStartTime;		//6)이벤트 시작 시간.(NPC생성)
+	float	m_fNPCEffectRegenTimeGap;		//7)이벤트 설정 시간.
+
+	float	m_fGameStartTime;		//8)게임 시작 시간.
+	float	m_fGameTimeGap;			//9)게임 설정 시간.
 
 public:
 	bool Init();			//초기화
@@ -39,6 +41,7 @@ public:
 	bool Release();			//소멸, 삭제
 public:
 	void NPCRegenTime(float fNPCRegenTimeGap);
+	void NPCEffectTime(float fNPCRegenTimeGap);
 	void GameStartTime(float fGameTimeGap);
 public:
 	TTimer(xCore * m_pOwner);

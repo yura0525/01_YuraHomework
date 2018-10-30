@@ -73,6 +73,7 @@ public:
 					++m_iLevel;
 					m_pCurrentScene->Reset();
 					m_Timer.NPCRegenTime(g_NPCRegenTime);
+					m_Timer.NPCEffectTime(g_NPCRegenTime);
 					m_Timer.GameStartTime(g_TotalGameTime);
 				}
 			}
@@ -105,6 +106,10 @@ public:
 		I_NPCMgr.NPCRegenAlarm();
 	}
 
+	void NPCEffectRegenAlarm()
+	{
+		I_EffectMgr.NPCEffectRegenAlarm();
+	}
 	void GameEndTimeAlarm()
 	{
 		m_pCurrentScene->m_bNextSceneStart = true;

@@ -47,6 +47,12 @@ bool TTimer::Frame()
 		m_fNPCRegenStartTime += m_fNPCRegenTimeGap;
 	}
 
+	if ((0.0f < m_fNPCEffectRegenTimeGap) && ((m_fNPCEffectRegenStartTime + m_fNPCEffectRegenTimeGap) < m_fGameTime))
+	{
+		m_pOwner->NPCEffectRegenAlarm();
+		m_fNPCEffectRegenStartTime += m_fNPCEffectRegenTimeGap;
+	}
+
 	if ((0.0f < m_fGameTimeGap) && ((m_fGameStartTime + m_fGameTimeGap) < m_fGameTime))
 	{
 		//이벤트를 알려주는 함수.
@@ -86,7 +92,11 @@ void TTimer::NPCRegenTime(float fNPCRegenTimeGap)
 	m_fNPCRegenStartTime = 0.0f;
 	m_fNPCRegenTimeGap = fNPCRegenTimeGap;
 }
-
+void TTimer::NPCEffectTime(float fNPCRegenTimeGap)
+{
+	m_fNPCEffectRegenStartTime = 0.0f;
+	m_fNPCEffectRegenTimeGap = fNPCRegenTimeGap;
+}
 void TTimer::GameStartTime(float fGameTimeGap)
 {
 	m_fGameStartTime = 0.0f;
