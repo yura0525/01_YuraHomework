@@ -60,6 +60,13 @@ public:
 		case GAME_SCENE_PLAY:
 			if (m_pCurrentScene->m_bNextSceneStart == true)
 			{
+				m_pCurrentScene->m_bNextSceneStart = false;
+				if (m_iLevel == 1)
+				{
+					m_Timer.NPCRegenTime(I_GameDataLoad.g_NPC_REGENTIME);
+					m_Timer.NPCEffectTime(I_GameDataLoad.g_EFFECT_NPC_REGENTIME);
+				}
+
 				if ((m_pCurrentScene->m_bEndSceneStart) || (m_iLevel > 3))
 				{
 					m_pCurrentScene->Reset();
@@ -72,8 +79,6 @@ public:
 					m_pCurrentScene = m_pGameScene.get();
 					++m_iLevel;
 					m_pCurrentScene->Reset();
-					m_Timer.NPCRegenTime(I_GameDataLoad.g_NPC_REGENTIME);
-					m_Timer.NPCEffectTime(I_GameDataLoad.g_EFFECT_NPC_REGENTIME);
 					m_Timer.GameStartTime(I_GameDataLoad.g_TOTAL_GAMETIME);
 				}
 			}

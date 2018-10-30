@@ -100,9 +100,7 @@ bool TEffectMgr::Frame()
 			if (!m_rtSpriteList.empty())
 			{
 				if (pEffectObject->m_iCurrentSprite >= m_rtSpriteList[pEffectObject->m_iIndexSprite ].size())
-				{
 					pEffectObject->m_iCurrentSprite = 0;
-				}
 			}
 
 			pEffectObject->m_fSpriteTime -= pEffectObject->m_fOffSet;
@@ -130,9 +128,7 @@ bool TEffectMgr::Frame()
 			if (!m_rtSpriteList.empty())
 			{
 				if (pEffectObject->m_iCurrentSprite >= m_rtSpriteList[pEffectObject->m_iIndexSprite].size())
-				{
 					pEffectObject->m_iCurrentSprite = 0;
-				}
 			}
 
 			pEffectObject->m_fSpriteTime -= pEffectObject->m_fOffSet;
@@ -145,6 +141,10 @@ bool TEffectMgr::Frame()
 			pEffectObject->m_fAngle = m_fAngle;
 			pEffectObject->Frame();
 		}
+
+		//Hero가 NPC총알에 맞는거 처리.
+		if (TCollision::RectInRect(I_HeroMgr.m_Hero.m_rtCollision, pEffectObject->m_rtCollision))
+			I_HeroMgr.ProcessDamage(-1);
 	}
 	return true;
 }

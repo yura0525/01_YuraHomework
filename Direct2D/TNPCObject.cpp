@@ -164,8 +164,8 @@ void TNPCMgr::NPCRegenAlarm()
 
 	for (int iNPC = 0; iNPC < I_GameDataLoad.g_iMAX_NPC_COUNT; iNPC++)
 	{
-		//eNPCTYPE으로 HP값을 셋팅하므로 1부터 하게 했다.
-		eNPCTYPE eType = (eNPCTYPE)(rand() % eMaxDragon);
+		//게임이 어려워서 퍼플이랑 검은색은 안나오도록 임시로 했다.
+		eNPCTYPE eType = (eNPCTYPE)(rand() % ePurpleDragon);
 		TNPCObject* pNPCObject = new TNPCObject(eType);
 
 		if (m_rtSpriteList.empty())
@@ -179,6 +179,8 @@ void TNPCMgr::NPCRegenAlarm()
 		pNPCObject->Create(g_pd3dDevice, 609, 100, NPCXPos, I_GameDataLoad.g_INIT_NPC_POSY,
 			rt.left, rt.top, rt.right, rt.bottom,
 			L"vertexshader.txt", L"../data/Resource/dragon.png");
+
+		//eNPCTYPE으로 HP값을 셋팅하므로 1부터 하게 했다.
 		pNPCObject->SetMAXHP(eType + 1);
 
 		pNPCObject->m_HPBar.Create(g_pd3dDevice, 100, 27, NPCXPos, (I_GameDataLoad.g_INIT_NPC_POSY + I_GameDataLoad.g_INIT_HERO_HP_GAP_POSY),

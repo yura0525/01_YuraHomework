@@ -28,7 +28,7 @@ bool TGameScene::Frame()
 
 	//주인공이 죽으면 게임끝
 	if (I_HeroMgr.m_Hero.IsDead())
-		m_bEndSceneStart = true;
+		m_bNextSceneStart = true;
 
 	I_HeroMgr.Frame();
 	I_NPCMgr.Frame();
@@ -62,7 +62,6 @@ bool TGameScene::Reset()
 	m_bEndSceneStart = false;
 
 	I_HeroMgr.Reset();
-	I_NPCMgr.Reset();
 
 	return true;
 }
