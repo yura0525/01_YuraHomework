@@ -2,6 +2,28 @@
 #include <iostream>
 #pragma comment(lib, "ws2_32.lib")
 
+DWORD WINAPI SendThread(LPVOID param)
+{
+	SOCKET sock = (SOCKET)param;
+	while (1)
+	{
+		char buffer[256] = { 0, };
+		fgets(buffer, 256, stdin);
+		if (strlen(buffer) <= 1)
+		{
+			break;
+		}
+		//enter지움.
+		buffer[strlen(buffer) - 1] = '\0';
+
+		send(sock, buffer, strlen(buffer), 0);
+		printf("[%s] : %zd 바이트를 전송하였습니다.\n", buffer, strlen(buffer));
+	}
+
+	closesocket(sock);
+	return 1;
+}
+
 int main()
 {
 	WSADATA wd;
