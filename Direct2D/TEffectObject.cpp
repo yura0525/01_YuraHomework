@@ -4,6 +4,7 @@
 #include "TNPCObject.h"
 #include "xInput.h"
 #include "TGameDataLoad.h"
+#include "TSound.h"
 
 float g_EFFECT_TIME_GAP = 0.15f;
 
@@ -81,6 +82,7 @@ bool TEffectMgr::Frame()
 		if (fAddTime >= g_EFFECT_TIME_GAP)
 		{
 			AddEffectByHero();
+			I_SoundMgr.PlayEffect(1);
 			fAddTime -= g_EFFECT_TIME_GAP;
 		}
 	}
@@ -144,7 +146,7 @@ bool TEffectMgr::Frame()
 
 		//Hero가 NPC총알에 맞는거 처리.
 		if (TCollision::RectInRect(I_HeroMgr.m_Hero.m_rtCollision, pEffectObject->m_rtCollision))
-			I_HeroMgr.ProcessDamage(-1);
+			I_HeroMgr.m_Hero.ProcessDamage(-1);
 	}
 	return true;
 }
@@ -331,10 +333,11 @@ void TEffectMgr::NPCEffectRegenAlarm()
 {
 	srand(time(NULL));
 	int effectCount = rand() % I_GameDataLoad.g_EFFECT_NPC_MAX_COUNT;
+	I_SoundMgr.Play(2);
 
 	for (int i = 0; i < effectCount; i++)
 	{
-		int posIndex = rand() % 15;
+		int posIndex = rand() % 18;
 		float xPos = posIndex * 45.0f;
 		AddEffectByNPC(xPos, I_GameDataLoad.g_INIT_NPC_POSY);
 

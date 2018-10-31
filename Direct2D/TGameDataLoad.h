@@ -25,7 +25,7 @@ public:
 	float g_NPC_REGENTIME;
 	float g_EFFECT_NPC_REGENTIME;
 	float g_TOTAL_GAMETIME;
-
+	int g_STAGE_MAX_LEVEL;
 	friend class TSingleton<TGameDataLoad>;
 
 public:

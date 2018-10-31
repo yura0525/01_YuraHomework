@@ -2,6 +2,7 @@
 #include "xInput.h"
 #include "TCollision.h"
 #include "TGameDataLoad.h"
+#include "TSound.h"
 
 bool TGameScene::Init()
 {
@@ -11,6 +12,11 @@ bool TGameScene::Init()
 	m_bEndSceneStart = false;
 
 	I_GameDataLoad.Init();
+	I_SoundMgr.Init();
+
+	I_SoundMgr.Load("../data/Resource/Dance The Night Away.flac", true);
+	I_SoundMgr.Load("../data/Resource/Gun1.wav", false);
+	I_SoundMgr.Load("../data/Resource/drumloop.wav", false);
 
 	m_BackGround.Create(g_pd3dDevice, 450, 600, (g_rtClient.right / 2), (g_rtClient.bottom / 2), 0, 0, 800, 600,
 		L"vertexshader.txt", L"../data/Resource/background_00.png");
@@ -30,6 +36,7 @@ bool TGameScene::Frame()
 	if (I_HeroMgr.m_Hero.IsDead())
 		m_bNextSceneStart = true;
 
+	I_SoundMgr.Frame();
 	I_HeroMgr.Frame();
 	I_NPCMgr.Frame();
 	I_EffectMgr.Frame();
@@ -40,6 +47,8 @@ bool TGameScene::Frame()
 bool TGameScene::Render()
 {
 	m_BackGround.Render();
+
+	I_SoundMgr.Render();
 	I_HeroMgr.Render();
 	I_NPCMgr.Render();
 	I_EffectMgr.Render();
@@ -49,6 +58,8 @@ bool TGameScene::Render()
 bool TGameScene::Release()
 {
 	m_BackGround.Release();
+	I_SoundMgr.Release();
+
 	I_HeroMgr.Release();
 	I_NPCMgr.Release();
 	I_EffectMgr.Release();

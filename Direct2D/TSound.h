@@ -37,3 +37,4 @@ public:
 	virtual ~TSound();
 };
 
+#define I_SoundMgr TSound::GetInstance()

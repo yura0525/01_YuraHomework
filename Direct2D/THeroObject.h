@@ -23,14 +23,14 @@ public:
 
 	THeroObject		m_Hero;
 	THPBarObject	m_HPBar;
-
+	xObject*		m_pLifeIcon;
+	int				m_iCurrentLevel;
 public:
 	bool Init();
 	bool Frame();
 	bool Render();
 	bool Release();
 public:
-	void ProcessDamage(int damage);
 	void Reset();
 
 protected:

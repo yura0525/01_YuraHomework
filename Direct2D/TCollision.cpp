@@ -64,6 +64,33 @@ bool TCollision::SphereInSphere(RECT rtDest, RECT rtSrc)
 
 	return false;
 }
+
+bool TCollision::HeroSpereInNPCSphere(RECT rtDest, RECT rtSrc)
+{
+	TSphere sphereDest;
+	sphereDest.pCenter.x = (rtDest.left + rtDest.right) / 2;
+	sphereDest.pCenter.y = (rtDest.top + rtDest.bottom) / 2;
+
+	long dwX = (rtDest.right - rtDest.left) / 2;
+	long dwY = (rtDest.bottom - rtDest.top) / 2;
+	sphereDest.fRadius = (dwX + dwY) / 2;
+
+	TSphere sphereSrc;
+	sphereSrc.pCenter.x = (rtSrc.left + rtSrc.right) / 2;
+	sphereSrc.pCenter.y = (rtSrc.top + rtSrc.bottom) / 2;
+
+	dwX = (rtSrc.right - rtSrc.left) / 2;
+	dwY = (rtSrc.bottom - rtSrc.top) / 2;
+	sphereSrc.fRadius = (dwX + dwY) / 2;
+
+	float fDistance = sqrt((sphereDest.pCenter.x - sphereSrc.pCenter.x) * (sphereDest.pCenter.x - sphereSrc.pCenter.x) +
+		(sphereDest.pCenter.y - sphereSrc.pCenter.y) * (sphereDest.pCenter.y - sphereSrc.pCenter.y));
+
+	if (fDistance < (sphereDest.fRadius + sphereSrc.fRadius))
+		return true;
+
+	return false;
+}
 bool TCollision::SphereInPoint(RECT rtDest, POINT ptSrc)
 {
 	TSphere sphereDest;

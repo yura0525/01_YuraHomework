@@ -105,34 +105,59 @@ bool THeroMgr::Init()
 		0, 0, 150, 100, L"vertexshader.txt", L"../data/Resource/Hero.png");
 
 	m_Hero.SetMAXHP(I_GameDataLoad.g_HERO_MAXHP);
+
+	//LifeIcon
+	m_pLifeIcon = new xObject[I_GameDataLoad.g_STAGE_MAX_LEVEL];
+	int lifeIconWidth = 40;
+	for (int i = 0; i < I_GameDataLoad.g_STAGE_MAX_LEVEL; i++)
+	{
+		m_pLifeIcon[i].Create(g_pd3dDevice, 1024, 768, (lifeIconWidth * (i+1)), 50,
+			0, 0, 35, 35, L"vertexshader.txt", L"../data/Resource/hero_1.png");
+	}
+	
 	return true;
 }
 bool THeroMgr::Frame()
 {
+	for (int i = 0; i < I_GameDataLoad.g_STAGE_MAX_LEVEL; i++)
+		m_pLifeIcon[i].Frame();
+
 	m_HPBar.Frame();
 	return m_Hero.Frame();
 }
 
 bool THeroMgr::Render()
 {
+	for (int i = 0; i < I_GameDataLoad.g_STAGE_MAX_LEVEL; i++)
+		m_pLifeIcon[i].Render();
+
 	m_HPBar.Render();
 	return m_Hero.Render();
 }
 
 bool THeroMgr::Release()
 {
+	for (int i = 0; i < I_GameDataLoad.g_STAGE_MAX_LEVEL; i++)
+	{
+		m_pLifeIcon[i].Release();
+
+	}
+
+	SAFE_DELETE_ARRAY(m_pLifeIcon);
+
 	m_HPBar.Release();
 	return m_Hero.Release();
 }
 
-void THeroMgr::ProcessDamage(int damage)
-{
-	m_Hero.ProcessDamage(damage);
-}
-
 void THeroMgr::Reset()
 {
+	if (g_iCurrentLevel != 0)
+	{
+		m_pLifeIcon[I_GameDataLoad.g_STAGE_MAX_LEVEL - g_iCurrentLevel].SetDead();
+	}
+
 	m_Hero.SetPosition((g_rtClient.right / 2), I_GameDataLoad.g_INIT_HERO_POSY);
+	m_Hero.m_fLastDamageTime = g_fGameTimer;
 	m_Hero.SetMAXHP(I_GameDataLoad.g_HERO_MAXHP);
 
 	m_HPBar.SetPosition((g_rtClient.right / 2), (I_GameDataLoad.g_INIT_HERO_POSY - I_GameDataLoad.g_INIT_HERO_HP_GAP_POSY));

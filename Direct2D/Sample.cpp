@@ -9,6 +9,7 @@
 #include "TGameDataLoad.h"
 
 using namespace std;
+int g_iCurrentLevel = 0;
 
 //TCoreLib의 빌드후 이벤트
 //폴더내의 모든 헤더파일을 ../../include 경로로 복사한다
@@ -24,13 +25,12 @@ public:
 	shared_ptr<TScene>	m_pEndScene;
 
 	TScene*				m_pCurrentScene;
-	int					m_iLevel;
 public:
 	bool Init()
 	{
 		xCore::Init();
-		
-		m_iLevel = 1;
+
+		g_iCurrentLevel = 0;
 		m_pLobbyScene = make_shared<TLobbyScene>();
 		m_pGameScene = make_shared<TGameScene>();
 		m_pEndScene = make_shared<TEndScene>();
@@ -61,25 +61,25 @@ public:
 			if (m_pCurrentScene->m_bNextSceneStart == true)
 			{
 				m_pCurrentScene->m_bNextSceneStart = false;
-				if (m_iLevel == 1)
+				if (g_iCurrentLevel == 0)
 				{
 					m_Timer.NPCRegenTime(I_GameDataLoad.g_NPC_REGENTIME);
 					m_Timer.NPCEffectTime(I_GameDataLoad.g_EFFECT_NPC_REGENTIME);
 				}
 
-				if ((m_pCurrentScene->m_bEndSceneStart) || (m_iLevel > 3))
+				if ((m_pCurrentScene->m_bEndSceneStart) || (g_iCurrentLevel >= I_GameDataLoad.g_STAGE_MAX_LEVEL))
 				{
 					m_pCurrentScene->Reset();
-					m_iLevel = 1;
+					g_iCurrentLevel = 0;
 					m_pCurrentScene = m_pEndScene.get();
 					break;
 				}
 				else
 				{
 					m_pCurrentScene = m_pGameScene.get();
-					++m_iLevel;
 					m_pCurrentScene->Reset();
 					m_Timer.GameStartTime(I_GameDataLoad.g_TOTAL_GAMETIME);
+					++g_iCurrentLevel;
 				}
 			}
 			break;

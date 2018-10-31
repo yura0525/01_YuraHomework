@@ -88,9 +88,9 @@ bool TNPCMgr::Frame()
 		pNPCObject->Frame();
 
 		//Hero가 NPC에 맞는거 처리.
-		if (TCollision::RectInRect(I_HeroMgr.m_Hero.m_rtCollision, pNPCObject->m_rtCollision))
+		if (TCollision::HeroSpereInNPCSphere(I_HeroMgr.m_Hero.m_rtCollision, pNPCObject->m_rtCollision))
 		{
-			I_HeroMgr.ProcessDamage(-1);
+			I_HeroMgr.m_Hero.ProcessDamage(-1);
 		}
 	}
 
@@ -164,8 +164,7 @@ void TNPCMgr::NPCRegenAlarm()
 
 	for (int iNPC = 0; iNPC < I_GameDataLoad.g_iMAX_NPC_COUNT; iNPC++)
 	{
-		//게임이 어려워서 퍼플이랑 검은색은 안나오도록 임시로 했다.
-		eNPCTYPE eType = (eNPCTYPE)(rand() % ePurpleDragon);
+		eNPCTYPE eType = (eNPCTYPE)(rand() % eMaxDragon);
 		TNPCObject* pNPCObject = new TNPCObject(eType);
 
 		if (m_rtSpriteList.empty())

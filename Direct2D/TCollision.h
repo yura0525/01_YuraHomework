@@ -14,7 +14,7 @@ public:
 	static bool RectInPoint(RECT rtDest, POINT ptSrc);
 	static bool SphereInSphere(RECT rtDest, RECT rtSrc);
 	static bool SphereInPoint(RECT rtDest, POINT ptSrc);
-
+	static bool HeroSpereInNPCSphere(RECT rtDest, RECT rtSrc);
 
 public:
 	TCollision();

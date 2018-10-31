@@ -135,6 +135,9 @@ bool xObject::Init()
 }
 bool xObject::Frame()
 {
+	if (IsDead())
+		return true;
+
 	m_posDraw.x = m_pos.x - (m_rtDraw.right / 2);
 	m_posDraw.y = m_pos.y - (m_rtDraw.bottom / 2);
 

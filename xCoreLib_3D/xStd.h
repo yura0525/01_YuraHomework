@@ -64,6 +64,7 @@ extern ID3D11DeviceContext*	g_pContext;
 //Game
 extern POINT		g_pHeroPos;
 extern POINT		g_pMousePos;
+extern int			g_iCurrentLevel;
 struct TGameInput
 {
 	BOOL bFront;

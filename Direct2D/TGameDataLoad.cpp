@@ -96,6 +96,10 @@ bool TGameDataLoad::GameDataLoad(const TCHAR* pszFileName)
 		{
 			g_TOTAL_GAMETIME = iNumValue;
 		}
+		else if (temp == wstring(L"g_STAGE_MAX_LEVEL"))
+		{
+			g_STAGE_MAX_LEVEL = iNumValue;
+		}
 	}
 	fclose(fp_src);
 
