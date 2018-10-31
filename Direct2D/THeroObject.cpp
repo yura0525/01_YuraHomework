@@ -98,8 +98,8 @@ THeroObject::~THeroObject()
 bool THeroMgr::Init()
 {
 	m_HPBar.SetOwner(&m_Hero);
-	m_HPBar.Create(g_pd3dDevice, 100, 27, (g_rtClient.right / 2), (I_GameDataLoad.g_INIT_HERO_POSY + I_GameDataLoad.g_INIT_HERO_HP_GAP_POSY),
-		0, 0, 100, 27, L"vertexshader.txt", L"../data/Resource/HPBK.png");
+	m_HPBar.Create(g_pd3dDevice, 80, 19, (g_rtClient.right / 2), (I_GameDataLoad.g_INIT_HERO_POSY + I_GameDataLoad.g_INIT_HERO_HP_GAP_POSY),
+		0, 0, 80, 19, L"vertexshader.txt", L"../data/Resource/HPBK.png");
 	
 	m_Hero.Create(g_pd3dDevice, 150, 100, (g_rtClient.right / 2), I_GameDataLoad.g_INIT_HERO_POSY,
 		0, 0, 150, 100, L"vertexshader.txt", L"../data/Resource/Hero.png");
@@ -112,7 +112,7 @@ bool THeroMgr::Init()
 	for (int i = 0; i < I_GameDataLoad.g_STAGE_MAX_LEVEL; i++)
 	{
 		m_pLifeIcon[i].Create(g_pd3dDevice, 1024, 768, (lifeIconWidth * (i+1)), 50,
-			0, 0, 35, 35, L"vertexshader.txt", L"../data/Resource/hero_1.png");
+			2, 2, 35, 35, L"vertexshader.txt", L"../data/Resource/hero_1.png");
 	}
 	
 	return true;

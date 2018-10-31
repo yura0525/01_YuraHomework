@@ -3,7 +3,7 @@
 #include "xObject.h"
 typedef std::vector<RECT> RECT_ARRAY;
 class TNPCObject;
-
+class TItemObject;
 class TEffectObject : public xObject
 {
 public:
@@ -30,8 +30,10 @@ public:
 	friend class TSingleton<TEffectMgr>;
 	std::vector<RECT_ARRAY>			m_rtSpriteList;
 
-	std::list<TEffectObject*>		m_effectObjListByHero;
-	std::list<TEffectObject*>		m_effectObjListByNPC;
+	std::list<TEffectObject*>		m_effectObjListByHero;	//Hero총알
+	std::list<TEffectObject*>		m_effectObjListByNPC;	//불구덩이 같은 NPC공격
+
+	std::list<TItemObject*>			m_ItemObjList;			//생성된 아이템.
 public:
 	float							m_fAngle;
 
@@ -45,7 +47,9 @@ public:
 	bool SpriteDataLoad(const TCHAR* pszFileName);
 	void AddEffectByHero();
 	void AddEffectByNPC(float xPos, float yPos);
-	bool IsCollisionAndDeleteList(RECT rt, bool isHeroEffect = true);
+	void AddItemByHeroEffect(float xPos, float yPos);
+
+	bool IsCollisionAndDeleteList(RECT rt);
 	void DeleteEffectList();
 
 	void NPCEffectRegenAlarm();

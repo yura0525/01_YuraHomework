@@ -41,6 +41,9 @@ bool TNPCObject::Frame()
 
 bool TNPCObject::Render()
 {
+	if (IsDead())
+		return false;
+
 	m_HPBar.Render();
 	return xObject::Render();
 }
@@ -80,18 +83,21 @@ bool TNPCMgr::Frame()
 		TNPCObject* pNPCObject = (*iter);
 
 		//NPC가 Hero의 총알에 맞는 처리
-		if (I_EffectMgr.IsCollisionAndDeleteList(pNPCObject->m_rtCollision, true))
+		TPoint	pos = pNPCObject->m_pos;
+		if (I_EffectMgr.IsCollisionAndDeleteList(pNPCObject->m_rtCollision))
 		{
 			pNPCObject->ProcessDamage(-1);
+
+			//NPC가 죽었으면 아이템 생성.
+			if (pNPCObject->IsDead())
+				I_EffectMgr.AddItemByHeroEffect(pos.x, pos.y);
 		}
 
 		pNPCObject->Frame();
 
 		//Hero가 NPC에 맞는거 처리.
 		if (TCollision::HeroSpereInNPCSphere(I_HeroMgr.m_Hero.m_rtCollision, pNPCObject->m_rtCollision))
-		{
 			I_HeroMgr.m_Hero.ProcessDamage(-1);
-		}
 	}
 
 	DeleteNPCList();
@@ -182,8 +188,8 @@ void TNPCMgr::NPCRegenAlarm()
 		//eNPCTYPE으로 HP값을 셋팅하므로 1부터 하게 했다.
 		pNPCObject->SetMAXHP(eType + 1);
 
-		pNPCObject->m_HPBar.Create(g_pd3dDevice, 100, 27, NPCXPos, (I_GameDataLoad.g_INIT_NPC_POSY + I_GameDataLoad.g_INIT_HERO_HP_GAP_POSY),
-			0, 0, 100, 27, L"vertexshader.txt", L"../data/Resource/HPBK.png");
+		pNPCObject->m_HPBar.Create(g_pd3dDevice, 80, 19, NPCXPos, (I_GameDataLoad.g_INIT_NPC_POSY + I_GameDataLoad.g_INIT_HERO_HP_GAP_POSY),
+			0, 0, 80, 19, L"vertexshader.txt", L"../data/Resource/HPBK.png");
 
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
 		//pNPCObject->SetDirectionSpeed(0.0f, 1.0f, g_NPCMoveSpeed);

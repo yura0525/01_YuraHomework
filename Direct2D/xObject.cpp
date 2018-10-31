@@ -191,6 +191,7 @@ void xObject::ProcessDamage(int damage)
 
 		m_iHP = m_iHP + damage;
 		m_iHP = max(0, m_iHP);
+		m_iHP = min(m_iMAXHP, m_iHP);
 	}
 }
 

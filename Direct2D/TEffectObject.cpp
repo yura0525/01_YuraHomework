@@ -5,6 +5,7 @@
 #include "xInput.h"
 #include "TGameDataLoad.h"
 #include "TSound.h"
+#include "TItemObject.h"
 
 float g_EFFECT_TIME_GAP = 0.15f;
 
@@ -66,6 +67,10 @@ TEffectObject::~TEffectObject()
 
 bool TEffectMgr::Init()
 {
+	m_effectObjListByHero.clear();
+	m_effectObjListByNPC.clear();
+	m_ItemObjList.clear();
+
 	SpriteDataLoad(L"../data/Resource/SpriteList.txt");
 	return true;
 }
@@ -146,7 +151,24 @@ bool TEffectMgr::Frame()
 
 		//Hero가 NPC총알에 맞는거 처리.
 		if (TCollision::RectInRect(I_HeroMgr.m_Hero.m_rtCollision, pEffectObject->m_rtCollision))
-			I_HeroMgr.m_Hero.ProcessDamage(-1);
+			I_HeroMgr.m_Hero.ProcessDamage(-1);	
+	}
+
+	//m_ItemObjList
+	list<TItemObject*>::iterator iterItem;
+	for (iterItem = m_ItemObjList.begin(); iterItem != m_ItemObjList.end(); iterItem++)
+	{
+		TItemObject* pItem = (*iterItem);
+		pItem->Frame();
+
+		//Hero가 NPC총알에 맞는거 처리.
+		if (TCollision::RectInRect(I_HeroMgr.m_Hero.m_rtCollision, pItem->m_rtCollision))
+		{
+			//아이템을 먹으면 HP가 늘어난다.
+			I_HeroMgr.m_Hero.ProcessDamage(1);
+			m_ItemObjList.erase(iterItem);
+			break;
+		}
 	}
 	return true;
 }
@@ -155,14 +177,16 @@ bool TEffectMgr::Render()
 {
 	list<TEffectObject*>::iterator iter;
 	for (iter = m_effectObjListByHero.begin(); iter != m_effectObjListByHero.end(); iter++)
-	{
 		(*iter)->Render();
-	}
 
 	for (iter = m_effectObjListByNPC.begin(); iter != m_effectObjListByNPC.end(); iter++)
-	{
 		(*iter)->Render();
-	}
+
+	//m_ItemObjList
+	list<TItemObject*>::iterator iterItem;
+	for (iterItem = m_ItemObjList.begin(); iterItem != m_ItemObjList.end(); iterItem++)
+		(*iterItem)->Render();
+
 	return true;
 }
 
@@ -184,6 +208,15 @@ bool TEffectMgr::Release()
 		delete (*iter);
 	}
 	m_effectObjListByNPC.clear();
+
+	//m_ItemObjList
+	list<TItemObject*>::iterator iterItem;
+	for (iterItem = m_ItemObjList.begin(); iterItem != m_ItemObjList.end(); iterItem++)
+	{
+		(*iterItem)->Release();
+		delete (*iterItem);
+	}
+	m_ItemObjList.clear();
 	return true;
 }
 
@@ -268,32 +301,28 @@ void TEffectMgr::AddEffectByNPC(float xPos, float yPos)
 	m_effectObjListByNPC.push_back(pObj);
 }
 
-bool TEffectMgr::IsCollisionAndDeleteList(RECT rt, bool isHeroEffect)
+void TEffectMgr::AddItemByHeroEffect(float xPos, float yPos)
+{
+	TItemObject* pObj = new TItemObject();
+
+	pObj->Create(g_pd3dDevice, 108, 108, xPos, yPos,
+		3, 3, 102, 102, L"vertexshader.txt", L"../data/Resource/Item.png");
+	pObj->SetDirectionSpeed(0.0f, 1.0f, 300.0f);
+
+	m_ItemObjList.push_back(pObj);
+}
+
+bool TEffectMgr::IsCollisionAndDeleteList(RECT rt)
 {
 	list<TEffectObject*>::iterator iter;
 
-	if (isHeroEffect)
+	for (iter = m_effectObjListByHero.begin(); iter != m_effectObjListByHero.end(); iter++)
 	{
-		for (iter = m_effectObjListByHero.begin(); iter != m_effectObjListByHero.end(); iter++)
+		if (TCollision::RectInRect(rt, (*iter)->m_rtCollision))
 		{
-			if (TCollision::RectInRect(rt, (*iter)->m_rtCollision))
-			{
-				//충돌되었으면 m_effectObjListByHero에서 삭제한다.
-				m_effectObjListByHero.erase(iter);
-				return true;
-			}
-		}
-	}
-	else
-	{
-		for (iter = m_effectObjListByNPC.begin(); iter != m_effectObjListByNPC.end(); iter++)
-		{
-			if (TCollision::RectInRect(rt, (*iter)->m_rtCollision))
-			{
-				//충돌되었으면 m_effectObjListByNPC에서 삭제한다.
-				m_effectObjListByNPC.erase(iter);
-				return true;
-			}
+			//충돌되었으면 m_effectObjListByHero에서 삭제한다.
+			m_effectObjListByHero.erase(iter);
+			return true;
 		}
 	}
 	return false;
@@ -325,6 +354,19 @@ void TEffectMgr::DeleteEffectList()
 		}
 		else
 			iter++;
+	}
+
+	list<TItemObject*>::iterator iterItem;
+	for (iterItem = m_ItemObjList.begin(); iterItem != m_ItemObjList.end();)
+	{
+		if ((*iterItem)->IsDead())
+		{
+			(*iterItem)->Release();
+			delete (*iterItem);
+			iterItem = m_ItemObjList.erase(iterItem);
+		}
+		else
+			iterItem++;
 	}
 }
 
