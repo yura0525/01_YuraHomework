@@ -26,6 +26,8 @@ public:
 	float g_EFFECT_NPC_REGENTIME;
 	float g_TOTAL_GAMETIME;
 	int g_STAGE_MAX_LEVEL;
+	float g_ITEM_DROP_SPEED;
+	int g_ITEM_DROP_PERCENT;
 	friend class TSingleton<TGameDataLoad>;
 
 public:

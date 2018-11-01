@@ -114,11 +114,11 @@
     <ClCompile Include="THPBarObject.cpp">
       <Filter>Object</Filter>
     </ClCompile>
-    <ClCompile Include="TGameDataLoad.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
     <ClCompile Include="TItemObject.cpp">
       <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="TGameDataLoad.cpp">
+      <Filter>Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -200,11 +200,11 @@
     <ClInclude Include="THPBarObject.h">
       <Filter>Object</Filter>
     </ClInclude>
-    <ClInclude Include="TGameDataLoad.h">
-      <Filter>Object</Filter>
-    </ClInclude>
     <ClInclude Include="TItemObject.h">
       <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="TGameDataLoad.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

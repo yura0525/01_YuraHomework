@@ -100,6 +100,14 @@ bool TGameDataLoad::GameDataLoad(const TCHAR* pszFileName)
 		{
 			g_STAGE_MAX_LEVEL = iNumValue;
 		}
+		else if (temp == wstring(L"g_ITEM_DROP_SPEED"))
+		{
+			g_ITEM_DROP_SPEED = iNumValue;
+		}
+		else if (temp == wstring(L"g_ITEM_DROP_PERCENT"))
+		{
+			g_ITEM_DROP_PERCENT = iNumValue;
+		}
 	}
 	fclose(fp_src);
 

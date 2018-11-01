@@ -303,11 +303,18 @@ void TEffectMgr::AddEffectByNPC(float xPos, float yPos)
 
 void TEffectMgr::AddItemByHeroEffect(float xPos, float yPos)
 {
+	if (I_GameDataLoad.g_ITEM_DROP_PERCENT == 0)
+		return;
+
+	int itemRegen = rand() % I_GameDataLoad.g_ITEM_DROP_PERCENT;
+	if (itemRegen != 0)
+		return;
+
 	TItemObject* pObj = new TItemObject();
 
 	pObj->Create(g_pd3dDevice, 108, 108, xPos, yPos,
 		3, 3, 102, 102, L"vertexshader.txt", L"../data/Resource/Item.png");
-	pObj->SetDirectionSpeed(0.0f, 1.0f, 300.0f);
+	pObj->SetDirectionSpeed(0.0f, 1.0f, I_GameDataLoad.g_ITEM_DROP_SPEED);
 
 	m_ItemObjList.push_back(pObj);
 }
