@@ -3,6 +3,9 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include "TPacket.h"
+#include "Sample.h"
+
 #pragma comment(lib, "ws2_32.lib")
 using namespace std;
 
@@ -10,31 +13,79 @@ struct TUser
 {
 	SOCKET sock;
 	SOCKADDR_IN clientAddr;
+	int iIndex;
 };
 
+TUser* g_allUser[100];
+int g_iNumClient = 0;
+CRITICAL_SECTION g_Crit;
+
+void AddUser(TUser* user)
+{
+	EnterCriticalSection(&g_Crit);
+		g_allUser[g_iNumClient] = user;
+		g_iNumClient++;
+	LeaveCriticalSection(&g_Crit);
+}
+
+int Broadcast(char* pMsg)
+{
+	EnterCriticalSection(&g_Crit);
+
+	for (int iUser = 0; iUser < g_iNumClient; iUser++)
+	{
+		if (0 <= SendMsg(g_allUser[iUser]->sock, pMsg, PACKET_CHAT_MSG))
+		{
+			continue;
+		}
+	}
+	LeaveCriticalSection(&g_Crit);
+	return 1;
+}
+
+void DelUser(TUser* pUser)
+{
+	tMSG(pUser, " 퇴장하였습니다.\n");
+
+	EnterCriticalSection(&g_Crit);
+	for (int iUser = 0; iUser < g_iNumClient; iUser++)
+	{
+		if (g_allUser[iUser]->sock == pUser->sock)
+		{
+			for (int iDel = iUser; iDel < g_iNumClient; iDel++)
+			{
+				g_allUser[iDel] = g_allUser[iDel + 1];
+			}
+			break;
+		}
+	}
+	g_iNumClient--;
+
+	closesocket(pUser->sock);
+	LeaveCriticalSection(&g_Crit);
+	return;
+}
+
+DWORD WINAPI ClientThread(LPVOID arg)
+{
+	TUser* pUser = (TUser*)arg;
+	SOCKET sock = pUser->sock;
+
+	char buffer[256] = { 0, };
+	int recvByte = 0;
+	int iRet = 0;
+	bool bConnect = true;
+
+	//하는중.
+	while (1)
+	{
+
+	}
+}
 void tMSG(TUser* pUser, const char* msg)
 {
-	printf("\n ip = %s, msg = %s", inet_ntoa(pUser->clientAddr.sin_addr), msg);
+	printf("\n ip = %s, port = %d, msg = %s", inet_ntoa(pUser->clientAddr.sin_addr), ntohs(pUser->clientAddr.sin_port), msg);
 }
-
-bool BeginWinSock()
-{
-	WSADATA wsa;
-	//윈속 초기화. 0이면 성공.
-	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
-		return false;
-
-	return true;
-}
-bool EndWinSock()
-{
-	//객체 소멸
-	if (WSACleanup() == 0)
-		return false;
-
-	return true;
-}
-
 int main()
 {
 	if (BeginWinSock() == false)
