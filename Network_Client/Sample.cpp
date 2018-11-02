@@ -161,10 +161,15 @@ int main()
 	WSADATA wd;
 
 	//윈속초기화. 0이면 성공
-	if (BeginWinSock == false)
+	if (BeginWinSock() == false)
 	{
 		return 1;
 	}
+
+	//이벤트는 스레드간 중계, 스레드간 흐름을 제어하려고 사용한다.
+	//전달 인자 2번째 : FALSE(자동 리셋 이벤트), TRUE(수동 리셋 이벤트)
+	//전달 인자 3번째 : 초기값(FALSE : 논시그널, TRUE: 시그널)
+	g_hEvent = CreateEvent(NULL, FALSE, FALSE, L"ConnectEvent");
 
 	//소켓 생성 완료.
 	//SOCKET sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);	//UDP
@@ -175,38 +180,31 @@ int main()
 		return 1;
 	}
 
-	SOCKADDR_IN addr;
-	ZeroMemory(&addr, sizeof(addr));
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = inet_addr("192.168.0.27");
-	addr.sin_port = htons(10000);
+	DWORD id_0;
+	HANDLE hConnectThread = CreateThread(0, 0, ConnectThread, (LPVOID)sock, 0, &id_0);
 
-	int ret = connect(sock, (sockaddr*)&addr, sizeof(addr));
-	if (ret == SOCKET_ERROR)
-	{
-		return 1;
-	}
+	//event
+	//커넥트가 되야 샌드, 리시브가 되니까 기다리려고 이벤트를 사용한다.
+	WaitForSingleObject(hConnectThread, INFINITE);
+	//WaitForSingleObject(g_hEvent, INFINITE);
+	ResetEvent(g_hEvent);		//자동리셋 이벤트는 사용 안해도 되고, 수동 리셋 이벤트는 필요하다.
 
 	char buffer2[256] = { 0, };
 	int iLen = 0;
-	DWORD id;
-	HANDLE hThread = CreateThread(NULL, 0, SendThread, (LPVOID)sock, 0, &id);
+	DWORD id_1;
+	HANDLE hSendThread = CreateThread(NULL, 0, SendThread, (LPVOID)sock, 0, &id_1);
 
-	while (1)
-	{
-		char buffer[256] = { 0, };
-		int iRet = recv(sock, buffer, sizeof(buffer), 0);
+	DWORD id_2;
+	HANDLE hRecvThread = CreateThread(NULL, 0, RecvThread, (LPVOID)sock, 0, &id_2);
 
-		if (iRet == 0)
-			break;
-		
-		if (iRet == SOCKET_ERROR)
-			break;
-
-		printf("[%s] : %zd 바이트를 받았습니다.\n", buffer2, strlen(buffer2));
-	}
+	WaitForSingleObject(hSendThread, INFINITE);
+	WaitForSingleObject(hRecvThread, INFINITE);
 
 	closesocket(sock);
+	CloseHandle(hConnectThread);
+	CloseHandle(hSendThread);
+	CloseHandle(hRecvThread);
+
 	EndWinSock();
 
 	std::cout << "Client Hello World\n";

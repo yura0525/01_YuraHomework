@@ -306,6 +306,7 @@ void TEffectMgr::AddItemByHeroEffect(float xPos, float yPos)
 	if (I_GameDataLoad.g_ITEM_DROP_PERCENT == 0)
 		return;
 
+	srand(time(NULL));
 	int itemRegen = rand() % I_GameDataLoad.g_ITEM_DROP_PERCENT;
 	if (itemRegen != 0)
 		return;
