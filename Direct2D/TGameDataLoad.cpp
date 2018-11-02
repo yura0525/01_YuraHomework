@@ -108,6 +108,10 @@ bool TGameDataLoad::GameDataLoad(const TCHAR* pszFileName)
 		{
 			g_ITEM_DROP_PERCENT = iNumValue;
 		}
+		else if (temp == wstring(L"g_NPC_INITHP"))
+		{
+			g_NPC_INITHP = iNumValue;
+		}
 	}
 	fclose(fp_src);
 

@@ -137,7 +137,7 @@ void TNPCMgr::Reset()
 		NPCXPos = I_GameDataLoad.g_INIT_NPC_POSX + (I_GameDataLoad.g_NPC_WIDTH_GAP / 2) + (I_GameDataLoad.g_NPC_WIDTH_GAP * iNPC);
 
 		pNPCObject->SetPosition(NPCXPos, I_GameDataLoad.g_INIT_NPC_POSY);
-		pNPCObject->SetMAXHP(pNPCObject->m_eNPCType);
+		pNPCObject->SetMAXHP(pNPCObject->m_eNPCType + I_GameDataLoad.g_NPC_INITHP);
 
 		pNPCObject->m_HPBar.SetPosition(NPCXPos, (I_GameDataLoad.g_INIT_NPC_POSY + I_GameDataLoad.g_INIT_HERO_HP_GAP_POSY));
 		//pNPCObject->m_fAttackRadius = 30 + rand() % 100;
@@ -186,7 +186,7 @@ void TNPCMgr::NPCRegenAlarm()
 			L"vertexshader.txt", L"../data/Resource/dragon.png");
 
 		//eNPCTYPE으로 HP값을 셋팅하므로 1부터 하게 했다.
-		pNPCObject->SetMAXHP(eType + 1);
+		pNPCObject->SetMAXHP(eType + I_GameDataLoad.g_NPC_INITHP);
 
 		pNPCObject->m_HPBar.Create(g_pd3dDevice, 80, 19, NPCXPos, (I_GameDataLoad.g_INIT_NPC_POSY + I_GameDataLoad.g_INIT_HERO_HP_GAP_POSY),
 			0, 0, 80, 19, L"vertexshader.txt", L"../data/Resource/HPBK.png");

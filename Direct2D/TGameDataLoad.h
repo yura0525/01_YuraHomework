@@ -28,6 +28,7 @@ public:
 	int g_STAGE_MAX_LEVEL;
 	float g_ITEM_DROP_SPEED;
 	int g_ITEM_DROP_PERCENT;
+	int g_NPC_INITHP;
 	friend class TSingleton<TGameDataLoad>;
 
 public:
