@@ -149,6 +149,7 @@
     <ClCompile Include="TPacket.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Sample.h" />
     <ClInclude Include="TPacket.h" />
     <ClInclude Include="TProtocol.h" />
   </ItemGroup>
