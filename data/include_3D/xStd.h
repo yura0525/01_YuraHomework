@@ -1,5 +1,6 @@
 #pragma once
 #define DIRECTINPUT_VERSION 0x0800
+#pragma warning (disable : 4005)
 
 #include <windows.h>
 #include <assert.h>
@@ -27,8 +28,6 @@ using namespace std;
 #pragma comment( lib, "dxguid.lib")
 #pragma comment( lib, "d3dx11.lib")
 #pragma comment(lib, "fmod64_vc.lib")
-
-#pragma warning (disable : 4005)
 
 typedef std::basic_string <char>	C_STR;	//multi-byte
 typedef std::basic_string <wchar_t>	W_STR;	//unicode byte
