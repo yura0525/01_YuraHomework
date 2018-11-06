@@ -9,13 +9,6 @@
 #pragma comment(lib, "ws2_32.lib")
 using namespace std;
 
-struct TUser
-{
-	SOCKET sock;
-	SOCKADDR_IN clientAddr;
-	int iIndex;
-};
-
 TUser* g_allUser[100];
 int g_iNumClient = 0;
 CRITICAL_SECTION g_Crit;
@@ -28,7 +21,7 @@ void AddUser(TUser* user)
 	LeaveCriticalSection(&g_Crit);
 }
 
-int Broadcast(char* pMsg)
+int Broadcastting(char* pMsg)
 {
 	EnterCriticalSection(&g_Crit);
 
@@ -41,6 +34,11 @@ int Broadcast(char* pMsg)
 	}
 	LeaveCriticalSection(&g_Crit);
 	return 1;
+}
+
+void tMSG(TUser* pUser, const char* msg)
+{
+	printf("\n ip = %s, msg = %s", inet_ntoa(pUser->clientAddr.sin_addr), msg);
 }
 
 void DelUser(TUser* pUser)
@@ -76,18 +74,73 @@ DWORD WINAPI ClientThread(LPVOID arg)
 	int iRet = 0;
 	bool bConnect = true;
 
-	//하는중.
 	while (1)
 	{
+		//처음엔 PACKET_HEADER_SIZE사이즈만큼 받는다.
+		iRet = recv(sock, &buffer[recvByte], sizeof(char) * PACKET_HEADER_SIZE - recvByte, 0);
+		if (iRet == 0)	break;
+		if (iRet == SOCKET_ERROR)
+		{
+			break;
+		}
+		recvByte += iRet;
 
+		//패킷을 PACKET_HEADER_SIZE만큼 받았을때.
+		if (recvByte == PACKET_HEADER_SIZE)
+		{
+			UPACKET packet;
+			ZeroMemory(&packet, sizeof(UPACKET));
+			memcpy(&packet.ph, buffer, sizeof(char) * PACKET_HEADER_SIZE);
+
+			//패킷을 packet.ph.len길이만큼 받는다. 패킷을 다받아야 while문 종료.
+			//packet.ph.len에는 msg의 길이만 들어있다. PACKET_HEADER_SIZE 더해져있지 않다.
+			int rByte = 0;
+			do {
+				
+				int iRecvByte = recv(sock, &(packet.msg[rByte]), sizeof(char) * (packet.ph.len - rByte), 0);
+
+				if (iRecvByte == 0 || iRecvByte == SOCKET_ERROR)
+				{
+					bConnect = false;
+					break;
+				}
+				rByte += iRecvByte;
+			} while (packet.ph.len > rByte);
+
+			recvByte = 0;
+			if (bConnect)
+			{
+				switch (packet.ph.type)
+				{
+					case PACKET_CHAT_MSG:
+					{
+						printf("패킷 완성 %s\n", packet.msg);
+						Broadcastting(packet.msg);
+					}
+					break;
+					case PACKET_CREATE_CHARACTER:
+					{
+						CHARACTER_INFO cInfo;
+						memcpy(&cInfo, packet.msg, sizeof(CHARACTER_INFO));
+					}
+					break;
+				}
+				printf("패킷 완성 %s\n", packet.msg);
+			}
+		}
+		Sleep(1);
 	}
+	DelUser(pUser);
+	closesocket(sock);
+	return 1;
 }
-void tMSG(TUser* pUser, const char* msg)
-{
-	printf("\n ip = %s, port = %d, msg = %s", inet_ntoa(pUser->clientAddr.sin_addr), ntohs(pUser->clientAddr.sin_port), msg);
-}
+
 int main()
 {
+	//크리티컬 섹션 초기화
+	//InitializeCriticalSection()<------> DeleteCriticalSection()
+	InitializeCriticalSection(&g_Crit);
+
 	if (BeginWinSock() == false)
 		return -1;
 
@@ -118,13 +171,17 @@ int main()
 	if (ret == SOCKET_ERROR)
 		return 1;
 
+	//스레드를 여러개 쓰면 논블럭킹 함수가 필요 없다.
+	//각자 스레드를 시간을 쪼개서 나눠서 쓰기때문에 블럭 당하지 않는다.
+	//따라서 아래 코드는 주석해야 정상적으로 돌아간다.
+
 	//FIONBIO =>File InputOutput NonBlocking InputOutput
 	//listenSock이 사용하는 모든 API함수를 다 NonBlocking함수로 바꿔줌.
 	//ClientSock이 NonBlocking 되는건 아니다.
 	//논블럭킹함수를 사용하면 예외처리를 해줘야한다. 
 	//정상적인 반환인지 그냥 반환인지 구분 해야 한다.
-	u_long on = TRUE;
-	ioctlsocket(listenSock, FIONBIO, &on);
+	/*u_long on = TRUE;
+	ioctlsocket(listenSock, FIONBIO, &on);*/
 
 	map<int, TUser> g_userList;
 	int g_iNumUser = 0;
@@ -134,77 +191,39 @@ int main()
 		//client socket준비
 		//while(1)
 		// clientSocket = accept(listenSocket)	//누군가 -> 접속시도, 연결시도 -> 수용, 허가
+
 		TUser tUser;
 		int iSize = sizeof(tUser.clientAddr);
 
 		//3번째 전달인자가 sizeof(clientInfo)가 아니라 그변수의 주소값(&addlen)을 원한다.
 		tUser.sock = accept(listenSock, (sockaddr*)&tUser.clientAddr, &iSize);
 
-		//할일이 없어서 반환되도 SOCKET_ERROR가 뜨고, 진짜 Error이여도 SOCKET_ERROR이다.
-		if (tUser.sock == SOCKET_ERROR)
-		{
-			//WSA_E_WOULD_BLOCK = 할일이 없어서 반환된 Error
-			if (WSAGetLastError() != WSAEWOULDBLOCK)
-			{
-				exit(1);
-			}
-		}
-		else
-		{
-			g_userList.insert(make_pair(g_iNumUser++, tUser));
+		AddUser(&tUser);
 
+		DWORD threadID;
+		HANDLE hThread = CreateThread(0, 0, ClientThread, (LPVOID)&g_allUser[g_iNumClient], 0, &threadID);
+
+		if (tUser.sock != SOCKET_ERROR)
+		{
 			//Use inet_ntop() or InetNtop() headerfile <ws2tcpip.h>
 			char ip[INET_ADDRSTRLEN] = { 0, };
-			printf("\n ip = %s, port = %d",
+			printf("\n 입장 ip = %s, port = %d",
 				inet_ntop(AF_INET, &tUser.clientAddr.sin_addr, ip, INET_ADDRSTRLEN), ntohs(tUser.clientAddr.sin_port));
 		}
-		char recvMsg[256] = { 0, };
-		int iRecvByte = sizeof(recvMsg);
-
-		map<int, TUser>::iterator iter;
-		int iByte;
-		for (iter = g_userList.begin(); iter != g_userList.end(); iter++)
-		{
-			TUser* pUser = &(iter->second);
-			iByte = recv(pUser->sock, recvMsg, iRecvByte, 0);
-
-			//누군가가 나갔을 경우.
-			//map에서 지우고 소켓을 닫는다.
-			if (iByte == 0)
-			{
-				g_userList.erase(iter);
-				closesocket(pUser->sock);
-				tMSG(pUser, "님이 나갔습니다.\n");
-				break;
-			}
-
-			if (iByte == SOCKET_ERROR)
-			{
-				//WSA_E_WOULD_BLOCK = 할일이 없어서 반환된 Error
-				if (WSAGetLastError() != WSAEWOULDBLOCK)
-				{
-					g_userList.erase(iter);
-					closesocket(pUser->sock);
-					break;
-				}
-			}
-			else
-			{
-				tMSG(pUser, recvMsg);
-				break;
-			}
-		}
-
-		//브로드캐스트
-		for (iter = g_userList.begin(); iter != g_userList.end(); iter++)
-		{
-			TUser* pUser = &(iter->second);
-			send(pUser->sock, recvMsg, iByte, 0);
-		}
+		//논블럭킹 함수일경우의 처리라 멀티스레드일 경우 필요 없다.
+		////할일이 없어서 반환되도 SOCKET_ERROR가 뜨고, 진짜 Error이여도 SOCKET_ERROR이다.
+		//if (tUser.sock == SOCKET_ERROR)
+		//{
+		//	//WSA_E_WOULD_BLOCK = 할일이 없어서 반환된 Error
+		//	if (WSAGetLastError() != WSAEWOULDBLOCK)
+		//	{
+		//		exit(1);
+		//	}
+		//}
 	}
 
+	//서버가 종료될 경우에, 유저들에게 게임종료 메세지를 보내고 종료한다.
 	char buffer2[256] = { 0, };
-
 	while (0 < g_userList.size())
 	{
 		char msg[] = "게임종료합니다.!!!";
@@ -223,6 +242,8 @@ int main()
 
 	closesocket(listenSock);
 	EndWinSock();
+
+	DeleteCriticalSection(&g_Crit);
 	std::cout << "Server Hello World\n";
 	return 0;
 }
