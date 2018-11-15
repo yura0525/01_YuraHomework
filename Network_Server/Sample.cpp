@@ -9,11 +9,11 @@
 #pragma comment(lib, "ws2_32.lib")
 using namespace std;
 
-TUser* g_allUser[100];
+TUser g_allUser[100];
 int g_iNumClient = 0;
 CRITICAL_SECTION g_Crit;
 
-void AddUser(TUser* user)
+void AddUser(TUser& user)
 {
 	EnterCriticalSection(&g_Crit);
 		g_allUser[g_iNumClient] = user;
@@ -27,7 +27,7 @@ int Broadcastting(char* pMsg)
 
 	for (int iUser = 0; iUser < g_iNumClient; iUser++)
 	{
-		if (0 <= SendMsg(g_allUser[iUser]->sock, pMsg, PACKET_CHAT_MSG))
+		if (0 <= SendMsg(g_allUser[iUser].sock, pMsg, PACKET_CHAT_MSG))
 		{
 			continue;
 		}
@@ -48,8 +48,9 @@ void DelUser(TUser* pUser)
 	EnterCriticalSection(&g_Crit);
 	for (int iUser = 0; iUser < g_iNumClient; iUser++)
 	{
-		if (g_allUser[iUser]->sock == pUser->sock)
+		if (g_allUser[iUser].sock == pUser->sock)
 		{
+			//지울때 뒤에서 하나씩 땡겨오고 g_iNumClient을 하나 줄인다.
 			for (int iDel = iUser; iDel < g_iNumClient; iDel++)
 			{
 				g_allUser[iDel] = g_allUser[iDel + 1];
@@ -76,6 +77,8 @@ DWORD WINAPI ClientThread(LPVOID arg)
 
 	while (1)
 	{
+		ZeroMemory(&buffer, sizeof(char) * 256);
+
 		//처음엔 PACKET_HEADER_SIZE사이즈만큼 받는다.
 		iRet = recv(sock, &buffer[recvByte], sizeof(char) * PACKET_HEADER_SIZE - recvByte, 0);
 		if (iRet == 0)	break;
@@ -105,7 +108,7 @@ DWORD WINAPI ClientThread(LPVOID arg)
 					break;
 				}
 				rByte += iRecvByte;
-			} while (packet.ph.len > rByte);
+			} while (rByte < packet.ph.len);
 
 			recvByte = 0;
 			if (bConnect)
@@ -183,8 +186,8 @@ int main()
 	/*u_long on = TRUE;
 	ioctlsocket(listenSock, FIONBIO, &on);*/
 
-	map<int, TUser> g_userList;
-	int g_iNumUser = 0;
+	/*map<int, TUser> g_userList;
+	int g_iNumUser = 0;*/
 
 	while (1)
 	{
@@ -198,10 +201,10 @@ int main()
 		//3번째 전달인자가 sizeof(clientInfo)가 아니라 그변수의 주소값(&addlen)을 원한다.
 		tUser.sock = accept(listenSock, (sockaddr*)&tUser.clientAddr, &iSize);
 
-		AddUser(&tUser);
+		AddUser(tUser);
 
 		DWORD threadID;
-		HANDLE hThread = CreateThread(0, 0, ClientThread, (LPVOID)&g_allUser[g_iNumClient], 0, &threadID);
+		HANDLE hThread = CreateThread(0, 0, ClientThread, (LPVOID)&g_allUser[g_iNumClient-1], 0, &threadID);
 
 		if (tUser.sock != SOCKET_ERROR)
 		{
@@ -224,20 +227,13 @@ int main()
 
 	//서버가 종료될 경우에, 유저들에게 게임종료 메세지를 보내고 종료한다.
 	char buffer2[256] = { 0, };
-	while (0 < g_userList.size())
+	for(int i = 0; i < g_iNumClient; i++)
 	{
 		char msg[] = "게임종료합니다.!!!";
 		int iRecvByte = sizeof(msg);
 
-		for (int iUser = 0; iUser < g_userList.size(); iUser++)
-		{
-			send(g_userList[iUser].sock, msg, iRecvByte, 0);
-		}
-
-		for (int iUser = 0; iUser < g_userList.size(); iUser++)
-		{
-			closesocket(g_userList[iUser].sock);
-		}
+		send(g_allUser[i].sock, msg, iRecvByte, 0);
+		closesocket(g_allUser[i].sock);
 	}
 
 	closesocket(listenSock);

@@ -44,6 +44,7 @@ DWORD WINAPI SendThread(LPVOID param)
 	while (1)
 	{
 		char buffer[256] = { 0, };
+		ZeroMemory(buffer, sizeof(char) * 256);
 
 		printf("\n보낼 데이터 입력하시오?\n");
 		fgets(buffer, 256, stdin);
@@ -52,13 +53,17 @@ DWORD WINAPI SendThread(LPVOID param)
 		{
 			break;
 		}
-		//enter지움.
-		buffer[strlen(buffer) - 1] = '\0';
+		//enter지우기
+		if (buffer[strlen(buffer) - 1] == '\n')
+			buffer[strlen(buffer) - 1] = 0;
 
-		send(sock, buffer, strlen(buffer), 0);
-		printf("[%s] : %zd 바이트를 전송하였습니다.\n", buffer, strlen(buffer));
+		int iSendByte = SendMsg(sock, buffer, PACKET_CHAT_MSG);
+		if (iSendByte == SOCKET_ERROR)
+			break;
+		printf("\n[%s] : %zd 바이트를 전송하였습니다.\n", buffer, strlen(buffer));
 	}
 
+	shutdown(sock, SD_BOTH);
 	closesocket(sock);
 	return 1;
 }
@@ -71,13 +76,12 @@ DWORD WINAPI RecvThread(LPVOID arg)
 
 	int iRecvByte = 0;
 	int iStartByte = 0;
-
-	ZeroMemory(buffer, sizeof(char) * 2048);
-	
 	bool bConnect = true;
 
 	while(bConnect)
 	{
+		ZeroMemory(buffer, sizeof(char) * 2048);
+
 		int iLen = 0;
 		iLen = recv(sock, (char*)&buffer[iStartByte], sizeof(char) * PACKET_HEADER_SIZE - iRecvByte, 0);
 		iRecvByte += iLen;
@@ -96,10 +100,11 @@ DWORD WINAPI RecvThread(LPVOID arg)
 		if (iRecvByte == PACKET_HEADER_SIZE)
 		{
 			UPACKET* pPacket = (UPACKET*)&buffer;
+			int iRecvMsg = 0;
 			while (iRecvByte < pPacket->ph.len)
 			{
-				iLen = recv(sock, (char*)&buffer[iRecvByte], ((sizeof(char) * pPacket->ph.len) - iRecvByte), 0);
-				iRecvByte += iLen;
+				iRecvMsg = recv(sock, (char*)&buffer[iRecvByte], (sizeof(char) * pPacket->ph.len), 0);
+				iRecvByte += iRecvMsg;
 
 				if (iLen == 0 || iLen <= SOCKET_ERROR)
 				{
@@ -109,11 +114,11 @@ DWORD WINAPI RecvThread(LPVOID arg)
 				}
 			}
 
-			if (iRecvByte == pPacket->ph.len)
+			if (iRecvByte == (pPacket->ph.len + PACKET_HEADER_SIZE))
 			{
 				UPACKET recvMsg;
 				ZeroMemory(&recvMsg, sizeof(recvMsg));
-				memcpy(&recvMsg, pPacket, pPacket->ph.len);
+				memcpy(&recvMsg, pPacket, (pPacket->ph.len + PACKET_HEADER_SIZE));
 
 				switch (recvMsg.ph.type)
 				{
@@ -144,7 +149,7 @@ DWORD WINAPI ConnectThread(LPVOID param)
 	SOCKADDR_IN addr;
 	ZeroMemory(&addr, sizeof(addr));
 	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = inet_addr("192.168.0.101");
+	addr.sin_addr.s_addr = inet_addr("192.168.0.27");
 	addr.sin_port = htons(10000);
 
 	int iRet = connect(sock, (sockaddr*)&addr, sizeof(addr));
@@ -153,7 +158,8 @@ DWORD WINAPI ConnectThread(LPVOID param)
 		return 1;
 	}
 
-	SetEvent(g_hEvent);			//이벤트 끝나면 해줘야한다.
+	//이벤트의 상태를 시그널 상태가 되게한다.
+	SetEvent(g_hEvent);
 	return 1;
 }
 int main()
@@ -166,9 +172,19 @@ int main()
 		return 1;
 	}
 
-	//이벤트는 스레드간 중계, 스레드간 흐름을 제어하려고 사용한다.
-	//전달 인자 2번째 : FALSE(자동 리셋 이벤트), TRUE(수동 리셋 이벤트)
-	//전달 인자 3번째 : 초기값(FALSE : 논시그널, TRUE: 시그널)
+	// 이벤트는 스레드간 중계, 스레드간 흐름을 제어하려고 사용한다.
+	// 이벤트 객체는 어떤사건이 일어났음을 알리는 동기화 객체이다.
+	// 스레드간의 작업 순서나 시기를 조정하고 신호를 보내기 위해 사용되며,
+	// 윈도우의 메세지와 유사한 기능을 갖고있다.
+	// 자동 리셋 이벤트 : 대기 상태가 종료되면 자동으로 비신호 상태가 된다.
+	// 수동 리셋 이벤트 : 스레드가 비신호 상태로 만들때까지 신호 상태를 유지한다.
+	// 2 : FALSE(자동리셋 이벤트 ), TRUE( 수동리셋 이벤트 )
+	// 3 : 초기값(FALSE: 논시그널, TRUE:시그널)
+	//자동리셋 이벤트는 사용 안 해도 되고, 수동리셋 이벤트는 필요하다.
+	//이벤트의 상태를 논시그널 상태가 되게한다. => ResetEvent(g_hEvent);
+	//이벤트의 상태를 시그널 상태가 되게한다.	=> SetEvent(g_hEvent);
+
+	//초기값은 논시그널된 상태.
 	g_hEvent = CreateEvent(NULL, FALSE, FALSE, L"ConnectEvent");
 
 	//소켓 생성 완료.
@@ -184,10 +200,11 @@ int main()
 	HANDLE hConnectThread = CreateThread(0, 0, ConnectThread, (LPVOID)sock, 0, &id_0);
 
 	//event
-	//커넥트가 되야 샌드, 리시브가 되니까 기다리려고 이벤트를 사용한다.
+	// 커넥트가 되야 샌드 리시브 되니까 커넥트가 될때까지 대기하려고 이벤트를 사용한다
+	//커넥트가 되면 이벤트가 시그널 상태가 된다.
 	WaitForSingleObject(hConnectThread, INFINITE);
 	//WaitForSingleObject(g_hEvent, INFINITE);
-	ResetEvent(g_hEvent);		//자동리셋 이벤트는 사용 안해도 되고, 수동 리셋 이벤트는 필요하다.
+	//ResetEvent(g_hEvent);		//자동리셋 이벤트는 사용 안해도 되고, 수동 리셋 이벤트는 필요하다.
 
 	char buffer2[256] = { 0, };
 	int iLen = 0;
@@ -204,6 +221,7 @@ int main()
 	CloseHandle(hConnectThread);
 	CloseHandle(hSendThread);
 	CloseHandle(hRecvThread);
+	CloseHandle(g_hEvent);
 
 	EndWinSock();
 
