@@ -41,9 +41,10 @@ HANDLE g_hEvent;
 DWORD WINAPI SendThread(LPVOID param)
 {
 	SOCKET sock = (SOCKET)param;
+	char buffer[256] = { 0, };
+
 	while (1)
 	{
-		char buffer[256] = { 0, };
 		ZeroMemory(buffer, sizeof(char) * 256);
 
 		printf("\n보낼 데이터 입력하시오?\n");
@@ -106,30 +107,27 @@ DWORD WINAPI RecvThread(LPVOID arg)
 				iRecvMsg = recv(sock, (char*)&buffer[iRecvByte], (sizeof(char) * pPacket->ph.len), 0);
 				iRecvByte += iRecvMsg;
 
-				if (iLen == 0 || iLen <= SOCKET_ERROR)
+				if (iRecvMsg == 0 || iRecvMsg <= SOCKET_ERROR)
 				{
-					printf("\niLen == 0 || iLen <= SOCKET_ERROR [연결 종료] : %s", "서버 문제로 인하여 종료되었다.\n");
+					printf("\iRecvMsg == 0 || iRecvMsg <= SOCKET_ERROR [연결 종료] : %s", "서버 문제로 인하여 종료되었다.\n");
 					bConnect = false;
 					break;
 				}
 			}
 
-			if (iRecvByte == (pPacket->ph.len + PACKET_HEADER_SIZE))
-			{
-				UPACKET recvMsg;
-				ZeroMemory(&recvMsg, sizeof(recvMsg));
-				memcpy(&recvMsg, pPacket, (pPacket->ph.len + PACKET_HEADER_SIZE));
+			UPACKET recvMsg;
+			ZeroMemory(&recvMsg, sizeof(recvMsg));
+			memcpy(&recvMsg, pPacket, (pPacket->ph.len + PACKET_HEADER_SIZE));
 
-				switch (recvMsg.ph.type)
+			switch (recvMsg.ph.type)
+			{
+				case PACKET_CHAT_MSG:
 				{
-					case PACKET_CHAT_MSG:
-					{
-						printf("\n[받은 메세지] : %s\n", recvMsg.msg);
-					}
-					break;
+					printf("\n[받은 메세지] : %s\n", recvMsg.msg);
 				}
-				iStartByte = iRecvByte = 0;
+				break;
 			}
+			iStartByte = iRecvByte = 0;
 		}
 		else
 		{

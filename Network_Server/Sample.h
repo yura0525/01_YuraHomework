@@ -24,6 +24,7 @@ int SendMsg(SOCKET sock, char* msg, WORD type)
 	int iTotalSize = strlen(msg) + PACKET_HEADER_SIZE;
 	int iSend = 0;
 
+	printf("Broadcastting sendMsg.msg[%s], iTotalSize[%d]\n", sendMsg.msg, iTotalSize);
 	//덜보냈으면 잘라서 보낸다.
 	char* pMsg = (char*)&sendMsg;
 	do {
@@ -34,6 +35,7 @@ int SendMsg(SOCKET sock, char* msg, WORD type)
 		sendBytes += iSend;
 	} while (sendBytes < iTotalSize);
 	
+	printf("Broadcastting pMsg[%s], sendBytes[%d]\n", pMsg, sendBytes);
 	return iTotalSize;
 }
 

@@ -1,9 +1,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>	//InetNtop(), inet_ntop();
 #include <iostream>
-#include <vector>
 #include <map>
-#include "TPacket.h"
 #include "Sample.h"
 
 #pragma comment(lib, "ws2_32.lib")
@@ -27,6 +25,7 @@ int Broadcastting(char* pMsg)
 
 	for (int iUser = 0; iUser < g_iNumClient; iUser++)
 	{
+		printf("Broadcastting pMsg[%s]\n", pMsg);
 		if (0 <= SendMsg(g_allUser[iUser].sock, pMsg, PACKET_CHAT_MSG))
 		{
 			continue;
@@ -81,11 +80,12 @@ DWORD WINAPI ClientThread(LPVOID arg)
 
 		//처음엔 PACKET_HEADER_SIZE사이즈만큼 받는다.
 		iRet = recv(sock, &buffer[recvByte], sizeof(char) * PACKET_HEADER_SIZE - recvByte, 0);
-		if (iRet == 0)	break;
-		if (iRet == SOCKET_ERROR)
+		if (iRet == 0 ||iRet == SOCKET_ERROR)
 		{
+			printf("iRet == 0 || iRet == SOCKET_ERROR\n");
 			break;
 		}
+
 		recvByte += iRet;
 
 		//패킷을 PACKET_HEADER_SIZE만큼 받았을때.
@@ -104,6 +104,7 @@ DWORD WINAPI ClientThread(LPVOID arg)
 
 				if (iRecvByte == 0 || iRecvByte == SOCKET_ERROR)
 				{
+					printf("iRecvByte == 0 || iRecvByte == SOCKET_ERROR\n");
 					bConnect = false;
 					break;
 				}
@@ -125,14 +126,16 @@ DWORD WINAPI ClientThread(LPVOID arg)
 					{
 						CHARACTER_INFO cInfo;
 						memcpy(&cInfo, packet.msg, sizeof(CHARACTER_INFO));
+						printf("패킷 완성 %s\n", packet.msg);
 					}
 					break;
 				}
-				printf("패킷 완성 %s\n", packet.msg);
 			}
 		}
 		Sleep(1);
 	}
+
+	printf("DelUser(pUser)\n");
 	DelUser(pUser);
 	closesocket(sock);
 	return 1;
