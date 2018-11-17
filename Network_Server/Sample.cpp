@@ -25,7 +25,6 @@ int Broadcastting(char* pMsg)
 
 	for (int iUser = 0; iUser < g_iNumClient; iUser++)
 	{
-		printf("Broadcastting pMsg[%s]\n", pMsg);
 		if (0 <= SendMsg(g_allUser[iUser].sock, pMsg, PACKET_CHAT_MSG))
 		{
 			continue;
@@ -82,7 +81,6 @@ DWORD WINAPI ClientThread(LPVOID arg)
 		iRet = recv(sock, &buffer[recvByte], sizeof(char) * PACKET_HEADER_SIZE - recvByte, 0);
 		if (iRet == 0 ||iRet == SOCKET_ERROR)
 		{
-			printf("iRet == 0 || iRet == SOCKET_ERROR\n");
 			break;
 		}
 
@@ -104,7 +102,6 @@ DWORD WINAPI ClientThread(LPVOID arg)
 
 				if (iRecvByte == 0 || iRecvByte == SOCKET_ERROR)
 				{
-					printf("iRecvByte == 0 || iRecvByte == SOCKET_ERROR\n");
 					bConnect = false;
 					break;
 				}
@@ -135,7 +132,6 @@ DWORD WINAPI ClientThread(LPVOID arg)
 		Sleep(1);
 	}
 
-	printf("DelUser(pUser)\n");
 	DelUser(pUser);
 	closesocket(sock);
 	return 1;

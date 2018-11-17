@@ -102,7 +102,7 @@ DWORD WINAPI RecvThread(LPVOID arg)
 		{
 			UPACKET* pPacket = (UPACKET*)&buffer;
 			int iRecvMsg = 0;
-			while (iRecvByte < pPacket->ph.len)
+			do
 			{
 				iRecvMsg = recv(sock, (char*)&buffer[iRecvByte], (sizeof(char) * pPacket->ph.len), 0);
 				iRecvByte += iRecvMsg;
@@ -113,7 +113,7 @@ DWORD WINAPI RecvThread(LPVOID arg)
 					bConnect = false;
 					break;
 				}
-			}
+			} while (iRecvMsg < pPacket->ph.len);
 
 			UPACKET recvMsg;
 			ZeroMemory(&recvMsg, sizeof(recvMsg));
@@ -147,7 +147,7 @@ DWORD WINAPI ConnectThread(LPVOID param)
 	SOCKADDR_IN addr;
 	ZeroMemory(&addr, sizeof(addr));
 	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = inet_addr("192.168.0.27");
+	addr.sin_addr.s_addr = inet_addr("192.168.0.2");
 	addr.sin_port = htons(10000);
 
 	int iRet = connect(sock, (sockaddr*)&addr, sizeof(addr));
@@ -200,8 +200,8 @@ int main()
 	//event
 	// 커넥트가 되야 샌드 리시브 되니까 커넥트가 될때까지 대기하려고 이벤트를 사용한다
 	//커넥트가 되면 이벤트가 시그널 상태가 된다.
-	WaitForSingleObject(hConnectThread, INFINITE);
-	//WaitForSingleObject(g_hEvent, INFINITE);
+	//WaitForSingleObject(hConnectThread, INFINITE);
+	WaitForSingleObject(g_hEvent, INFINITE);
 	//ResetEvent(g_hEvent);		//자동리셋 이벤트는 사용 안해도 되고, 수동 리셋 이벤트는 필요하다.
 
 	char buffer2[256] = { 0, };
