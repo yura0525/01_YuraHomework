@@ -14,13 +14,15 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Direct2D", "Direct2D\Direct
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xCoreLib_3D", "xCoreLib_3D\xCoreLib_3D.vcxproj", "{484628B4-0A4D-46E2-A25B-AC8AB8354A11}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Network_Server(Critical)", "Network_Server\Network_Server.vcxproj", "{720AFBDF-E6ED-4A99-A9FB-49EF9C8DF642}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Network_Server(echo_CriticalSection)", "Network_Server\Network_Server.vcxproj", "{720AFBDF-E6ED-4A99-A9FB-49EF9C8DF642}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Network_Client", "Network_Client\Network_Client.vcxproj", "{41915CF6-2648-4C77-BC60-6586CB7D1DA5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mutex", "Mutex\Mutex.vcxproj", "{D8F261AF-49D3-4292-9E64-E074D7B7E711}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SelectModel", "SelectModel\SelectModel.vcxproj", "{D7F4AA2B-BCD7-412C-86EF-ECF01CC337FB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AsyncSelect", "AsyncSelect\AsyncSelect.vcxproj", "{F3A7A8D0-EACD-496A-8186-04BC26EF409C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -94,6 +96,14 @@ Global
 		{D7F4AA2B-BCD7-412C-86EF-ECF01CC337FB}.Release|x64.Build.0 = Release|x64
 		{D7F4AA2B-BCD7-412C-86EF-ECF01CC337FB}.Release|x86.ActiveCfg = Release|Win32
 		{D7F4AA2B-BCD7-412C-86EF-ECF01CC337FB}.Release|x86.Build.0 = Release|Win32
+		{F3A7A8D0-EACD-496A-8186-04BC26EF409C}.Debug|x64.ActiveCfg = Debug|x64
+		{F3A7A8D0-EACD-496A-8186-04BC26EF409C}.Debug|x64.Build.0 = Debug|x64
+		{F3A7A8D0-EACD-496A-8186-04BC26EF409C}.Debug|x86.ActiveCfg = Debug|Win32
+		{F3A7A8D0-EACD-496A-8186-04BC26EF409C}.Debug|x86.Build.0 = Debug|Win32
+		{F3A7A8D0-EACD-496A-8186-04BC26EF409C}.Release|x64.ActiveCfg = Release|x64
+		{F3A7A8D0-EACD-496A-8186-04BC26EF409C}.Release|x64.Build.0 = Release|x64
+		{F3A7A8D0-EACD-496A-8186-04BC26EF409C}.Release|x86.ActiveCfg = Release|Win32
+		{F3A7A8D0-EACD-496A-8186-04BC26EF409C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,6 +9,18 @@ struct TUser
 {
 	SOCKET sock;
 	SOCKADDR_IN clientAddr;
+	TUser() {}
+	TUser(SOCKET client, SOCKADDR_IN add)
+	{
+		sock = client;
+		clientAddr = add;
+	}
+	TUser(const TUser& user)
+	{
+		sock = user.sock;
+		clientAddr = user.clientAddr;
+	}
+	int iIndex;
 };
 
 int SendMsg(SOCKET sock, char* msg, WORD type)
@@ -24,18 +36,16 @@ int SendMsg(SOCKET sock, char* msg, WORD type)
 	int iTotalSize = strlen(msg) + PACKET_HEADER_SIZE;
 	int iSend = 0;
 
-	printf("Broadcastting sendMsg.msg[%s], iTotalSize[%d]\n", sendMsg.msg, iTotalSize);
-	//덜보냈으면 잘라서 보낸다.
 	char* pMsg = (char*)&sendMsg;
-	do {
+	while (sendBytes < iTotalSize)
+	{
 		iSend = send(sock, (char*)&pMsg[sendBytes], iTotalSize - sendBytes, 0);
 		if (iSend == SOCKET_ERROR)
 			return iSend;
 
 		sendBytes += iSend;
-	} while (sendBytes < iTotalSize);
+	}
 	
-	printf("Broadcastting pMsg[%s], sendBytes[%d]\n", pMsg, sendBytes);
 	return iTotalSize;
 }
 
@@ -53,13 +63,14 @@ int SendMsg(SOCKET sock, PACKET_HEADER ph, char* msg)
 
 	//덜보냈으면 잘라서 보낸다.
 	char* pMsg = (char*)&sendMsg;
-	do {
+	while (sendBytes < iTotalSize)
+	{
 		iSend = send(sock, (char*)&pMsg[sendBytes], iTotalSize - sendBytes, 0);
 		if (iSend == SOCKET_ERROR)
 			return iSend;
 
 		sendBytes += iSend;
-	} while (sendBytes < iTotalSize);
+	} 
 
 	return iTotalSize;
 }
@@ -72,13 +83,14 @@ int SendMsg(SOCKET sock, UPACKET* uPacket)
 
 	//덜보냈으면 잘라서 보낸다.
 	char* pMsg = (char*)uPacket;
-	do {
+	while (sendBytes < iTotalSize)
+	{
 		iSend = send(sock, (char*)&pMsg[sendBytes], iTotalSize - sendBytes, 0);
 		if (iSend == SOCKET_ERROR)
 			return iSend;
 
 		sendBytes += iSend;
-	} while (sendBytes < iTotalSize);
+	} 
 
 	return iTotalSize;
 }

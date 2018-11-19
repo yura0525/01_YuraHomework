@@ -201,8 +201,12 @@ int main()
 	// 커넥트가 되야 샌드 리시브 되니까 커넥트가 될때까지 대기하려고 이벤트를 사용한다
 	//커넥트가 되면 이벤트가 시그널 상태가 된다.
 	//WaitForSingleObject(hConnectThread, INFINITE);
+	//자동리셋 이벤트는 사용 안해도 되고, 수동 리셋 이벤트는 필요하다.
+	//SetEvent <------> ResetEvent(g_hEvent);
 	WaitForSingleObject(g_hEvent, INFINITE);
-	//ResetEvent(g_hEvent);		//자동리셋 이벤트는 사용 안해도 되고, 수동 리셋 이벤트는 필요하다.
+
+	//이벤트의 상태를 논시그널 상태가 되게한다.
+	//ResetEvent(g_hEvent);					//자동리셋이벤트라서 안해줘도 된다.
 
 	char buffer2[256] = { 0, };
 	int iLen = 0;

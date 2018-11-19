@@ -7,30 +7,56 @@
 #pragma comment(lib, "ws2_32.lib")
 using namespace std;
 
-TUser g_allUser[100];
-int g_iNumClient = 0;
+std::map<SOCKET, TUser> g_allUser;
+typedef std::map<SOCKET, TUser>::iterator ITOR;
+
 CRITICAL_SECTION g_Crit;
+HANDLE			g_hMutex;
 
 void AddUser(TUser& user)
 {
-	EnterCriticalSection(&g_Crit);
-		g_allUser[g_iNumClient] = user;
-		g_iNumClient++;
-	LeaveCriticalSection(&g_Crit);
+	//EnterCriticalSection(&g_Crit);
+	//EnterCriticalSection와 같다. 무한이 기다려준다.
+	//무한대기하면 WAIT_TIMEOUT할 필요가 없다. 시간을 주어줄때 WAIT_TIMEOUT을 쓴다.
+	DWORD dwRet = WaitForSingleObject(g_hMutex, INFINITE);
+
+	if (dwRet != WAIT_TIMEOUT)
+	{
+		g_allUser.insert(make_pair(user.sock, user));
+		//g_allUser[g_iNumClient] = user;
+		//g_iNumClient++;
+	}
+
+	//LeaveCriticalSection(&g_Crit);
+	ReleaseMutex(g_hMutex);
 }
 
 int Broadcastting(char* pMsg)
 {
-	EnterCriticalSection(&g_Crit);
+	//EnterCriticalSection(&g_Crit);
+	DWORD dwRet = WaitForSingleObject(g_hMutex, INFINITE);
 
-	for (int iUser = 0; iUser < g_iNumClient; iUser++)
+	//중요!!!:증감연산자가 없다. if문 안에서 증감한다.
+	for (ITOR itor = g_allUser.begin(); itor != g_allUser.end(); )
 	{
-		if (0 <= SendMsg(g_allUser[iUser].sock, pMsg, PACKET_CHAT_MSG))
+		TUser* pUser = (TUser*)&(itor->second);
+		if (pUser != NULL)
 		{
-			continue;
+			if (SendMsg(pUser->sock, pMsg, PACKET_CHAT_MSG) <= 0)
+			{
+				closesocket(pUser->sock);
+				g_allUser.erase(itor++);
+			}
+			else
+			{
+				itor++;
+			}
 		}
+		
 	}
-	LeaveCriticalSection(&g_Crit);
+
+	ReleaseMutex(g_hMutex);
+	//LeaveCriticalSection(&g_Crit);
 	return 1;
 }
 
@@ -43,23 +69,35 @@ void DelUser(TUser* pUser)
 {
 	tMSG(pUser, " 퇴장하였습니다.\n");
 
-	EnterCriticalSection(&g_Crit);
-	for (int iUser = 0; iUser < g_iNumClient; iUser++)
+	//EnterCriticalSection(&g_Crit);
+	DWORD dwRet = WaitForSingleObject(g_hMutex, INFINITE);
 	{
-		if (g_allUser[iUser].sock == pUser->sock)
+		ITOR itor = g_allUser.find(pUser->sock);
+		closesocket(pUser->sock);
+
+		if (itor != g_allUser.end())
 		{
-			//지울때 뒤에서 하나씩 땡겨오고 g_iNumClient을 하나 줄인다.
-			for (int iDel = iUser; iDel < g_iNumClient; iDel++)
-			{
-				g_allUser[iDel] = g_allUser[iDel + 1];
-			}
-			break;
+			g_allUser.erase(itor);
 		}
 	}
-	g_iNumClient--;
 
-	closesocket(pUser->sock);
-	LeaveCriticalSection(&g_Crit);
+	//for (int iUser = 0; iUser < g_iNumClient; iUser++)
+	//{
+	//	if (g_allUser[iUser].sock == pUser->sock)
+	//	{
+	//		//지울때 뒤에서 하나씩 땡겨오고 g_iNumClient을 하나 줄인다.
+	//		for (int iDel = iUser; iDel < g_iNumClient; iDel++)
+	//		{
+	//			g_allUser[iDel] = g_allUser[iDel + 1];
+	//		}
+	//		break;
+	//	}
+	//}
+	//g_iNumClient--;
+
+	T_ERROR();
+	ReleaseMutex(g_hMutex);
+	//LeaveCriticalSection(&g_Crit);
 	return;
 }
 
@@ -96,7 +134,8 @@ DWORD WINAPI ClientThread(LPVOID arg)
 			//패킷을 packet.ph.len길이만큼 받는다. 패킷을 다받아야 while문 종료.
 			//packet.ph.len에는 msg의 길이만 들어있다. PACKET_HEADER_SIZE 더해져있지 않다.
 			int rByte = 0;
-			do {
+			while (rByte < packet.ph.len)
+			{
 				
 				int iRecvByte = recv(sock, &(packet.msg[rByte]), sizeof(char) * (packet.ph.len - rByte), 0);
 
@@ -106,7 +145,7 @@ DWORD WINAPI ClientThread(LPVOID arg)
 					break;
 				}
 				rByte += iRecvByte;
-			} while (rByte < packet.ph.len);
+			} 
 
 			recvByte = 0;
 			if (bConnect)
@@ -115,7 +154,7 @@ DWORD WINAPI ClientThread(LPVOID arg)
 				{
 					case PACKET_CHAT_MSG:
 					{
-						printf("패킷 완성 %s\n", packet.msg);
+						printf("\n패킷 완성 %s\n", packet.msg);
 						Broadcastting(packet.msg);
 					}
 					break;
@@ -123,7 +162,7 @@ DWORD WINAPI ClientThread(LPVOID arg)
 					{
 						CHARACTER_INFO cInfo;
 						memcpy(&cInfo, packet.msg, sizeof(CHARACTER_INFO));
-						printf("패킷 완성 %s\n", packet.msg);
+						printf("\n패킷 완성 %s\n", packet.msg);
 					}
 					break;
 				}
@@ -203,7 +242,7 @@ int main()
 		AddUser(tUser);
 
 		DWORD threadID;
-		HANDLE hThread = CreateThread(0, 0, ClientThread, (LPVOID)&g_allUser[g_iNumClient-1], 0, &threadID);
+		HANDLE hThread = CreateThread(0, 0, ClientThread, (LPVOID)&tUser.sock, 0, &threadID);
 
 		if (tUser.sock != SOCKET_ERROR)
 		{
@@ -226,7 +265,7 @@ int main()
 
 	//서버가 종료될 경우에, 유저들에게 게임종료 메세지를 보내고 종료한다.
 	char buffer2[256] = { 0, };
-	for(int i = 0; i < g_iNumClient; i++)
+	for(int i = 0; i < g_allUser.size(); i++)
 	{
 		char msg[] = "게임종료합니다.!!!";
 		int iRecvByte = sizeof(msg);
