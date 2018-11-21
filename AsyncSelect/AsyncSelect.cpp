@@ -67,6 +67,95 @@ int RecvData(TUser* pUser)
 	return 1;
 }
 
+LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	if (uMsg == WM_KGCA)
+	{
+		if (WSAGETSELECTERROR(lParam))
+		{
+			closesocket(wParam);
+		}
+		else
+		{
+			switch (WSAGETSELECTEVENT(lParam))
+			{
+			case FD_ACCEPT:
+			{
+				TUser addUser;
+				addUser.sock = accept(wParam, (SOCKADDR*)&addUser.clientAddr, &addUser.addrlen);
+				if (addUser.sock == INVALID_SOCKET)
+				{
+					break;
+				}
+
+				AddUser(addUser);
+
+				//WSAASyncSelect같은 함수를 여러번 호출하면 마지막만 적용된다.
+				//WM_DROP만 된다.
+				int iRet = WSAAsyncSelect(addUser.sock, hWnd, WM_RWC, FD_READ | FD_WRITE | FD_CLOSE);
+
+				if (iRet == SOCKET_ERROR)
+				{
+					return -1;
+				}
+			}
+			break;
+			case FD_READ:
+			{
+				TUser::g_socket = wParam;
+				ITOR itor = find_if(g_allUser.begin(), g_allUser.end(), TUser());
+				TUser* pUser = (TUser*)&(*itor);
+				//클라이언트 소켓일경우 recv()
+				if (RecvData(pUser) <= 0)
+				{
+					closesocket(pUser->sock);
+					itor = g_allUser.erase(itor);
+				}
+			}
+			break;
+			case FD_WRITE:
+			{
+				//받은 패킷을 넣어두는 장소가 없음.
+				//패킷풀에 있는걸 Send한다.
+			}
+			break;
+			case FD_CLOSE:
+			{
+				//받은 데이터가 0일경우에 나가는 처리를 하였다.
+				PostMessage(hWnd, WM_KGCA, wParam, FD_READ);
+			}
+			break;
+			}
+		}
+	}
+	else if (uMsg == WM_RWC)
+	{
+		printf("uMsg == WM_RWC\n");
+	}
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+}
+
+HWND MakeWindow()
+{
+	//윈도우 클래스 등록
+	WNDCLASSEX wc;
+	ZeroMemory(&wc, sizeof(WNDCLASSEX));
+
+	wc.cbSize = sizeof(WNDCLASSEX);
+	wc.style = CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc = WindowProc;
+
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hInstance = NULL;
+	wc.hIcon;
+	wc.hCursor;
+	wc.hbrBackground;
+	wc.lpszMenuName;
+	wc.lpszClassName;
+	wc.hIconSm;
+
+
 int main()
 {
 
