@@ -41,6 +41,8 @@ struct TUser
 };
 
 SOCKET TUser::g_socket = NULL;
+SOCKET g_listenSocket = NULL;
+
 std::list<TUser> g_allUser;
 typedef std::list<TUser>::iterator ITOR;
 
@@ -162,9 +164,9 @@ int Broadcastting(char* pMsg)
 	//중요!!!!증감연산자가 없다. if문 안에서 증감한다.
 	for (ITOR itor = g_allUser.begin(); itor != g_allUser.end();)
 	{
-		//g_allUser 맨 앞에는 리슨소켓이 등록되어있다.
+		//SelectModel은 g_allUser 맨 앞에는 리슨소켓이 등록되어있다.
 		//리슨소켓은 브로드캐스트하지 않는다.
-		if (itor == g_allUser.begin())
+		if (g_listenSocket == (*itor).sock)
 		{
 			itor++;
 			continue;

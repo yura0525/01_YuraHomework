@@ -103,9 +103,12 @@ int main()
 	listen(listenSock, SOMAXCONN);	//->개통
 
 	//리슨소켓도 유저에 등록한다.
-
+	//나중에 브로드캐스트로 에코할때 리슨소켓을 제외해야한다.
+	//유저리스트의 맨처음은 패스한다.
 	TUser listenUser(listenSock, sa);;
 	AddUser(listenUser);
+
+	g_listenSocket = listenSock;
 
 	FD_SET rSet;
 	FD_SET wSet;

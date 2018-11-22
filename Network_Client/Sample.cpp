@@ -147,7 +147,7 @@ DWORD WINAPI ConnectThread(LPVOID param)
 	SOCKADDR_IN addr;
 	ZeroMemory(&addr, sizeof(addr));
 	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = inet_addr("192.168.0.2");
+	addr.sin_addr.s_addr = inet_addr("192.168.0.27");
 	addr.sin_port = htons(10000);
 
 	int iRet = connect(sock, (sockaddr*)&addr, sizeof(addr));
