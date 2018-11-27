@@ -76,7 +76,7 @@ void main()
 	LARGE_INTEGER fileSize;
 	ZeroMemory(&ov, sizeof(OVERLAPPED));
 
-	HANDLE hReadFile = CreateFileA("../../data_1.zip", GENERIC_READ,
+	HANDLE hReadFile = CreateFileA("../../TBasisSample3D.zip", GENERIC_READ,
 		0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, NULL);
 
 	if (hReadFile != INVALID_HANDLE_VALUE)
@@ -137,12 +137,11 @@ void main()
 
 			if (dwRet == WAIT_OBJECT_0)
 			{
-				printf("\n%s : %ld", "FinishWrite....", ov.InternalHigh);
+				printf("\n WAIT_OBJECT_0 %s : %ld", "FinishWrite....", ov.InternalHigh);
 				break;
 			}
 			else if (dwRet == WAIT_TIMEOUT)
 			{
-				static DWORD dwSum = 0;
 				DWORD trans;
 
 				bool ret = GetOverlappedResult(hWriteFile, &ov, &trans, FALSE);
@@ -150,14 +149,14 @@ void main()
 				{
 					bool iRet = WriteFile(hWriteFile, g_buf, fileSize.QuadPart, &dwWritten, &wov);
 
-					printf("\n%s : %ld", "FinishWrite...", ov.InternalHigh);
+					printf("\n WAIT_TIMEOUT %s : %ld", "FinishWrite...", wov.InternalHigh);
 					break;
 				}
 				else
 				{
-				
-					dwSum += ov.InternalHigh;
-					printf("\n%s : %ld : %ld", "Write....", ov.InternalHigh, dwSum);
+					static LONG dwSum = 0;
+					dwSum += wov.InternalHigh;
+					printf("\n%s : %ld : %ld", "Write....", wov.InternalHigh, dwSum);
 				}
 			}
 		}

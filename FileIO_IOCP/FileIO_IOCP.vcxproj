@@ -20,11 +20,11 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{BB31643F-5F5E-4EEF-B486-305C43105091}</ProjectGuid>
+    <ProjectGuid>{78023B8A-2BBE-478F-B7B7-C37D5BD596DE}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>OverlappedFileIO</RootNamespace>
+    <RootNamespace>FileIOIOCP</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
-    <ProjectName>OverlappedFileIO(x)</ProjectName>
+    <ProjectName>FileIO_IOCP</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -73,8 +73,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>../output/OverlappedFileIO/</OutDir>
-    <IntDir>../output/OverlappedFileIO/</IntDir>
+    <OutDir>../output/FILE_IO_IOCP/</OutDir>
+    <IntDir>../output/FILE_IO_IOCP/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
