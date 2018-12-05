@@ -30,7 +30,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WideCharAndMultiByte", "Wid
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileIO_IOCP", "FileIO_IOCP\FileIO_IOCP.vcxproj", "{78023B8A-2BBE-478F-B7B7-C37D5BD596DE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IOCP_Server", "IOCP_Server\IOCP_Server.vcxproj", "{08039AE0-811F-4539-A217-43C7B9082312}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IOCP_Server(x)", "IOCP_Server\IOCP_Server.vcxproj", "{08039AE0-811F-4539-A217-43C7B9082312}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AyncNotiEchoServ_win", "AyncNotiEchoServ_win\AyncNotiEchoServ_win.vcxproj", "{259ED71B-5A0A-4AD2-8E0F-E2302DF3E881}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -144,6 +146,14 @@ Global
 		{08039AE0-811F-4539-A217-43C7B9082312}.Release|x64.Build.0 = Release|x64
 		{08039AE0-811F-4539-A217-43C7B9082312}.Release|x86.ActiveCfg = Release|Win32
 		{08039AE0-811F-4539-A217-43C7B9082312}.Release|x86.Build.0 = Release|Win32
+		{259ED71B-5A0A-4AD2-8E0F-E2302DF3E881}.Debug|x64.ActiveCfg = Debug|x64
+		{259ED71B-5A0A-4AD2-8E0F-E2302DF3E881}.Debug|x64.Build.0 = Debug|x64
+		{259ED71B-5A0A-4AD2-8E0F-E2302DF3E881}.Debug|x86.ActiveCfg = Debug|Win32
+		{259ED71B-5A0A-4AD2-8E0F-E2302DF3E881}.Debug|x86.Build.0 = Debug|Win32
+		{259ED71B-5A0A-4AD2-8E0F-E2302DF3E881}.Release|x64.ActiveCfg = Release|x64
+		{259ED71B-5A0A-4AD2-8E0F-E2302DF3E881}.Release|x64.Build.0 = Release|x64
+		{259ED71B-5A0A-4AD2-8E0F-E2302DF3E881}.Release|x86.ActiveCfg = Release|Win32
+		{259ED71B-5A0A-4AD2-8E0F-E2302DF3E881}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

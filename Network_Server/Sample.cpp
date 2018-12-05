@@ -180,7 +180,14 @@ int main()
 {
 	//크리티컬 섹션 초기화
 	//InitializeCriticalSection()<------> DeleteCriticalSection()
-	InitializeCriticalSection(&g_Crit);
+	//InitializeCriticalSection(&g_Crit);
+	g_hMutex = CreateMutex(NULL, FALSE, L"KGCA");
+
+	if (GetLastError() == ERROR_ALREADY_EXISTS)
+	{
+		CloseHandle(g_hMutex);
+		return 1;
+	}
 
 	if (BeginWinSock() == false)
 		return -1;
@@ -277,7 +284,9 @@ int main()
 	closesocket(listenSock);
 	EndWinSock();
 
-	DeleteCriticalSection(&g_Crit);
+	//DeleteCriticalSection(&g_Crit);
+	CloseHandle(g_hMutex);
+
 	std::cout << "Server Hello World\n";
 	return 0;
 }
