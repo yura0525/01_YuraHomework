@@ -2,23 +2,16 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <iostream>
-#include <list>
-#include <map>
 
 #pragma comment(lib, "ws2_32")
 using namespace std;
 
-#define BUF_SIZE 100
 
-
-void T_ERROR()
+void ErrorHandling(const char* msg)
 {
-	char* pMsg = 0;
-	FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL,
-		WSAGetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (char*)&pMsg, 0, NULL);
-
-	printf("\n%s\n", pMsg);
-	LocalFree(pMsg);
+	fputs(msg, stderr);
+	fputc('n', stderr);
+	exit(1);
 }
 
 void main()
@@ -29,15 +22,14 @@ void main()
 
 	WSABUF dataBuf;
 	char msg[] = "Network is Computer!";
-	int sendBytes = 0;
+	DWORD sendBytes = 0;
 
 	WSAEVENT evObj;
 	WSAOVERLAPPED overlapped;
 
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 	{
-		T_ERROR();
-		return;
+		ErrorHandling("WSAStartup() error!!!");
 	}
 
 	hSocket = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
@@ -46,4 +38,37 @@ void main()
 	sendAddr.sin_family = AF_INET;
 	sendAddr.sin_addr.s_addr = inet_addr("192.168.0.27");
 	sendAddr.sin_port = htons(10000);
+
+	if (connect(hSocket, (SOCKADDR*)&sendAddr, sizeof(sendAddr)) == SOCKET_ERROR)
+	{
+		ErrorHandling("connect() error!!!");
+	}
+
+	evObj = WSACreateEvent();
+	memset(&overlapped, 0, sizeof(overlapped));
+	overlapped.hEvent = evObj;
+	dataBuf.len = strlen(msg) + 1;
+	dataBuf.buf = msg;
+
+	if ( WSASend(hSocket, &dataBuf, 1, &sendBytes, 0, &overlapped, NULL) == SOCKET_ERROR)
+	{
+		if (WSAGetLastError() == WSA_IO_PENDING)
+		{
+			printf("Background data send");
+			WSAWaitForMultipleEvents(1, &evObj, TRUE, WSA_INFINITE, FALSE);
+			WSAGetOverlappedResult(hSocket, &overlapped, &sendBytes, FALSE, NULL);
+		}
+		else
+		{
+			ErrorHandling("WSASend error!!!");
+			return;
+		}
+	}
+
+	printf("Send Data Size : %d\n", sendBytes);
+	WSACloseEvent(evObj);
+	closesocket(hSocket);
+	WSACleanup();
+	return;
 }
+

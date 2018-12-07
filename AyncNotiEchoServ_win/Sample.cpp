@@ -1,8 +1,6 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <iostream>
-#include <list>
-#include <map>
 
 #pragma comment(lib, "ws2_32")
 
