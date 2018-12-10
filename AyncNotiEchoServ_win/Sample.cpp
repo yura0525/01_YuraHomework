@@ -98,8 +98,6 @@ void main()
 			}
 			else
 			{
-				//이걸 해줘야할것같은데 안해줬다...이상함.
-				//sigEventIdx = sigEventIdx - WSA_WAIT_EVENT_0;
 				sigEventIdx = i;
 				WSAEnumNetworkEvents(hSockArr[sigEventIdx],  hEventArr[sigEventIdx], &netEvents);
 
