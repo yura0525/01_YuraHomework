@@ -61,8 +61,7 @@ DWORD WINAPI WorkerThread(LPVOID param)
 			pUser->buffer.buf = pUser->buf;
 			pUser->buffer.len = 2048;
 			trans = bytesTransfer;
-			//memcpy(pUser->buffer.buf, pUser->buf, trans);
-			//ovex->flag = RECV;
+			ovex->flag = RECV;
 
 			if (ovex->flag == RECV)
 			{
@@ -74,13 +73,13 @@ DWORD WINAPI WorkerThread(LPVOID param)
 				ovex->flag = RECV;
 				int iRet = WSARecv(pUser->sock, &(pUser->buffer), 1, &trans, 0, (LPOVERLAPPED)&(pUser->ov), NULL);
 
-				if (iRet == SOCKET_ERROR)
+				/*if (iRet == SOCKET_ERROR)
 				{
 					if (WSAGetLastError() != WSA_IO_PENDING)
 					{
 						return false;
 					}
-				}
+				}*/
 			}
 		}
 	}

@@ -7,48 +7,11 @@ OVERLAPPED ov;
 LARGE_INTEGER g_size;
 char* g_buf = NULL;
 
-//유니코드에서 멀티바이트로 바꾸는 함수.
-char* GetW2M(WCHAR* data)
-{
-	char cData[3333] = { 0, };
-
-	//변환된 크기를 찾는다.
-	int iLength = WideCharToMultiByte(CP_ACP, 0, data, -1, 0, 0, NULL, NULL);
-
-	int iRet = WideCharToMultiByte(CP_ACP, 0, data, -1, cData, iLength, NULL, NULL);
-	return cData;
-}
-
-//멀티바이트에서 유니코드로 바꾸는 함수.
-WCHAR* GetM2W(char* data)
-{
-	WCHAR cData[3333] = { 0, };
-
-	//변환된 크기를 찾는다.
-	int iLength = MultiByteToWideChar(CP_ACP, 0, data, -1, 0, 0);
-
-	int iRet = MultiByteToWideChar(CP_ACP, 0, data, -1, cData, iLength);
-	return cData;
-}
-
-std::string w2m(std::wstring data)
-{
-	std::string ret = std::string(data.begin(), data.end());
-	return ret;
-}
-
-std::wstring m2w(std::string data)
-{
-	std::wstring ret = std::wstring(data.begin(), data.end());
-	return ret;
-}
-
-
-//4096 * 1024 만큼 쪼개서 읽는다.
+//4096만큼 쪼개서 읽는다.
 //파일을 한번에 읽으면 부담스럽기 때문에 쪼개서 읽는다.
 void FileRead(HANDLE hReadFile, DWORD offset)
 {
-	DWORD dwLength = 4096 * 1024;
+	DWORD dwLength = 4096;
 	g_size.QuadPart += offset;
 
 	ov.Offset = g_size.LowPart;
@@ -76,7 +39,7 @@ void main()
 	LARGE_INTEGER fileSize;
 	ZeroMemory(&ov, sizeof(OVERLAPPED));
 
-	HANDLE hReadFile = CreateFileA("../../TBasisSample3D.zip", GENERIC_READ,
+	HANDLE hReadFile = CreateFileA("../../xCoreLib_2.7z", GENERIC_READ,
 		0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, NULL);
 
 	if (hReadFile != INVALID_HANDLE_VALUE)
@@ -109,8 +72,6 @@ void main()
 
 	printf("\n%s : %ld", "FinishRead...", g_size.QuadPart);
 
-	CloseHandle(hReadFile);
-
 	OVERLAPPED wov;
 	ZeroMemory(&wov, sizeof(OVERLAPPED));
 
@@ -133,18 +94,18 @@ void main()
 
 		while (1)
 		{
-			DWORD dwRet = WaitForSingleObject(hWriteFile, 0);
+			DWORD dwRet = WaitForSingleObject(hWriteFile, INFINITE);
 
 			if (dwRet == WAIT_OBJECT_0)
 			{
-				printf("\n WAIT_OBJECT_0 %s : %ld", "FinishWrite....", ov.InternalHigh);
+				printf("\n WAIT_OBJECT_0 %s : %ld", "FinishWrite....", wov.InternalHigh);
 				break;
 			}
 			else if (dwRet == WAIT_TIMEOUT)
 			{
 				DWORD trans;
 
-				bool ret = GetOverlappedResult(hWriteFile, &ov, &trans, FALSE);
+				bool ret = GetOverlappedResult(hWriteFile, &wov, &trans, TRUE);
 				if (ret == TRUE)
 				{
 					bool iRet = WriteFile(hWriteFile, g_buf, fileSize.QuadPart, &dwWritten, &wov);
@@ -165,5 +126,6 @@ void main()
 	printf("파일 복사 완료");
 	delete[] g_buf;
 
+	CloseHandle(hReadFile);
 	CloseHandle(hWriteFile);
 }

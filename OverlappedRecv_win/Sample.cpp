@@ -29,7 +29,7 @@ void main()
 	WSAOVERLAPPED overlapped;
 
 	char buf[BUF_SIZE];
-	int recvBytes = 0, flags = 0;
+	DWORD recvBytes = 0, flags = 0;
 
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 	{
@@ -53,4 +53,32 @@ void main()
 	}
 
 	recvAddrSize = sizeof(recvAddr);
+	hRecvSock = accept(hListenSock, (SOCKADDR*)&recvAddr, &recvAddrSize);
+
+	evObj = WSACreateEvent();
+	ZeroMemory(&overlapped, sizeof(overlapped));
+	overlapped.hEvent = evObj;
+	dataBuf.len = BUF_SIZE;
+	dataBuf.buf = buf;
+
+	if (WSARecv(hRecvSock, &dataBuf, 1, &recvBytes, &flags, &overlapped, NULL) == SOCKET_ERROR)
+	{
+		if (WSAGetLastError() == WSA_IO_PENDING)
+		{
+			puts("Background data receive");
+			WSAWaitForMultipleEvents(1, &evObj, TRUE, WSA_INFINITE, FALSE);
+			WSAGetOverlappedResult(hRecvSock, &overlapped, &recvBytes, FALSE, NULL);
+		}
+		else
+		{
+			ErrorHandling("WSARecv() error");
+		}
+	}
+
+	printf("Received message: %s\n", buf);
+	WSACloseEvent(evObj);
+	closesocket(hRecvSock);
+	closesocket(hListenSock);
+	WSACleanup();
+	return;
 }

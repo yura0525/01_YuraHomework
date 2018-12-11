@@ -61,7 +61,7 @@ DWORD WINAPI SendThread(LPVOID param)
 		int iSendByte = SendMsg(sock, buffer, PACKET_CHAT_MSG);
 		if (iSendByte == SOCKET_ERROR)
 			break;
-		printf("\n[%s] : %zd 바이트를 전송하였습니다.\n", buffer, strlen(buffer));
+		printf("\n[%s] : %zd 바이트를 전송하였습니다.\n", buffer, iSendByte);
 	}
 
 	shutdown(sock, SD_BOTH);

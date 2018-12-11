@@ -32,9 +32,9 @@ void main()
 		ErrorHandling("WSAStartup() error!!!");
 	}
 
-	hSocket = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
+	hSocket = WSASocket(PF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
 
-	ZeroMemory(&sendAddr, 0, sizeof(sendAddr));
+	ZeroMemory(&sendAddr, sizeof(sendAddr));
 	sendAddr.sin_family = AF_INET;
 	sendAddr.sin_addr.s_addr = inet_addr("192.168.0.27");
 	sendAddr.sin_port = htons(10000);
@@ -66,6 +66,7 @@ void main()
 	}
 
 	printf("Send Data Size : %d\n", sendBytes);
+	getchar();
 	WSACloseEvent(evObj);
 	closesocket(hSocket);
 	WSACleanup();
