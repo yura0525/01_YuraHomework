@@ -20,33 +20,34 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{4099833D-5965-4CD9-9EC6-36C4EFD77891}</ProjectGuid>
+    <ProjectGuid>{484628B4-0A4D-46E2-A25B-AC8AB8354A11}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Direct2D</RootNamespace>
+    <RootNamespace>xCoreLib3D</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <ProjectName>xCoreLib</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -72,8 +73,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>../output/</OutDir>
-    <IntDir>../output/</IntDir>
+    <OutDir>../data/lib/</OutDir>
+    <IntDir>../../output/xCoreLib/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -83,134 +84,100 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>../output/Direct2D/</OutDir>
-    <IntDir>../output/Direct2D/</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../data/include;../data/dx/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../data/dx/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>../data/lib;../data/dx/Lib/x64</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "*.h" "../data/include"
+
+copy "*.lib" "../data/lib"</Command>
+    </PostBuildEvent>
+    <Lib>
+      <OutputFile>xCoreLib.lib</OutputFile>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="TAttackAction.cpp" />
-    <ClCompile Include="TBKObject.cpp" />
-    <ClCompile Include="TBKScrollObject.cpp" />
-    <ClCompile Include="TButton.cpp" />
-    <ClCompile Include="TCollision.cpp" />
-    <ClCompile Include="TEffectObject.cpp" />
-    <ClCompile Include="TEndScene.cpp" />
-    <ClCompile Include="TEnemy.cpp" />
-    <ClCompile Include="TEnemyState.cpp" />
-    <ClCompile Include="TFiniteStateMachine.cpp" />
-    <ClCompile Include="TFSMMgr.cpp" />
-    <ClCompile Include="TGameDataLoad.cpp" />
-    <ClCompile Include="TGameScene.cpp" />
-    <ClCompile Include="THeroObject.cpp" />
-    <ClCompile Include="THPBarObject.cpp" />
-    <ClCompile Include="TItemObject.cpp" />
-    <ClCompile Include="TLobbyScene.cpp" />
-    <ClCompile Include="TMoveAction.cpp" />
-    <ClCompile Include="TNPCObject.cpp" />
-    <ClCompile Include="TScene.cpp" />
-    <ClCompile Include="TSound.cpp" />
-    <ClCompile Include="TStandAction.cpp" />
-    <ClCompile Include="xObject.cpp" />
-    <ClCompile Include="xObject_2D.cpp" />
-    <ClCompile Include="xShader.cpp" />
-    <ClCompile Include="xShaderManager.cpp" />
-    <ClCompile Include="xTexManager.cpp" />
-    <ClCompile Include="xTexture.cpp" />
+    <ClCompile Include="TDevice.cpp" />
+    <ClCompile Include="TDirectWrite.cpp" />
+    <ClCompile Include="TTimer.cpp" />
+    <ClCompile Include="xCore.cpp" />
+    <ClCompile Include="xInput.cpp" />
+    <ClCompile Include="xWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TAttackAction.h" />
-    <ClInclude Include="TBKObject.h" />
-    <ClInclude Include="TBKScrollObject.h" />
-    <ClInclude Include="TButton.h" />
-    <ClInclude Include="TCollision.h" />
-    <ClInclude Include="TEffectObject.h" />
-    <ClInclude Include="TEndScene.h" />
-    <ClInclude Include="TEnemy.h" />
-    <ClInclude Include="TEnemyState.h" />
-    <ClInclude Include="TFiniteStateMachine.h" />
-    <ClInclude Include="TFSMMgr.h" />
-    <ClInclude Include="TGameDataLoad.h" />
-    <ClInclude Include="TGameScene.h" />
-    <ClInclude Include="THeroObject.h" />
-    <ClInclude Include="THPBarObject.h" />
-    <ClInclude Include="TItemObject.h" />
-    <ClInclude Include="TLobbyScene.h" />
-    <ClInclude Include="TMoveAction.h" />
-    <ClInclude Include="TNPCObject.h" />
-    <ClInclude Include="TScene.h" />
-    <ClInclude Include="TSound.h" />
-    <ClInclude Include="TStandAction.h" />
-    <ClInclude Include="xObject.h" />
-    <ClInclude Include="xObject_2D.h" />
-    <ClInclude Include="xShader.h" />
-    <ClInclude Include="xShaderManager.h" />
-    <ClInclude Include="xTexManager.h" />
-    <ClInclude Include="xTexture.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="vertexshader.txt" />
+    <ClInclude Include="TDevice.h" />
+    <ClInclude Include="TDirectWrite.h" />
+    <ClInclude Include="TTimer.h" />
+    <ClInclude Include="xCore.h" />
+    <ClInclude Include="xInput.h" />
+    <ClInclude Include="xStd.h" />
+    <ClInclude Include="xWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

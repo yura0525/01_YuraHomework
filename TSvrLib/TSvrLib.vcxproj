@@ -20,10 +20,10 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{484628B4-0A4D-46E2-A25B-AC8AB8354A11}</ProjectGuid>
+    <ProjectGuid>{0F69A4C4-6FBF-4F7A-B1FA-FF002115DBEA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>xCoreLib3D</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <RootNamespace>TSvrLib</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>../data/lib_3D/</OutDir>
-    <IntDir>../../output/xCoreLib_3D/</IntDir>
+    <OutDir>../output/TSvrLib/</OutDir>
+    <IntDir>../output/TSvrLib/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -86,32 +86,21 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../data/dx/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PostBuildEvent>
-      <Command>copy "*.h" "../data/include_3D"
-
-copy "*.lib" "../data/lib_3D"</Command>
-    </PostBuildEvent>
-    <Lib>
-      <OutputFile>xCoreLib_3D.lib</OutputFile>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -125,8 +114,7 @@ copy "*.lib" "../data/lib_3D"</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -144,8 +132,7 @@ copy "*.lib" "../data/lib_3D"</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -162,21 +149,32 @@ copy "*.lib" "../data/lib_3D"</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="TDevice.cpp" />
-    <ClCompile Include="TDirectWrite.cpp" />
-    <ClCompile Include="TTimer.cpp" />
-    <ClCompile Include="xCore.cpp" />
-    <ClCompile Include="xInput.cpp" />
-    <ClCompile Include="xWindow.cpp" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="TLogError.h" />
+    <ClInclude Include="TNetwork.h" />
+    <ClInclude Include="TProtocol.h" />
+    <ClInclude Include="TServerStd.h" />
+    <ClInclude Include="TStreamPacket.h" />
+    <ClInclude Include="TSvrObject.h" />
+    <ClInclude Include="TSynchronize.h" />
+    <ClInclude Include="TThread.h" />
+    <ClInclude Include="XUser.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TDevice.h" />
-    <ClInclude Include="TDirectWrite.h" />
-    <ClInclude Include="TTimer.h" />
-    <ClInclude Include="xCore.h" />
-    <ClInclude Include="xInput.h" />
-    <ClInclude Include="xStd.h" />
-    <ClInclude Include="xWindow.h" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TLogError.cpp" />
+    <ClCompile Include="TNetwork.cpp" />
+    <ClCompile Include="TStreamPacket.cpp" />
+    <ClCompile Include="TSvrObject.cpp" />
+    <ClCompile Include="TSynchronize.cpp" />
+    <ClCompile Include="TThread.cpp" />
+    <ClCompile Include="XUser.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
