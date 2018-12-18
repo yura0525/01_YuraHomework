@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="iocp">
+      <UniqueIdentifier>{469f6236-5aaf-4d31-b993-3ee7b63a2079}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -48,6 +51,15 @@
     <ClInclude Include="XUser.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="TAccept.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TSvrIOCP.h">
+      <Filter>iocp</Filter>
+    </ClInclude>
+    <ClInclude Include="TWorkThread.h">
+      <Filter>iocp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -73,6 +85,15 @@
     </ClCompile>
     <ClCompile Include="XUser.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TAccept.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TSvrIOCP.cpp">
+      <Filter>iocp</Filter>
+    </ClCompile>
+    <ClCompile Include="TWorkThread.cpp">
+      <Filter>iocp</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

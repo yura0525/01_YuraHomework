@@ -28,20 +28,37 @@ void TStreamPacket::Put(char* recvBuffer, int iSize, XUser* pUser)
 
 	//패킷의 시작
 	m_pPacket = (P_UPACKET)&m_RecvBuffer[m_dwStartPos];
-	//1개의 패킷 사이즈만큼 받았다면
-	if (m_dwReadPos >= m_pPacket->ph.len)
+	//리시브된 패킷이 최소한 4바이트 이상이다. 최소 하나의 패킼ㅅ이 들어왔다.
+	if (m_dwReadPos >= m_pPacket->ph.len + PACKET_HEADER_SIZE)
 	{
+		//패킷을 잘라서 넣는다.
 		do
 		{
-			T_PACKET add;
-			ZeroMemory(&add, sizeof(add));
-			//여기하는중.
-		}
+			T_PACKET packet;
+			ZeroMemory(&packet, sizeof(packet));
+			packet.pUser = pUser;
+			memcpy(&packet, &m_RecvBuffer[m_dwStartPos], m_pPacket->ph.len + PACKET_HEADER_SIZE);
+			I_User.AddPacket(packet);
+
+			//1개의 패킷을 처리하고 남은 잔여량 크기
+			m_dwReadPos -= m_pPacket->ph.len + PACKET_HEADER_SIZE;
+			//패킷의 시작 위치
+			m_dwStartPos += m_pPacket->ph.len + PACKET_HEADER_SIZE;
+
+			//잔여량이 패킷헤더보다 작을 경우
+			if (m_dwReadPos < PACKET_HEADER_SIZE)
+				break;
+
+			m_pPacket = (P_UPACKET)&m_RecvBuffer[m_dwStartPos];
+		} while (m_dwReadPos >= m_pPacket->ph.len + PACKET_HEADER_SIZE);
 	}
 
 }
 TStreamPacket::TStreamPacket()
 {
+	m_dwWritePos = 0;
+	m_dwReadPos = 0;
+	m_dwStartPos = 0;
 }
 
 
