@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{EBD27F71-603A-4AF2-B904-1C3EF136F735}</ProjectGuid>
+    <ProjectGuid>{A449B66C-8186-4D1D-B3D9-5DE3E004C662}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>My1CUser</RootNamespace>
+    <RootNamespace>MakePacket</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>../output/1_CUser/</OutDir>
-    <IntDir>../output/1_CUser/</IntDir>
+    <OutDir>../output/MakePacket/</OutDir>
+    <IntDir>../output/MakePacket/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -145,21 +145,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CCircularQueue.h" />
-    <ClInclude Include="CIniFile.h" />
-    <ClInclude Include="CLog.h" />
-    <ClInclude Include="CMemoryPool.h" />
-    <ClInclude Include="CRegistry.h" />
-    <ClInclude Include="CStream.h" />
-    <ClInclude Include="CUser.h" />
+    <ClInclude Include="Sample.h" />
+    <ClInclude Include="TPacket.h" />
+    <ClInclude Include="TProtocol.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CIniFile.cpp" />
-    <ClCompile Include="CLog.cpp" />
-    <ClCompile Include="CRegistry.cpp" />
-    <ClCompile Include="CStream.cpp" />
-    <ClCompile Include="CUser.cpp" />
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TPacket.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
