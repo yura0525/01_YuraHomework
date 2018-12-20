@@ -68,6 +68,6 @@ public:
 };
 
 template<class T, int ALLOC_BLOCK_SIZE>
-UCHAR* CMemoryPool<T, ALLOC_BLOCK_SIZE>::m_FreePointer;
+UCHAR* CMemoryPool<T, ALLOC_BLOCK_SIZE>::m_FreePointer = NULL;
 
 
