@@ -45,6 +45,12 @@
     <ClInclude Include="MemoryLeak.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="CNetworkSession.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CThreadSync.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CUser.cpp">
@@ -66,6 +72,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="CMiniDump.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CNetworkSession.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

@@ -88,6 +88,7 @@ BOOL CMiniDump::Begin(VOID)
 	SetErrorMode(SEM_FAILCRITICALERRORS);
 
 	//Unhandled Exception이 발생했을때 진행될 콜백을 정의합니다.
+	SetUnhandledExceptionFilter(UnHandledExceptionFilter);
 	//PreviousExceptionFilter = SetUnhandledExceptionFilter(UnHandledExceptionFilter);
 	return TRUE;
 }

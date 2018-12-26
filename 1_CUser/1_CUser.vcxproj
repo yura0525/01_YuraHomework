@@ -152,8 +152,10 @@
     <ClInclude Include="CLog.h" />
     <ClInclude Include="CMemoryPool.h" />
     <ClInclude Include="CMiniDump.h" />
+    <ClInclude Include="CNetworkSession.h" />
     <ClInclude Include="CRegistry.h" />
     <ClInclude Include="CStream.h" />
+    <ClInclude Include="CThreadSync.h" />
     <ClInclude Include="CUser.h" />
     <ClInclude Include="MemoryLeak.h" />
   </ItemGroup>
@@ -161,6 +163,7 @@
     <ClCompile Include="CIniFile.cpp" />
     <ClCompile Include="CLog.cpp" />
     <ClCompile Include="CMiniDump.cpp" />
+    <ClCompile Include="CNetworkSession.cpp" />
     <ClCompile Include="CRegistry.cpp" />
     <ClCompile Include="CStream.cpp" />
     <ClCompile Include="CUser.cpp" />
