@@ -23,7 +23,7 @@
     <ProjectGuid>{BBD85164-A6CE-4088-AE80-5BED61A66B7E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>CmplRoutinesRecvwin</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

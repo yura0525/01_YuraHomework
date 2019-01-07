@@ -23,7 +23,7 @@
     <ProjectGuid>{259ED71B-5A0A-4AD2-8E0F-E2302DF3E881}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>AyncNotiEchoServwin</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
