@@ -8,7 +8,7 @@
 #include <tchar.h>
 #include <string.h>
 
-#define SERVERIP "192.168.0.2"
+#define SERVERIP "192.168.0.27"
 #define SERVERPORT 9000
 #define BUFSIZE 512
 

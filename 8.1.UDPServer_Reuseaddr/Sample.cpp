@@ -8,7 +8,6 @@
 #include <tchar.h>
 #include <string.h>
 
-#define SERVERIP "192.168.0.27"
 #define SERVERPORT 9000
 #define BUFSIZE 512
 
@@ -48,6 +47,7 @@ std::wstring m2w(std::string data)
 	return ret;
 }
 
+
 //소켓 함수 오류 출력후 종료
 void err_quit(const char* msg)
 {
@@ -71,27 +71,6 @@ void err_display(const char* msg)
 	LocalFree(lpMsgBuf);
 }
 
-//사용자 정의 데이터 수신 함수
-int recvn(SOCKET s, char* buf, int len, int flags)
-{
-	int received;
-	char* ptr = buf;
-	int left = len;
-
-	while (left > 0)
-	{
-		received = recv(s, ptr, left, flags);
-		if (received == SOCKET_ERROR)
-			return SOCKET_ERROR;
-		else if (received == 0)
-			break;
-		left -= received;
-		ptr += received;
-	}
-
-	return (len - left);
-}
-
 int main()
 {
 	int retval;
@@ -104,61 +83,51 @@ int main()
 	}
 
 	//socket()
-	SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
+	SOCKET sock = socket(AF_INET, SOCK_DGRAM, 0);
 	if (sock == INVALID_SOCKET)
 		err_quit("socket()");
 
-	//connect()
+	//SO_REUSEADDR 소켓 옵션 설정
+	BOOL optval = TRUE;
+	retval = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char*)&optval, sizeof(optval));
+	if (retval == SOCKET_ERROR) err_quit("setsockopt()");
+
+	//bind()
 	SOCKADDR_IN serveraddr;
 	ZeroMemory(&serveraddr, sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
-	serveraddr.sin_addr.s_addr = inet_addr(SERVERIP);
+	serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serveraddr.sin_port = htons(SERVERPORT);
-	retval = connect(sock, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
-	if (retval == SOCKET_ERROR) err_quit("connect()");
+	retval = bind(sock, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
+	if (retval == SOCKET_ERROR) err_quit("bind()");
 
 	//데이터 통신에 사용할 변수
+	SOCKADDR_IN clientaddr;
+	int addrlen;
 	char buf[BUFSIZE + 1];
-	int len;
 
-	//서버와 데이터 통신
 	while (1)
 	{
-		//데이터 입력
-		printf("\n[보낼 데이터] ");
-		if (fgets(buf, BUFSIZE + 1, stdin) == NULL)
-			break;
-
-		//'\n'문자 제거
-		len = strlen(buf);
-		if (buf[len - 1] == '\n')
-			buf[len - 1] = '\0';
-		if (strlen(buf) == 0)
-			break;
-
-		//데이터 보내기
-		retval = send(sock, buf, strlen(buf), 0);
-		if (retval == SOCKET_ERROR)
-		{
-			err_display("send()");
-			break;
-		}
-		printf("[TCP 클라이언트] %d 바이트를 보냈습니다.\n", retval);
-
 		//데이터 받기
-		retval = recvn(sock, buf, retval, 0);
+		addrlen = sizeof(clientaddr);
+		retval = recvfrom(sock, buf, BUFSIZE, 0, (SOCKADDR*)&clientaddr, &addrlen);
 		if (retval == SOCKET_ERROR)
 		{
-			err_display("recv()");
-			break;
+			err_display("recvfrom()");
+			continue;
 		}
-		else if (retval == 0)
-			break;
 
 		//받은 데이터 출력
 		buf[retval] = '\0';
-		printf("[TCP 클라이언트] %d 바이트를 받았습니다.\n", retval);
-		printf("[받은 데이터]%s\n", buf);
+		printf("\n[UDP %s: %d] %s\n", inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port), buf);
+
+		//데이터 보내기
+		retval = sendto(sock, buf, retval, 0, (SOCKADDR*)&clientaddr, sizeof(clientaddr));
+		if (retval == SOCKET_ERROR)
+		{
+			err_display("send()");
+			continue;
+		}
 	}
 
 	//closesocket()

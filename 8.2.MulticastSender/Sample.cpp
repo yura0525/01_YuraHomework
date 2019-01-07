@@ -2,13 +2,14 @@
 
 #pragma comment(lib, "ws2_32")
 #include <winsock2.h>
+#include <WS2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
 #include <tchar.h>
 #include <string.h>
 
-#define SERVERIP "192.168.0.27"
+#define MULTICASTIP "235.7.8.9"
 #define SERVERPORT 9000
 #define BUFSIZE 512
 
@@ -71,27 +72,6 @@ void err_display(const char* msg)
 	LocalFree(lpMsgBuf);
 }
 
-//사용자 정의 데이터 수신 함수
-int recvn(SOCKET s, char* buf, int len, int flags)
-{
-	int received;
-	char* ptr = buf;
-	int left = len;
-
-	while (left > 0)
-	{
-		received = recv(s, ptr, left, flags);
-		if (received == SOCKET_ERROR)
-			return SOCKET_ERROR;
-		else if (received == 0)
-			break;
-		left -= received;
-		ptr += received;
-	}
-
-	return (len - left);
-}
-
 int main()
 {
 	int retval;
@@ -104,24 +84,28 @@ int main()
 	}
 
 	//socket()
-	SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
+	SOCKET sock = socket(AF_INET, SOCK_DGRAM, 0);
 	if (sock == INVALID_SOCKET)
 		err_quit("socket()");
 
-	//connect()
+	// 멀티캐스트 TTL설정
+	int ttl = 2;
+	retval = setsockopt(sock, IPPROTO_IP, IP_MULTICAST_TTL, (char*)&ttl, sizeof(ttl));
+	if (retval == SOCKET_ERROR)	err_quit("setsockopt()");
+
+	//소켓 주소 구조체 초기화
 	SOCKADDR_IN serveraddr;
 	ZeroMemory(&serveraddr, sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
-	serveraddr.sin_addr.s_addr = inet_addr(SERVERIP);
+	serveraddr.sin_addr.s_addr = inet_addr(MULTICASTIP);
 	serveraddr.sin_port = htons(SERVERPORT);
-	retval = connect(sock, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
-	if (retval == SOCKET_ERROR) err_quit("connect()");
 
 	//데이터 통신에 사용할 변수
+	int addrlen;
 	char buf[BUFSIZE + 1];
 	int len;
 
-	//서버와 데이터 통신
+	//브로드 캐스트 데이터 보내기
 	while (1)
 	{
 		//데이터 입력
@@ -137,28 +121,13 @@ int main()
 			break;
 
 		//데이터 보내기
-		retval = send(sock, buf, strlen(buf), 0);
+		retval = sendto(sock, buf, strlen(buf), 0, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
 		if (retval == SOCKET_ERROR)
 		{
-			err_display("send()");
-			break;
+			err_display("sendto()");
+			continue;
 		}
-		printf("[TCP 클라이언트] %d 바이트를 보냈습니다.\n", retval);
-
-		//데이터 받기
-		retval = recvn(sock, buf, retval, 0);
-		if (retval == SOCKET_ERROR)
-		{
-			err_display("recv()");
-			break;
-		}
-		else if (retval == 0)
-			break;
-
-		//받은 데이터 출력
-		buf[retval] = '\0';
-		printf("[TCP 클라이언트] %d 바이트를 받았습니다.\n", retval);
-		printf("[받은 데이터]%s\n", buf);
+		printf("[UDP 클라이언트] %d 바이트를 보냈습니다.\n", retval);
 	}
 
 	//closesocket()
