@@ -108,22 +108,38 @@ int main()
 	int retval;
 
 	//윈도우 클래스 등록
-	WNDCLASS wndclass;
-	wndclass.style = CS_HREDRAW | CS_VREDRAW;
-	wndclass.lpfnWndProc = WndProc;
-	wndclass.cbClsExtra = 0;
-	wndclass.cbWndExtra = 0;
-	wndclass.hInstance = NULL;
-	wndclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-	wndclass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wndclass.lpszMenuName = NULL;
-	wndclass.lpszClassName = L"MyWndClass";
-	if (!RegisterClass(&wndclass)) return 1;
+	WNDCLASSEX wc;
+	ZeroMemory(&wc, sizeof(WNDCLASSEX));
+
+	wc.cbSize = sizeof(WNDCLASSEX);
+	wc.style = CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc = WndProc;
+	wc.hInstance = NULL;
+	wc.lpszClassName = L"MyWindow";
+	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.hbrBackground = (HBRUSH)GetStockObject(GRAY_BRUSH);
+	//wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+	wc.lpszMenuName = NULL;
+	wc.hIconSm = LoadIcon(NULL, IDI_HAND);
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+
+	if (RegisterClassEx(&wc) == FALSE)
+	{
+		return 1;
+	}
+
 
 	//윈도우 생성
-	HWND hWnd = CreateWindow(L"MyWndClass", L"TCP서버", WS_OVERLAPPEDWINDOW, 0, 0, 600, 200, NULL, NULL, NULL, NULL);
-	if (hWnd == NULL) return 1;
-	ShowWindow(hWnd, SW_SHOWNORMAL);
+	HWND hWnd = CreateWindowEx(WS_EX_APPWINDOW,
+		L"MyWindow", L"TCP서버", WS_OVERLAPPEDWINDOW,
+		0, 0, 600, 200, NULL, NULL, NULL, NULL);
+
+	if (hWnd == NULL)
+		return 1;
+
+	ShowWindow(hWnd, SW_SHOW);
 	UpdateWindow(hWnd);
 
 	//윈속 초기화
