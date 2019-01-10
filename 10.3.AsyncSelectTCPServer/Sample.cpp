@@ -68,7 +68,7 @@ void err_display(const char* msg)
 	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, WSAGetLastError(),
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
 
-	printf("[%s] %s", msg, (char*)lpMsgBuf);
+	printf("[%s] %s", msg, GetW2M((const WCHAR*)lpMsgBuf));
 	LocalFree(lpMsgBuf);
 }
 
@@ -78,7 +78,7 @@ void err_display(int errcode)
 	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, errcode,
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
 
-	printf("[오류] %s", (char*)lpMsgBuf);
+	printf("[오류] %s", GetW2M((const WCHAR*)lpMsgBuf));
 	LocalFree(lpMsgBuf);
 }
 //소켓 정보 저장을 위한 구조체와 변수
