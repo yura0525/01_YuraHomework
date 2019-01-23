@@ -51,7 +51,69 @@ DWORD WINAPI ClientThread(LPVOID arg)
 	DeleteUser(sock);
 	return 0;
 }
+// 소켓 생성
+// 연결형, TCP프로토콜(SOCK_STREAM,IPPROTO_TCP)
+// 비연결형, UDP 프로토콜(SOCK_DGRAM,IPPROTO_UDP)
 void main()
 {
+	HANDLE hExecuteMutex = CreateMutex(NULL, FALSE, L"OnceMutex");
+	if (GetLastError() == ERROR_ALREADY_EXISTS)
+	{
+		CloseHandle(hExecuteMutex);
+		return;
+	}
+	InitializeCriticalSection(&g_crit);
+	// TRUE =  현재의 스레드가 소유자
+	// FALSE = 소유자가 없다.(신호상태) : 비신호상태
+	g_hMutex = CreateMutex(NULL, FALSE, L"CHAT_MUTEX");
 
+	unsigned short iPort = 10000;
+	WSADATA wsa;
+	int iRet;
+	HANDLE hThread = NULL;
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+		return;
+
+	SOCKET listenSock = socket(AF_INET, SOCK_STREAM, 0);
+	SOCKADDR_IN sa;
+	ZeroMemory(&sa, sizeof(sa));
+	sa.sin_family = AF_INET;
+	sa.sin_port = htons(iPort);
+	sa.sin_addr.s_addr = htonl(INADDR_ANY);
+	// 소켓을 대상 ip에 연결해라.
+	iRet = bind(listenSock, (SOCKADDR*)&sa, sizeof(sa));
+	if (iRet == SOCKET_ERROR)
+		return;
+
+	iRet = listen(listenSock, SOMAXCONN);
+	if (iRet == SOCKET_ERROR)
+		return;
+
+	SOCKADDR_IN  clientaddr;
+	SOCKET client;
+	while (1)
+	{
+		int addlen = sizeof(clientaddr);
+		client = accept(listenSock, (SOCKADDR*)&clientaddr, &addlen);
+		if (client == INVALID_SOCKET)
+			break;
+
+		TUser user(client, clientaddr);
+		WaitForSingleObject(g_hMutex, INFINITE);
+		GreetMessage(user);
+		ReleaseMutex(g_hMutex);
+
+		DWORD dwRecvThreadID;
+		hThread = CreateThread(0, 0, ClientThread, (LPVOID)client, 0, &dwRecvThreadID);
+	}
+
+	closesocket(listenSock);
+
+	iRet = WSACleanup();
+
+	DeleteCriticalSection(&g_crit);
+	CloseHandle(hThread);
+	CloseHandle(g_hMutex);
+	CloseHandle(hExecuteMutex);
+	return;
 }

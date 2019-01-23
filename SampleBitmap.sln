@@ -132,6 +132,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "11.2.OverlappedTCPServer2",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "11.3.CompletionPortTCPServer", "11.3.CompletionPortTCPServer\11.3.CompletionPortTCPServer.vcxproj", "{DB00B1BD-06B1-4403-B70F-50CB71192605}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleMakePacket_Client", "SampleMakePacket_Client\SampleMakePacket_Client.vcxproj", "{82E68C88-8D0B-4E1D-9651-860363D5C62F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -580,6 +582,14 @@ Global
 		{DB00B1BD-06B1-4403-B70F-50CB71192605}.Release|x64.Build.0 = Release|x64
 		{DB00B1BD-06B1-4403-B70F-50CB71192605}.Release|x86.ActiveCfg = Release|Win32
 		{DB00B1BD-06B1-4403-B70F-50CB71192605}.Release|x86.Build.0 = Release|Win32
+		{82E68C88-8D0B-4E1D-9651-860363D5C62F}.Debug|x64.ActiveCfg = Debug|x64
+		{82E68C88-8D0B-4E1D-9651-860363D5C62F}.Debug|x64.Build.0 = Debug|x64
+		{82E68C88-8D0B-4E1D-9651-860363D5C62F}.Debug|x86.ActiveCfg = Debug|Win32
+		{82E68C88-8D0B-4E1D-9651-860363D5C62F}.Debug|x86.Build.0 = Debug|Win32
+		{82E68C88-8D0B-4E1D-9651-860363D5C62F}.Release|x64.ActiveCfg = Release|x64
+		{82E68C88-8D0B-4E1D-9651-860363D5C62F}.Release|x64.Build.0 = Release|x64
+		{82E68C88-8D0B-4E1D-9651-860363D5C62F}.Release|x86.ActiveCfg = Release|Win32
+		{82E68C88-8D0B-4E1D-9651-860363D5C62F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -645,6 +655,7 @@ Global
 		{3482B5EC-10C1-4AA4-BDDB-56652A0FE61E} = {4676AF86-147C-4D16-BC86-EE61941E69B6}
 		{FC1EB806-745B-4DB0-BBEC-AC7F5276D285} = {4676AF86-147C-4D16-BC86-EE61941E69B6}
 		{DB00B1BD-06B1-4403-B70F-50CB71192605} = {4676AF86-147C-4D16-BC86-EE61941E69B6}
+		{82E68C88-8D0B-4E1D-9651-860363D5C62F} = {68122C6A-D157-46DF-9767-69C69745F502}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {52770C95-AEF2-430D-8C91-D40C32B94650}
