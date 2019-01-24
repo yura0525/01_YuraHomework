@@ -32,6 +32,32 @@ struct TUser
 map<SOCKET, TUser> g_allClientSocket;
 typedef map<SOCKET, TUser>::iterator ITOR;
 
+void T_ERROR()
+{
+	char* pMsg = 0;
+	FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+		NULL, WSAGetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (char*)&pMsg, 0, NULL);
+
+	printf("\n%s\n", pMsg);
+	LocalFree(pMsg);
+}
+
+int CheckReturn(int iRet)
+{
+	if (iRet == 0)
+	{
+		printf("\n---->정상퇴장");
+		return 0;
+	}
+	if (iRet <= SOCKET_ERROR)
+	{
+		printf("\n---->비정상 퇴장");
+		T_ERROR();
+		return -1;
+	}
+	return iRet;
+}
+
 int SendMsg(SOCKET sock, char* msg, WORD type)
 {
 	UPACKET sendMsg;
@@ -46,16 +72,17 @@ int SendMsg(SOCKET sock, char* msg, WORD type)
 	int iSend = 0;
 
 	char* pMsg = (char*)&sendMsg;
-	while (sendBytes < iTotalSize)
-	{
+	do{
 		iSend = send(sock, (char*)&pMsg[sendBytes], iTotalSize - sendBytes, 0);
-		if (iSend == SOCKET_ERROR)
+		if (CheckReturn(iSend) <= 0)
+		{
 			return iSend;
+		}
 
 		sendBytes += iSend;
-	}
+	} while (sendBytes < iTotalSize);
 	
-	return iTotalSize;
+	return sendBytes;
 }
 
 int SendMsg(SOCKET sock, PACKET_HEADER ph, char* msg)
@@ -72,16 +99,17 @@ int SendMsg(SOCKET sock, PACKET_HEADER ph, char* msg)
 
 	//덜보냈으면 잘라서 보낸다.
 	char* pMsg = (char*)&sendMsg;
-	while (sendBytes < iTotalSize)
-	{
+	do {
 		iSend = send(sock, (char*)&pMsg[sendBytes], iTotalSize - sendBytes, 0);
-		if (iSend == SOCKET_ERROR)
+		if (CheckReturn(iSend) <= 0)
+		{
 			return iSend;
+		}
 
 		sendBytes += iSend;
-	} 
+	} while (sendBytes < iTotalSize);
 
-	return iTotalSize;
+	return sendBytes;
 }
 
 int SendMsg(SOCKET sock, UPACKET* uPacket)
@@ -92,44 +120,19 @@ int SendMsg(SOCKET sock, UPACKET* uPacket)
 
 	//덜보냈으면 잘라서 보낸다.
 	char* pMsg = (char*)uPacket;
-	while (sendBytes < iTotalSize)
-	{
+	do {
 		iSend = send(sock, (char*)&pMsg[sendBytes], iTotalSize - sendBytes, 0);
-		if (iSend == SOCKET_ERROR)
+		if (CheckReturn(iSend) <= 0)
+		{
 			return iSend;
+		}
 
 		sendBytes += iSend;
-	} 
+	} while (sendBytes < iTotalSize);
 
-	return iTotalSize;
+	return sendBytes;
 }
 
-void T_ERROR()
-{
-	char* pMsg = 0;
-	FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-		NULL, WSAGetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (char*)&pMsg, 0, NULL);
-
-	printf("\n%s\n", pMsg);
-	LocalFree(pMsg);
-}
-
-int CheckReturn(int iRet)
-{
-	//정상
-	if (iRet == 0)
-	{
-		return 0;
-	}
-
-	if (iRet <= SOCKET_ERROR)
-	{
-		T_ERROR();
-		return -1;
-	}
-
-	return iRet;
-}
 
 bool BeginWinSock()
 {

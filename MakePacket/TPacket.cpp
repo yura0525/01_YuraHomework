@@ -57,6 +57,7 @@ TPacket::TPacket(WORD type)
 {
 	ZeroMemory(&m_uPacket, sizeof(UPACKET));
 	m_uPacket.ph.type = type;
+	m_uPacket.ph.len = 0;
 	m_pOffset = m_uPacket.msg;
 }
 
