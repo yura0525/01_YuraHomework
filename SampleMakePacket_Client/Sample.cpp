@@ -16,7 +16,7 @@ int SendMsg(SOCKET sock, char* msg, WORD type)
 {
 	UPACKET sendmsg;
 	ZeroMemory(&sendmsg, sizeof(sendmsg));
-	sendmsg.ph.len = strlen(msg);
+	sendmsg.ph.len = strlen(msg) + PACKET_HEADER_SIZE;
 	sendmsg.ph.type = type;
 	memcpy(sendmsg.msg, msg, strlen(msg));
 	int sendbytes = 0;
@@ -62,7 +62,7 @@ DWORD WINAPI ConnectThread(LPVOID arg)
 DWORD WINAPI SendThread(LPVOID arg)
 {
 	SOCKET sock = (SOCKET)arg;
-	char buf[256] = { 0. };
+	char buf[256] = { 0, };
 
 	while (1)
 	{
@@ -189,10 +189,11 @@ void main()
 			hRecvThread = CreateThread(0, 0, RecvThread, (LPVOID)sock, 0, &dwRecvThreadID);
 
 		}
+
 	}
 	// 스레드가 종료되었는지 확인
-	WaitForSingleObject(SendThread, INFINITE);
-	WaitForSingleObject(RecvThread, INFINITE);
+	WaitForSingleObject(hSendThread, INFINITE);
+	WaitForSingleObject(hRecvThread, INFINITE);
 
 	CloseHandle(hSendThread);
 	CloseHandle(hRecvThread);
