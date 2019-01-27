@@ -8,6 +8,7 @@ private:
 	friend class TSingleton<TPacketPool>;
 public:
 	std::list<UPACKET>	m_RecvPacketList;
+	std::list<UPACKET>	m_SendPacketList;
 	bool				AddPacket(UPACKET addPacket);
 	bool				ProcessPacket();
 	bool				ProcessWork(UPACKET addPacket);

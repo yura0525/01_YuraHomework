@@ -1,4 +1,5 @@
 #pragma once
+#define  _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <windows.h>
 #include <string>
 #include <list>

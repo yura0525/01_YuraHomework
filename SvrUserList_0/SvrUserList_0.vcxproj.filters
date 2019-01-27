@@ -27,6 +27,12 @@
     <ClCompile Include="TUser.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TSynchronize.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TNetwork.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TPacketPool.h">
@@ -42,6 +48,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="TUser.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TSynchronize.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TNetwork.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

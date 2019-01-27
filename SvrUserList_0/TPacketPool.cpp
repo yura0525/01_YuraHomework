@@ -4,6 +4,7 @@
 bool TPacketPool::AddPacket(UPACKET addPacket)
 {
 	m_RecvPacketList.push_back(addPacket);
+	printf("\n%s", addPacket.msg);
 	return true;
 }
 bool TPacketPool::ProcessPacket()

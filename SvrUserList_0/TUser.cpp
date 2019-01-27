@@ -4,6 +4,7 @@
 
 TUser::TUser()
 {
+	m_isConnect = FALSE;
 }
 
 
