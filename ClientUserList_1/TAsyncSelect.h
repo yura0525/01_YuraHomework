@@ -11,7 +11,7 @@ public:
 	int			SendMsg();
 	int			SendMsg(char* msg, WORD type);
 	int			SendMsg(SOCKET sock, char* msg, WORD type);
-	void		MsgEvent(MSG msg) {};
+	void		MsgEvent(MSG msg);
 	bool		Connect(char* ip, int iPort);
 
 	TAsyncSelect();

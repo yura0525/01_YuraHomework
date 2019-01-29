@@ -1,7 +1,10 @@
-#include "TAsyncSelect.h"
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <winsock2.h>
-//#include <ws2tcpip.h>
-#pragma comment(lib, "ws2_32.lib")
+#include <ws2tcpip.h>
+#include "TAsyncSelect.h"
+
+#pragma comment(lib, "ws2_32")
+using namespace std;
 
 // 사용자 정의 메세지( 네트워크 이벤트가 발생하면 ) 
 #define NETWORK_MSG		WM_USER+80
@@ -108,7 +111,27 @@ int TAsyncSelect::SendMsg(SOCKET sock, char* msg, WORD type)
 
 int TAsyncSelect::RecvMsg()
 {
-
+	int iLen = 0;
+	DWORD dwRecvSize;
+	DWORD dwFlag = 0;
+	WSABUF wsabuf;
+	wsabuf.len = 2048;
+	wsabuf.buf = m_szData;
+	DWORD dwResult = WSARecv(m_Sock, &wsabuf, 1, &dwRecvSize, &dwFlag, NULL, NULL);
+	//dwRecvSize==0 처리가 불필요하다.
+	if (dwResult == SOCKET_ERROR)
+	{
+		if (WSAGetLastError() != WSAEWOULDBLOCK)
+		{
+			return -1;
+		}
+		return WSAEWOULDBLOCK;
+	}
+	else
+	{
+		m_StreamPacket.Put(m_szData, dwRecvSize);
+	}
+	return 0;
 }
 
 void TAsyncSelect::MsgEvent(MSG msg)
@@ -122,6 +145,44 @@ void TAsyncSelect::MsgEvent(MSG msg)
 			MessageBox(g_hWnd, L"접속 종료", L"종료", MB_OK);
 			PostQuitMessage(0);
 			return;
+		}
+		WORD dwSelect = WSAGETSELECTEVENT(msg.lParam);
+		switch (dwSelect)
+		{
+		case FD_CONNECT:
+		{
+			m_bConnect = true;
+			PostMessage(g_hWnd, NETWORK_MSG, m_Sock, FD_READ);
+		}
+		break;
+		case FD_CLOSE:
+		{
+			m_bConnect = false;
+		}
+		break;
+		case FD_READ:
+		{
+			int iRet = RecvMsg();
+			// 비정상 오류가 있거나 정상 종료시
+			if (iRet < 0)
+			{
+				closesocket(m_Sock);
+				break;
+			}
+			if (iRet != WSAEWOULDBLOCK)
+			{
+				PostMessage(g_hWnd, NETWORK_MSG, m_Sock, FD_READ);
+			}
+		}
+		// 중요 break를 생략한다.
+		case FD_WRITE:
+		{
+			m_bSendEnable = true;
+			int iRet = SendMsg();
+			if (iRet < 0)
+				closesocket(m_Sock);
+		}
+		break;
 		}
 	}
 }

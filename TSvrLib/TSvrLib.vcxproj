@@ -99,8 +99,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy "*.h" "../include_Net"
-copy "*.lib" "../lib_Net"</Command>
+      <Command>copy "*.h" "../../data_1/include_Net"
+copy "*.lib" "../../data_1/lib"</Command>
     </PostBuildEvent>
     <Lib>
       <OutputFile>TSvrLib.lib</OutputFile>

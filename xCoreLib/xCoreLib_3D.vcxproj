@@ -101,9 +101,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy "*.h" "../data/include"
+      <Command>copy "*.h" "../../data_1/include"
 
-copy "*.lib" "../data/lib"</Command>
+copy "*.lib" "../../data_1/lib"</Command>
     </PostBuildEvent>
     <Lib>
       <OutputFile>xCoreLib.lib</OutputFile>
