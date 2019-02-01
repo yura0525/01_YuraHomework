@@ -135,12 +135,18 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleMakePacket_Client", "SampleMakePacket_Client\SampleMakePacket_Client.vcxproj", "{82E68C88-8D0B-4E1D-9651-860363D5C62F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SvrUserList_1", "SvrUserList_1\SvrUserList_1.vcxproj", "{3AD96B7D-ACA5-415C-A0EA-647926FA2A41}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B52BF787-699E-4B29-92D6-7AC9945C5100} = {B52BF787-699E-4B29-92D6-7AC9945C5100}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCoreClient", "TCoreClient\TCoreClient.vcxproj", "{B52BF787-699E-4B29-92D6-7AC9945C5100}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClientUserList_1", "ClientUserList_1\ClientUserList_1.vcxproj", "{C4CEED7A-7B65-4FDD-B950-DB7A708CE48C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SelectServer", "SelectServer\SelectServer.vcxproj", "{527A1652-06A3-414B-BFFF-ADA02B340F44}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B52BF787-699E-4B29-92D6-7AC9945C5100} = {B52BF787-699E-4B29-92D6-7AC9945C5100}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
