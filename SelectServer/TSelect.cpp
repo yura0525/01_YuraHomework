@@ -16,9 +16,9 @@ bool	TSelect::InitSelectServer()
 		server.sin_family = AF_INET;
 		server.sin_port = htons(10000);
 		server.sin_addr.s_addr = htonl(INADDR_ANY);
-		int iRet = ::bind(m_Sock, (SOCKADDR*)&server, sizeof(server));
+		int iRet = bind(m_Sock, (SOCKADDR*)&server, sizeof(server));
 		if (iRet == SOCKET_ERROR)  return false;
-		iRet = ::listen(m_Sock, SOMAXCONN);
+		iRet = listen(m_Sock, SOMAXCONN);
 		if (iRet == SOCKET_ERROR)  return false;
 		u_long on = TRUE;
 		iRet = ioctlsocket(m_Sock, FIONBIO, &on);
@@ -31,7 +31,7 @@ bool	TSelect::InitSelectServer()
 };
 void TSelect::PrintStatistics()
 {
-	system("cls");
+	//system("cls");
 	ULONG       bps, tick, elapsed;
 	tick = GetTickCount();
 	elapsed = (tick - gStartTime) / 1000;
@@ -184,7 +184,6 @@ bool TSelect::Run()
 			}
 			InterlockedIncrement(&gCurrentConnections);
 		}
-
 		{
 			TSynchronize sync(this);
 			for (std::list<TUser*>::iterator itor = m_pUserList.begin(); itor != m_pUserList.end(); itor++)
@@ -196,7 +195,7 @@ bool TSelect::Run()
 					// recv
 					char buf[1024] = { 0, };
 					iRet = recv(pUser->m_Socket, buf, 1024, 0);// > 0)
-					// 에러 또는 클라이언트 종료
+															   // 에러 또는 클라이언트 종료
 					if (iRet == SOCKET_ERROR)
 					{
 						if (WSAGetLastError() != WSAEWOULDBLOCK)
@@ -231,12 +230,13 @@ bool TSelect::Run()
 		}
 		{
 			TSynchronize sync(this);
-			for (std::list<TUser*>::iterator itor = m_pUserList.begin(); itor != m_pUserList.end(); )
+			for (std::list<TUser*>::iterator itor = m_pUserList.begin(); itor != m_pUserList.end(); itor++)
 			{
 				TUser* pUser = (TUser*)*itor;
 				if (pUser->m_isConnect == FALSE)
 				{
-					m_pUserList.erase(itor++);
+					m_pUserList.erase(itor);
+					break;
 				}
 			}
 

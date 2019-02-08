@@ -51,7 +51,7 @@ bool Sample::Init()
 	SendMessage(m_hList, LB_ADDSTRING, 0, (LPARAM)L"채팅 시작");
 
 	m_Network.Init();
-	if (!m_Network.Connect(const_cast<char*>("192.168.0.27"), 10000))
+	if (!m_Network.Connect(const_cast<char*>("192.168.0.2"), 10000))
 	{
 		return false;
 	}
@@ -136,4 +136,10 @@ Sample::~Sample()
 {
 }
 
-GAMERUN(Sample, 1024, 768);
+int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR lpCmdLine, int nCmdShow)
+{
+	Sample win;
+	win.SetWindow(hInst, L"Sample", 1024, 768);
+	win.Run();
+}
+//GAMERUN(Sample, 1024, 768);

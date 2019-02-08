@@ -134,16 +134,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "11.3.CompletionPortTCPServe
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleMakePacket_Client", "SampleMakePacket_Client\SampleMakePacket_Client.vcxproj", "{82E68C88-8D0B-4E1D-9651-860363D5C62F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SvrUserList_1", "SvrUserList_1\SvrUserList_1.vcxproj", "{3AD96B7D-ACA5-415C-A0EA-647926FA2A41}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SvrUserList", "SvrUserList_1\SvrUserList_1.vcxproj", "{3AD96B7D-ACA5-415C-A0EA-647926FA2A41}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B52BF787-699E-4B29-92D6-7AC9945C5100} = {B52BF787-699E-4B29-92D6-7AC9945C5100}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCoreClient", "TCoreClient\TCoreClient.vcxproj", "{B52BF787-699E-4B29-92D6-7AC9945C5100}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClientUserList_1", "ClientUserList_1\ClientUserList_1.vcxproj", "{C4CEED7A-7B65-4FDD-B950-DB7A708CE48C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClientUserList(x)", "ClientUserList_1\ClientUserList_1.vcxproj", "{C4CEED7A-7B65-4FDD-B950-DB7A708CE48C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SelectServer", "SelectServer\SelectServer.vcxproj", "{527A1652-06A3-414B-BFFF-ADA02B340F44}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SelectServer(x)", "SelectServer\SelectServer.vcxproj", "{527A1652-06A3-414B-BFFF-ADA02B340F44}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B52BF787-699E-4B29-92D6-7AC9945C5100} = {B52BF787-699E-4B29-92D6-7AC9945C5100}
 	EndProjectSection
@@ -162,7 +162,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Net_02_Client_Event", "Net_
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01_Library", "01_Library", "{A2C12771-0C4E-49E6-9010-D63BEB43D8AD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleAsyncSelect_Client", "SampleAsyncSelect_Client\SampleAsyncSelect_Client.vcxproj", "{7ECD6133-56DA-4E78-A623-208B57BF8000}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleAsyncSelect_Client(x)", "SampleAsyncSelect_Client\SampleAsyncSelect_Client.vcxproj", "{7ECD6133-56DA-4E78-A623-208B57BF8000}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "07_EventSelect", "07_EventSelect", "{ECBC2989-98F2-4C48-BDD9-6A2B06034788}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EventSelectServer", "EventSelectServer\EventSelectServer.vcxproj", "{A2899444-6C9C-4497-99B1-8AE69E267903}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -676,6 +680,14 @@ Global
 		{7ECD6133-56DA-4E78-A623-208B57BF8000}.Release|x64.Build.0 = Release|x64
 		{7ECD6133-56DA-4E78-A623-208B57BF8000}.Release|x86.ActiveCfg = Release|Win32
 		{7ECD6133-56DA-4E78-A623-208B57BF8000}.Release|x86.Build.0 = Release|Win32
+		{A2899444-6C9C-4497-99B1-8AE69E267903}.Debug|x64.ActiveCfg = Debug|x64
+		{A2899444-6C9C-4497-99B1-8AE69E267903}.Debug|x64.Build.0 = Debug|x64
+		{A2899444-6C9C-4497-99B1-8AE69E267903}.Debug|x86.ActiveCfg = Debug|Win32
+		{A2899444-6C9C-4497-99B1-8AE69E267903}.Debug|x86.Build.0 = Debug|Win32
+		{A2899444-6C9C-4497-99B1-8AE69E267903}.Release|x64.ActiveCfg = Release|x64
+		{A2899444-6C9C-4497-99B1-8AE69E267903}.Release|x64.Build.0 = Release|x64
+		{A2899444-6C9C-4497-99B1-8AE69E267903}.Release|x86.ActiveCfg = Release|Win32
+		{A2899444-6C9C-4497-99B1-8AE69E267903}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -754,6 +766,8 @@ Global
 		{14DCC13C-4673-47ED-AEB4-88E60D0BE0E5} = {97016AFC-9709-4542-8C2D-C605C3610FCF}
 		{A2C12771-0C4E-49E6-9010-D63BEB43D8AD} = {68122C6A-D157-46DF-9767-69C69745F502}
 		{7ECD6133-56DA-4E78-A623-208B57BF8000} = {326BE97B-34E9-44D6-9EDE-45D843CC3B44}
+		{ECBC2989-98F2-4C48-BDD9-6A2B06034788} = {68122C6A-D157-46DF-9767-69C69745F502}
+		{A2899444-6C9C-4497-99B1-8AE69E267903} = {ECBC2989-98F2-4C48-BDD9-6A2B06034788}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {52770C95-AEF2-430D-8C91-D40C32B94650}
