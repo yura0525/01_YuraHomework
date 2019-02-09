@@ -1,3 +1,5 @@
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include <WinSock2.h>
 #include "TNetwork.h"
 
 bool TNetwork::Init()
@@ -127,9 +129,10 @@ bool TNetwork::Connect(char* ip, int iPort)
 	server.sin_port = htons(iPort);
 	server.sin_addr.s_addr = inet_addr(ip);
 
-	DWORD dwRet = connect(m_Sock,
+	DWORD dwRet = WSAConnect(m_Sock,
 		(sockaddr*)&server,
-		sizeof(SOCKADDR_IN));
+		sizeof(SOCKADDR_IN),
+		NULL, NULL, NULL, NULL);
 	if (SOCKET_ERROR == dwRet)
 	{
 		// 비동기 정상 반환 = WSAEWOULDBLOCK
