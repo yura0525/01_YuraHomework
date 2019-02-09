@@ -1,12 +1,13 @@
 #include "TStreamPacket.h"
 #include "TPacketPool.h"
+#include "TUser.h"
 
 bool TStreamPacket::SendMsg(MSG_TYPE msg)
 {
 	return true;
 }
 
-void TStreamPacket::Put(char* recvBuffer, int iRecvSize, TUser*)
+void TStreamPacket::Put(char* recvBuffer, int iRecvSize, TUser* pUser)
 {
 	//받는 버퍼의 용량이 부족하면
 	if (m_iWritePos + iRecvSize >= MAX_RECV_SIZE)
@@ -38,7 +39,16 @@ void TStreamPacket::Put(char* recvBuffer, int iRecvSize, TUser*)
 			UPACKET add;
 			ZeroMemory(&add, sizeof(add));
 			memcpy(&add, &m_RecvBuffer[m_iStartPos], m_pPacket->ph.len);
-			I_Pool.AddPacket(add);
+
+			if (pUser != NULL)
+			{
+				pUser->m_SendPacketList.push_back(add);
+				//printf("\nTStreamPacket::Put pUser->m_SendPacketList.push_back[%s] len[%d] type[%d]", add.msg, m_pPacket->ph.len, m_pPacket->ph.type);
+			}
+			else
+			{
+				I_Pool.AddPacket(add);
+			}
 
 			//1개의 패킷을 처리하고 남은 잔여량 크기
 			m_iReadPos -= m_pPacket->ph.len;

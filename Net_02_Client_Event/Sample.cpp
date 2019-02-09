@@ -31,8 +31,9 @@ DWORD WINAPI SendThread(LPVOID arg)
 	{
 		ZeroMemory(buf, sizeof(char) * 256);
 		fgets(buf, 256, stdin);
+
 		if (buf[strlen(buf) - 1] == '\n')
-			buf[strlen(buf) - 1] = 0;
+			buf[strlen(buf) - 1] = '\0';
 		if (strlen(buf) == 0 ||
 			_stricmp(buf, "quit") == 0)
 		{

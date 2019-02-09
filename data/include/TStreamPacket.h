@@ -20,7 +20,7 @@ public:
 	int					m_iReadPos;
 	bool				SendMsg(MSG_TYPE msg);
 public:
-	void Put(char* recvBuffer, int iRecvSize, TUser* = NULL);
+	void Put(char* recvBuffer, int iRecvSize, TUser* pUser = NULL);
 public:
 	TStreamPacket();
 	virtual ~TStreamPacket();
