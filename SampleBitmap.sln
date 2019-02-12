@@ -176,6 +176,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleAsyncIO_0", "SampleAs
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleAsyncIO_1", "SampleAsyncIO_1\SampleAsyncIO_1.vcxproj", "{8793D8CD-5B48-4DAD-A25F-84FDEFD85AF4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GetOverlappedResult", "GetOverlappedResult\GetOverlappedResult.vcxproj", "{F42D4306-E754-4306-9173-698AE63ABC53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -720,6 +722,14 @@ Global
 		{8793D8CD-5B48-4DAD-A25F-84FDEFD85AF4}.Release|x64.Build.0 = Release|x64
 		{8793D8CD-5B48-4DAD-A25F-84FDEFD85AF4}.Release|x86.ActiveCfg = Release|Win32
 		{8793D8CD-5B48-4DAD-A25F-84FDEFD85AF4}.Release|x86.Build.0 = Release|Win32
+		{F42D4306-E754-4306-9173-698AE63ABC53}.Debug|x64.ActiveCfg = Debug|x64
+		{F42D4306-E754-4306-9173-698AE63ABC53}.Debug|x64.Build.0 = Debug|x64
+		{F42D4306-E754-4306-9173-698AE63ABC53}.Debug|x86.ActiveCfg = Debug|Win32
+		{F42D4306-E754-4306-9173-698AE63ABC53}.Debug|x86.Build.0 = Debug|Win32
+		{F42D4306-E754-4306-9173-698AE63ABC53}.Release|x64.ActiveCfg = Release|x64
+		{F42D4306-E754-4306-9173-698AE63ABC53}.Release|x64.Build.0 = Release|x64
+		{F42D4306-E754-4306-9173-698AE63ABC53}.Release|x86.ActiveCfg = Release|Win32
+		{F42D4306-E754-4306-9173-698AE63ABC53}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -804,6 +814,7 @@ Global
 		{1EFD3932-EB43-4963-928E-53A74370536C} = {319A229D-08A4-47E4-A48A-46ABCC79F10C}
 		{2573F6DD-F285-45E7-BE08-E4D5CB6278CF} = {319A229D-08A4-47E4-A48A-46ABCC79F10C}
 		{8793D8CD-5B48-4DAD-A25F-84FDEFD85AF4} = {319A229D-08A4-47E4-A48A-46ABCC79F10C}
+		{F42D4306-E754-4306-9173-698AE63ABC53} = {319A229D-08A4-47E4-A48A-46ABCC79F10C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {52770C95-AEF2-430D-8C91-D40C32B94650}
