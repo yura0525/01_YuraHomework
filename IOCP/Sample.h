@@ -10,6 +10,31 @@
 
 class Sample
 {
+private:
+	typedef struct OVERLAPPEDEX : OVERLAPPED
+	{
+		DWORD flag;
+	}OVERLAPPEDEX;
+private:
+	HANDLE			m_hIOCP;
+	HANDLE			m_hWorkerThread[WORKERTHREAD_COUNT];
+	HANDLE			m_hFileRead;
+	HANDLE			m_hFileWrite;
+	HANDLE			m_hEventKillThread;
+	OVERLAPPEDEX	m_hReadOV;
+	OVERLAPPEDEX	m_hWriteOV;
+	char			m_szReadBuffer[READBUFFER_SIZE];
+
+public:
+	bool			Init();
+	void			Frame();
+	void			Release();
+private:
+	static	DWORD	WINAPI WorkerThread(LPVOID parameter);
+	bool	WaitForRead();
+	bool	DispatchRead(DWORD transferred);
+	bool	DispatchWrite(DWORD transferred);
+
 public:
 	Sample();
 	virtual ~Sample();
