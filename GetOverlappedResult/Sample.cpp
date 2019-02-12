@@ -83,9 +83,13 @@ DWORD AsyncTestForEnd(HANDLE hEvent, HANDLE hFile)
 			switch (dwError)
 			{
 			case ERROR_HANDLE_EOF:
+			{
 				printf("\nReadFile returned FALSE and EOF condition, async EOF not triggered.\n");
 				break;
+			}
+
 			case ERROR_IO_PENDING:
+			{
 				BOOL bPending = TRUE;
 				// Loop until the I/O is complete, that is: the overlapped 
 				// event is signaled.
@@ -103,10 +107,99 @@ DWORD AsyncTestForEnd(HANDLE hEvent, HANDLE hFile)
 					// 비동기 Read시에는 GetOverlappedResult=FALSE이며 ERROR_HANDLE_EOF을 
 					// 반환한다.
 					// 참고로 동기 Read=TRUE을 반환하며  pNumberOfBytesRead=0이 된다.
+					bResult = GetOverlappedResult(hFile, &stOverlapped, &dwBytesRead, FALSE);
 
+					if (!bResult)
+					{
+						switch (dwError = GetLastError())
+						{
+						case ERROR_HANDLE_EOF:
+							// Handle an end of file
+							printf("GetOverlappedResult found EOF\n");
+							break;
+						case ERROR_IO_INCOMPLETE:
+						{
+							// Operation is still pending, allow while loop
+							// to loop again after printing a little progress.
+							printf("GetOverlappedResult I/O Incomplete\n");
+							bPending = TRUE;
+							bContinue = TRUE;
+							break;
+						}
+						default:
+						{
+							// Decode any other errors codes.
+							errMsg = ErrorMessage(dwError);
+							_tprintf(TEXT("GetOverlappedResult failed (%d): %s\n"),
+								dwError, errMsg);
+							LocalFree((LPVOID)errMsg);
+						}
+						}
+					}
+					else
+					{
+						printf("ReadFile operation completed %d->%d\n", stOverlapped.Offset,
+							dwBytesRead);
+
+						// Manual-reset event should be reset since it is now signaled.
+						ResetEvent(stOverlapped.hEvent);
+					}
 				}
+				break;
+			}
+			default:
+			{
+				// Decode any other errors codes.
+				errMsg = ErrorMessage(dwError);
+				printf("ReadFile GLE unhandled (%d): %s\n", dwError, errMsg);
+				LocalFree((LPVOID)errMsg);
+				break;
+			}
 			}
 		}
-
+		else
+		{
+			printf("ReadFile completed synchronously\n");
+		}
+		stOverlapped.Offset += dwBytesRead;
+		if (stOverlapped.Offset < dwFileSize)
+			bContinue = TRUE;
 	}
+	return stOverlapped.Offset;
+}
+
+void main()
+{
+	HANDLE hEvent;
+	HANDLE hFile;
+	DWORD dwReturnValue;
+
+	hFile = CreateFile(L"bigdata.zip", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, NULL);
+
+	if (hFile == INVALID_HANDLE_VALUE)
+	{
+		DWORD dwError = GetLastError();
+		LPCTSTR errMsg = ErrorMessage(dwError);
+		printf("Could not open file (%d): %s\n", dwError, errMsg);
+		LocalFree((LPVOID)errMsg);
+		return;
+	}
+
+	hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+
+	if (hEvent == NULL)
+	{
+		DWORD dwError = GetLastError();
+		LPCTSTR errMsg = ErrorMessage(dwError);
+		printf("Could not CreateEvent: %d %s\n", dwError, errMsg);
+		LocalFree((LPVOID)errMsg);
+		return;
+	}
+
+	dwReturnValue = AsyncTestForEnd(hEvent, hFile);
+
+	printf("\nRead complete. Bytes read: %d\n", dwReturnValue);
+	
+	CloseHandle(hFile);
+	CloseHandle(hEvent);
 }
