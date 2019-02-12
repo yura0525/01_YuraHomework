@@ -18,16 +18,16 @@ int main()
 	OVERLAPPED		ov = { 0, };
 	DWORD			dwValue = 0;
 
-	// abc...xy가 반복
-	for (i = 0; i < 1024; i++)
+	// abc...xyz가 반복
+	for (i = 0; i < BUF_SIZE; i++)
 	{
-		buf[i] = 'a' + i % ('z' - 'a');
+		buf[i] = 'a' + i % (('z' - 'a')+1);
 	}
 
-	// ABC...XY가 반복
-	for (i = 0; i < 1024; i++)
+	// ABC...XYZ가 반복
+	for (i = 0; i < BUF_SIZE; i++)
 	{
-		buf2[i] = 'A' + i % ('Z' - 'A');
+		buf2[i] = 'A' + i % (('Z' - 'A')+1);
 	}
 
 	// 임시 경로 생성
@@ -56,7 +56,7 @@ int main()
 
 	// Overlapped i/o로 쓴다. 즉시 리턴된다.
 	// FILE_FLAG_NO_BUFFERING 사용시 sector 크기의 배수 (512 x 2 = 1024)로 Write해야 한다.
-	if (FALSE == ::WriteFile(h, buf, 1024, NULL, &ov))
+	if (FALSE == ::WriteFile(h, buf, BUF_SIZE, NULL, &ov))
 	{
 		dwValue = ::GetLastError();
 		if (dwValue == ERROR_IO_PENDING)
@@ -146,27 +146,26 @@ int main()
 	}
 
 	// 여기까지,
-	// abc....xyabc...xy... 가 1024 byte
-	// ABC....XYABC...XY... 가 1024 byte
+	// abc....xyzabc...xyz... 가 1024 byte
+	// ABC....XYZABC...XYZ... 가 1024 byte
 	// 총 2048 byte가 저장되었다.
 	printf("2048 bytes written.\r\n");
 
 	//////////////////////////////////////////////////////////////////////////
 	// Overlapped i/o로 파일 읽기
-
-	// 1byte 위치 부터 읽어본다.
+	// 0byte 위치 부터 읽어본다.
 	// 읽기는 WriteFile 처럼, sector 배수의 조건이 필요 없다.
-	// 여기서는 File Pointer는 선두 1byte, 읽을 크기는 10byte로 한다.
+	// 여기서는 File Pointer는 선두 0byte, 읽을 크기는 10byte로 한다.
 	// Overlapped i/o로 하기 때문에, 바로 리턴된다.
-	// 만일, FILE_FLAG_NO_BUFFERING이 OR되었다면, 아래는 87번 오류(=ERROR_INVALID_PARAMETER)
-	// 가 들어온다.
+	// 만일, FILE_FLAG_NO_BUFFERING이 OR되었다면,sector 배수의 조건(1024)을 지켜야한다.
+	ZeroMemory(buf3, sizeof(buf3));
 
 	nLarge.QuadPart = 0;
 	ov.Offset = nLarge.LowPart;
 	ov.OffsetHigh = nLarge.HighPart;
 	if (FALSE == ::ReadFile(h, buf3, 10, NULL, &ov))
 	{
-		dwValue == ::GetLastError();
+		dwValue = ::GetLastError();
 		if (dwValue == ERROR_IO_PENDING)
 		{
 			// i/o가 완료되지 않았음
@@ -175,8 +174,8 @@ int main()
 		else
 		{
 			// 에러 상황
-			/*assert(FALSE);
-			exit(1);*/
+			assert(FALSE);
+			exit(1);
 		}
 	}
 	else
@@ -314,5 +313,6 @@ int main()
 		h = INVALID_HANDLE_VALUE;
 	}
 
+	getchar();
 	return 0;
 }

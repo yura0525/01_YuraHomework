@@ -48,6 +48,8 @@ static bool GetMtW(char* pSrc, WCHAR* pDest)
 
 bool Sample::Init()
 {
+	xCore::Init();
+
 	// 윈도우 컨트롤(edit)
 	DWORD sytle = WS_CHILD | WS_VISIBLE | ES_MULTILINE;
 	m_hEdit = CreateWindow(L"edit", NULL,
@@ -81,6 +83,7 @@ bool Sample::Init()
 }
 bool Sample::Frame()
 {
+	xCore::Frame();
 	if (m_Network.m_RecvList.empty() == false)
 	{
 		for (std::list<UPACKET>::iterator itor = m_Network.m_RecvList.begin();
@@ -102,6 +105,7 @@ bool Sample::Frame()
 }
 bool Sample::Release()
 {
+	xCore::Release();
 	m_Network.Release();
 	return true;
 }
@@ -132,11 +136,13 @@ LRESULT	Sample::MsgProc(HWND hWnd, UINT msg, WPARAM	wParam, LPARAM	lParam)
 		}
 	}break;
 	}
-	return 0;
+	
+	return xCore::MsgProc(hWnd, msg, wParam, lParam);
 }
 void Sample::MsgEvent(MSG msg)
 {
 	m_Network.MsgEvent(msg);
+	return xCore::MsgEvent(msg);
 }
 Sample::Sample()
 {

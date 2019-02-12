@@ -10,10 +10,7 @@ public:
 	HWND				m_hButton;
 	HWND				m_hList;
 public:
-	bool	GameRender()
-	{
-		return true;
-	}
+	bool	PostRender()	{	return true;	}
 	bool	Init();
 	bool	Frame();
 	bool	Release();

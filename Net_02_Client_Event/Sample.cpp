@@ -62,7 +62,7 @@ DWORD WINAPI RecvThread(LPVOID arg)
 			break;
 		}
 		buf[iRecvByte] = 0;
-		printf("\n[받은메세지]: %s", buf);
+		printf("\n[받은메세지]: %s\n", buf);
 	}
 	closesocket(sock);
 	return 0;

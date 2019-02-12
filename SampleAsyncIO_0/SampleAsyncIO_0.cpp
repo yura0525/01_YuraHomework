@@ -7,7 +7,7 @@
 #define HasOverlappedIoCompleted(pOverlapped) ((pOverlapped)->Internal != STATUS_PENDING)
 
 CHAR* g_pmbData;
-CHAR* g_pmbdataCopy;
+CHAR* g_pmbDataCopy;
 
 DWORD Load(const TCHAR* strFileName)
 {
@@ -19,7 +19,8 @@ DWORD Load(const TCHAR* strFileName)
 
 	DWORD cTotalBytes;
 	LARGE_INTEGER FileSize;
-	HANDLE hHandle = CreateFile(strFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	HANDLE hHandle = CreateFile(strFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 
+		FILE_ATTRIBUTE_NORMAL, NULL);
 	
 	if (hHandle != INVALID_HANDLE_VALUE)
 	{
@@ -60,7 +61,8 @@ DWORD AsyncLoad(const TCHAR* strFileName)
 
 	DWORD cTotalBytes;
 	LARGE_INTEGER FileSize;
-	HANDLE hHandle = CreateFile(strFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL| FILE_FLAG_OVERLAPPED, NULL);
+	HANDLE hHandle = CreateFile(strFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,
+		FILE_ATTRIBUTE_NORMAL| FILE_FLAG_OVERLAPPED, NULL);
 
 	if (hHandle != INVALID_HANDLE_VALUE)
 	{
@@ -118,7 +120,7 @@ DWORD AsyncLoad(const TCHAR* strFileName)
 				bWait가 TRUE인 경우에 미리 COMMTIMEOUTS에 설정한 타임아웃 값
 				만큼 기다린다.기다리는 도중 완료되면 TRUE 반환 TIMEOUT되면 FALSE 반환
 				GetLastError() 함수는 ERROR_IO_INCOMPLETE 반환
-				2. bWait == FALSE : && OVERLAPPED.internal == STATUS_PENDING
+				2. bWait == FALSE && OVERLAPPED.internal == STATUS_PENDING
 				bWait가 FALSE인 경우에 완료되길 기다리지 않고 바로 쓰기한 바이트를 넣고 반환된다.
 				아직 쓰기작업이 끝나지 않았다면 FALSE를 반환하고 GetLastError() 함수는
 				ERROR_IO_INCOMPLETE 반환*/
@@ -172,7 +174,8 @@ int main()
 	ov.hEvent = 0;
 
 	//비동기 출력
-	HANDLE hWriteFile = CreateFile(L"TBasis2Dcopy.zip", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, NULL);
+	HANDLE hWriteFile = CreateFile(L"004.flac", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 
+									FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, NULL);
 
 	printf("\n비동기 출력 시작----------->!");
 	if (hWriteFile != NULL)

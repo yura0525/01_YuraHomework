@@ -26,6 +26,8 @@ static char* GetWtM(WCHAR* data)
 
 bool Sample::Init()
 {
+	xCore::Init();
+
 	// 윈도우 컨트롤(edit)
 	DWORD sytle = WS_CHILD | WS_VISIBLE | ES_MULTILINE;
 	m_hEdit = CreateWindow(L"edit", NULL,
@@ -58,7 +60,7 @@ bool Sample::Init()
 	return true;
 }
 
-bool Sample::PreFrame()
+bool Sample::Frame()
 {
 	if (I_Pool.m_RecvPacketList.empty() == false)
 	{
@@ -77,54 +79,54 @@ bool Sample::PreFrame()
 		}
 		I_Pool.m_RecvPacketList.clear();
 	}
-	return true;
+	return xCore::Frame();
 }
-bool Sample::Frame()
-{
-	return true;
-}
+
 bool Sample::Release()
 {
+	xCore::Release();
 	m_Network.Release();
 	return true;
 }
-
 
 LRESULT	Sample::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
-	case WM_COMMAND:
-	{
-		// id에 해당하는 컨트롤
-		switch (LOWORD(wParam))
+		case WM_COMMAND:
 		{
-		case 200:
-		{
-			// 버튼클릭
-			TCHAR buffer[MAX_PATH] = { 0 };
-			SendMessage(m_hEdit, WM_GETTEXT, MAX_PATH, (LPARAM)buffer);
-
-			int iCnt = SendMessage(m_hList, LB_GETCOUNT, 0, 0);
-			if (iCnt > 20)
+			// id에 해당하는 컨트롤
+			switch (LOWORD(wParam))
 			{
-				SendMessage(m_hList, LB_RESETCONTENT, 0, 0);
+				case 200:
+				{
+					// 버튼클릭
+					TCHAR buffer[MAX_PATH] = { 0 };
+					SendMessage(m_hEdit, WM_GETTEXT, MAX_PATH, (LPARAM)buffer);
+
+					int iCnt = SendMessage(m_hList, LB_GETCOUNT, 0, 0);
+					if (iCnt > 20)
+					{
+						SendMessage(m_hList, LB_RESETCONTENT, 0, 0);
+					}
+					//SendMessage(m_hList, LB_ADDSTRING, 0, (LPARAM)buffer);
+					int iSendByte = m_Network.SendMsg(GetWtM(buffer), PACKET_CHAT_MSG);
+					//int iSendByte = m_Network.PushMsg(GetWtM(buffer), PACKET_CHAT_MSG);
+					if (iSendByte == SOCKET_ERROR) break;
+				}
+				break;
 			}
-			//SendMessage(m_hList, LB_ADDSTRING, 0, (LPARAM)buffer);
-			int iSendByte = m_Network.SendMsg(GetWtM(buffer), PACKET_CHAT_MSG);
-			//int iSendByte = m_Network.PushMsg(GetWtM(buffer), PACKET_CHAT_MSG);
-			if (iSendByte == SOCKET_ERROR) break;
 		}
-		}
+		break;
 	}
-	break;
-	}
-	return 0;
+
+	return xCore::MsgProc(hWnd, msg, wParam, lParam);
 }
 
 void Sample::MsgEvent(MSG msg)
 {
 	m_Network.MsgEvent(msg);
+	xCore::MsgEvent(msg);
 }
 
 Sample::Sample()

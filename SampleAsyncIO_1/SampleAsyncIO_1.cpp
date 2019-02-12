@@ -14,7 +14,7 @@ LARGE_INTEGER g_LargeWrite;
 
 CHAR* g_pmbData;
 CHAR* g_pmbOffsetData;
-CHAR* g_pmbdataCopy;
+CHAR* g_pmbDataCopy;
 
 //dwStepSize 사이즈 단위로 연속적으로 로딩한다.
 DWORD FileRead(HANDLE hHandle, DWORD offset)
@@ -31,7 +31,7 @@ DWORD FileRead(HANDLE hHandle, DWORD offset)
 	{
 		if (GetLastError() == ERROR_IO_PENDING)
 		{
-			//printf("\n작업 중!");
+			printf("\n작업 중!");
 		}
 	}
 	else
@@ -64,7 +64,7 @@ DWORD Load(const TCHAR* strFileName)
 		g_pmbData = new char[cTotalBytes];
 		if (!g_pmbData)
 		{
-			CloseHandle(hHandle);
+			CloseHandle(hHandle);//E_OUTOFMEMORY;
 			return 0;
 		}
 
@@ -106,12 +106,10 @@ DWORD AsyncLoad(const TCHAR* strFileName)
 		g_pmbData = new char[cTotalBytes];
 		if (!g_pmbData)
 		{
-			CloseHandle(hHandle);
+			CloseHandle(hHandle);//E_OUTOFMEMORY;
 			return 0;
 		}
 
-		// 비동기 입력
-		//OVERLAPPED readOV;
 		ZeroMemory(&g_ReadOV, sizeof(OVERLAPPED));
 		g_ReadOV.hEvent = NULL;
 
@@ -173,7 +171,7 @@ DWORD AsyncLoad(const TCHAR* strFileName)
 				printf("\n--->%d Error!!!!", dwRet);
 				break;
 			}
-			//Sleep(1);
+			Sleep(1);
 		}
 	}
 	else
@@ -202,7 +200,8 @@ int main()
 	ov.hEvent = NULL;
 
 	//비동기 출력
-	HANDLE hWriteFile = CreateFile(L"TBasis2Dcopy.zip", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, NULL);
+	HANDLE hWriteFile = CreateFile(L"004.flac", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 
+		FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, NULL);
 
 	printf("\n비동기 출력 시작----------->!");
 	if (hWriteFile != NULL)

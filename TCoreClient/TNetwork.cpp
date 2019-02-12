@@ -59,7 +59,6 @@ bool TNetwork::PushMsg(char* msg, WORD type)
 }
 int	TNetwork::RecvMsg()
 {
-	
 	int iLen = 0;
 	m_dwRecvByte += recv(m_Sock, &m_szRecvBuffer[m_iStartByte], PACKET_HEADER_SIZE - m_dwRecvByte, 0);
 	if (m_dwRecvByte == 0 || m_dwRecvByte == SOCKET_ERROR)

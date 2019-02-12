@@ -10,9 +10,9 @@ public:
 	HWND			m_hButton;
 	HWND			m_hList;
 public:
-	bool			GameRender() { return true; }
+	
+	bool			PostRender() { return true; }
 	bool			Init();
-	bool			PreFrame();
 	bool			Frame();
 	bool			Release();
 	LRESULT			MsgProc(HWND hWnd, UINT msg, WPARAM wPAram, LPARAM lParam);
