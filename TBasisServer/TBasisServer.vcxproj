@@ -157,10 +157,16 @@ copy "TBasisServer.lib" "../data/lib"</Command>
     <ClInclude Include="TProtocol.h" />
     <ClInclude Include="TServerObj.h" />
     <ClInclude Include="TServerStd.h" />
+    <ClInclude Include="TSynchronize.h" />
+    <ClInclude Include="TThread.h" />
+    <ClInclude Include="TWorkThread.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TPacket.cpp" />
     <ClCompile Include="TServerObj.cpp" />
+    <ClCompile Include="TSynchronize.cpp" />
+    <ClCompile Include="TThread.cpp" />
+    <ClCompile Include="TWorkThread.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

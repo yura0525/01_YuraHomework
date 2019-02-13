@@ -100,10 +100,10 @@
     </Link>
     <PostBuildEvent>
       <Command>copy "*.h" "../data/include_CoreClient"
-copy "TCoreClient64.lib" "../data/lib"</Command>
+copy "TCoreClient.lib" "../data/lib"</Command>
     </PostBuildEvent>
     <Lib>
-      <OutputFile>TCoreClient64.lib</OutputFile>
+      <OutputFile>TCoreClient.lib</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
