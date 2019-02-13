@@ -99,7 +99,7 @@
       <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>copy "*.h" "../data/include"
+      <Command>copy "*.h" "../data/include_CoreClient"
 copy "TCoreClient64.lib" "../data/lib"</Command>
     </PostBuildEvent>
     <Lib>
