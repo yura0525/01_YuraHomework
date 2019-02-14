@@ -23,7 +23,7 @@
     <ProjectGuid>{503443DB-0A9D-487F-9EDE-AC745D8119AD}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>TBasisServer</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -154,18 +154,24 @@ copy "TBasisServer.lib" "../data/lib"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="TPacket.h" />
+    <ClInclude Include="TPacketPool_1.h" />
     <ClInclude Include="TProtocol.h" />
     <ClInclude Include="TServerObj.h" />
     <ClInclude Include="TServerStd.h" />
+    <ClInclude Include="TStreamPacket_1.h" />
     <ClInclude Include="TSynchronize.h" />
     <ClInclude Include="TThread.h" />
+    <ClInclude Include="TUser_1.h" />
     <ClInclude Include="TWorkThread.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TPacket.cpp" />
+    <ClCompile Include="TPacketPool_1.cpp" />
     <ClCompile Include="TServerObj.cpp" />
+    <ClCompile Include="TStreamPacket_1.cpp" />
     <ClCompile Include="TSynchronize.cpp" />
     <ClCompile Include="TThread.cpp" />
+    <ClCompile Include="TUser_1.cpp" />
     <ClCompile Include="TWorkThread.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

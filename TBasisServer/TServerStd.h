@@ -8,6 +8,7 @@
 #include <windows.h>
 #include <tchar.h>
 #include <string>
+#include <list>
 
 using namespace std;
 #pragma comment( lib, "ws2_32.lib")
