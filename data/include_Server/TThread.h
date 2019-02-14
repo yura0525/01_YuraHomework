@@ -1,5 +1,6 @@
 #pragma once
-#include "TServerObj.h"
+#include "TSynchronize.h"
+
 class TThread : public TServerObj
 {
 public:

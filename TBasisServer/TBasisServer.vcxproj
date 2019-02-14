@@ -91,6 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../data/include_3D;../data/dx/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -153,9 +154,13 @@ copy "TBasisServer.lib" "../data/lib"</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="TAcceptor.h" />
+    <ClInclude Include="TDebugString.h" />
     <ClInclude Include="TPacket.h" />
     <ClInclude Include="TPacketPool_1.h" />
     <ClInclude Include="TProtocol.h" />
+    <ClInclude Include="TServer.h" />
+    <ClInclude Include="TServerIOCP.h" />
     <ClInclude Include="TServerObj.h" />
     <ClInclude Include="TServerStd.h" />
     <ClInclude Include="TStreamPacket_1.h" />
@@ -165,8 +170,12 @@ copy "TBasisServer.lib" "../data/lib"</Command>
     <ClInclude Include="TWorkThread.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="TAcceptor.cpp" />
+    <ClCompile Include="TDebugString.cpp" />
     <ClCompile Include="TPacket.cpp" />
     <ClCompile Include="TPacketPool_1.cpp" />
+    <ClCompile Include="TServer.cpp" />
+    <ClCompile Include="TServerIOCP.cpp" />
     <ClCompile Include="TServerObj.cpp" />
     <ClCompile Include="TStreamPacket_1.cpp" />
     <ClCompile Include="TSynchronize.cpp" />

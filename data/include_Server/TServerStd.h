@@ -1,23 +1,19 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #pragma once
-
 #include <thread>
 #include <process.h>
 #include <WS2tcpip.h>
 #include <WinSock2.h>
-#include <windows.h>
 #include <tchar.h>
-#include <string>
-#include <list>
+#include "xStd.h"
 
 using namespace std;
 #pragma comment( lib, "ws2_32.lib")
 #pragma comment( lib, "winmm.lib")
-#pragma coment( lib, "TCoreClient.lib")
 
-typedef basic_string<TCHAR> T_STR;
-typedef basic_string<wchar_t> W_STG;
-typedef basic_string<char>  C_STR;
+//typedef basic_string<TCHAR> T_STR;
+//typedef basic_string<wchar_t> W_STG;
+//typedef basic_string<char>  C_STR;
 
 // 멀티바이트 문자집합 사용경우
 // ABC홍길동 = 9
@@ -88,15 +84,15 @@ static void PRINT(char* fmt, ...) // 나열연산자
 	printf("\n=====> %s", buf);
 	va_end(arg);
 }
-template<class T> class TSingleton
-{
-public:
-	static T& GetInstance()
-	{
-		static T theSingleInstance;
-		return theSingleInstance;
-	}
-};
+//template<class T> class TSingleton
+//{
+//public:
+//	static T& GetInstance()
+//	{
+//		static T theSingleInstance;
+//		return theSingleInstance;
+//	}
+//};
 
 static void T_ERR_EXIT(TCHAR *msg)
 {

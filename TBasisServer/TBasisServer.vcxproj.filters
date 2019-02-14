@@ -45,6 +45,18 @@
     <ClInclude Include="TStreamPacket_1.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="TAcceptor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TDebugString.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TServer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TServerIOCP.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TPacket.cpp">
@@ -69,6 +81,18 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="TStreamPacket_1.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TAcceptor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TDebugString.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TServer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TServerIOCP.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

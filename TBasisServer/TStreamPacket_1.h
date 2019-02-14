@@ -1,29 +1,29 @@
 #pragma once
-#include "TServerStd.h"
+#include "TServerObj.h"
 #include "TProtocol.h"
 
 #define MAX_RECV_SIZE 10000
-class TUser;
+class TUser_1;
 
 typedef struct {
 	UPACKET packet;
-	TUser*	pUSer;
+	TUser_1*	pUser;
 }T_PACKET, *P_TPACKET;
 
-class TStreamPacket_1
+class TStreamPacket_1 : public TServerObj
 {
 public:
 	std::list<T_PACKET>						m_PacketList;
 	typedef std::list<T_PACKET>::iterator	m_PackItor;
 
 public:
-	UPACKET * m_pPacket;
-	char m_RecvBuffer[MAX_RECV_SIZE];
-	int m_iStartPos;
-	int m_iWritePos;
-	int m_iReadPos;
+	UPACKET *		m_pPacket;
+	char			m_RecvBuffer[MAX_RECV_SIZE];
+	int				m_iStartPos;
+	int				m_iWritePos;
+	int				m_iReadPos;
 public:
-	void Put(char* recvBuffer, int iSize, TUser* = NULL);
+	void Put(char* recvBuffer, int iRecvSize, TUser_1* pUser = NULL);
 
 public:
 	TStreamPacket_1();
