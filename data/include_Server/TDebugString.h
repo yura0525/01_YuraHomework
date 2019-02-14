@@ -8,7 +8,7 @@ private:
 public:
 	HWND		m_hList;
 public:
-	void		Print(char* fmt, ...);
+	void		Print(const char* fmt, ...);
 public:
 	bool		Init();
 	bool		Release();
