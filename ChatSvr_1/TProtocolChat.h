@@ -29,4 +29,5 @@ typedef struct
 // 보통 채팅 메세지
 #define PACKET_CHAT_MSG 1002 // 대화명 입력 전송.
 
+
 #pragma pack(pop)

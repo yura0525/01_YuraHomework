@@ -15,22 +15,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TProtocolChat.h">
+    <ClInclude Include="TThread.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TUdpSocket_1.h">
+    <ClInclude Include="TSynchronize.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TChatPacketPool.h">
+    <ClInclude Include="TServerObj.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TChatAccept.h">
+    <ClInclude Include="TSender.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TChatSvr.h">
+    <ClInclude Include="TReceiver.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TChatUser.h">
+    <ClInclude Include="TDebugString.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Sample.h">
@@ -38,19 +38,22 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TUdpSocket_1.cpp">
+    <ClCompile Include="TThread.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TChatPacketPool.cpp">
+    <ClCompile Include="TSynchronize.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TChatAccept.cpp">
+    <ClCompile Include="TServerObj.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TChatSvr.cpp">
+    <ClCompile Include="TSender.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TChatUser.cpp">
+    <ClCompile Include="TReceiver.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TDebugString.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Sample.cpp">

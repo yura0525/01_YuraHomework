@@ -20,10 +20,10 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{8235A656-D216-414F-867F-08DE23B07A57}</ProjectGuid>
+    <ProjectGuid>{38BA150C-2733-4A49-9CB2-77655C4DA982}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>ChatSvr1</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <RootNamespace>ChattingClient0</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>../output/ChatSvr_1/</OutDir>
-    <IntDir>../output/ChatSvr_1/</IntDir>
+    <OutDir>../output/Chatting_Client_0/</OutDir>
+    <IntDir>../output/Chatting_Client_0/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -91,13 +91,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../data/include_Server;../data/dx/Include;../data/include_3D;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>../data/lib;../data/dx/Lib/x64;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>TBasisServer.lib;xCoreLib_3D.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -149,20 +146,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
-    <ClInclude Include="TChatAccept.h" />
-    <ClInclude Include="TChatPacketPool.h" />
-    <ClInclude Include="TChatSvr.h" />
-    <ClInclude Include="TChatUser.h" />
-    <ClInclude Include="TProtocolChat.h" />
-    <ClInclude Include="TUdpSocket_1.h" />
+    <ClInclude Include="TDebugString.h" />
+    <ClInclude Include="TReceiver.h" />
+    <ClInclude Include="TSender.h" />
+    <ClInclude Include="TServerObj.h" />
+    <ClInclude Include="TSynchronize.h" />
+    <ClInclude Include="TThread.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="TChatAccept.cpp" />
-    <ClCompile Include="TChatPacketPool.cpp" />
-    <ClCompile Include="TChatSvr.cpp" />
-    <ClCompile Include="TChatUser.cpp" />
-    <ClCompile Include="TUdpSocket_1.cpp" />
+    <ClCompile Include="TDebugString.cpp" />
+    <ClCompile Include="TReceiver.cpp" />
+    <ClCompile Include="TSender.cpp" />
+    <ClCompile Include="TServerObj.cpp" />
+    <ClCompile Include="TSynchronize.cpp" />
+    <ClCompile Include="TThread.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
