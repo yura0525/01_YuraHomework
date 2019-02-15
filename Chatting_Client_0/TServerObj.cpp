@@ -1,12 +1,11 @@
 #include "TServerObj.h"
 
-
-
-TServerObj::TServerObj()
+TServerObj::TServerObj(void)
 {
+	InitializeCriticalSection(&m_cs);
 }
 
-
-TServerObj::~TServerObj()
+TServerObj::~TServerObj(void)
 {
+	DeleteCriticalSection(&m_cs);
 }

@@ -5,12 +5,14 @@
 #include <WS2tcpip.h>
 #include <WinSock2.h>
 #include <tchar.h>
+#include <vector>
 #include "xStd.h"
 
 using namespace std;
 #pragma comment( lib, "ws2_32.lib")
 #pragma comment( lib, "winmm.lib")
 
+typedef vector<basic_string<TCHAR>> TCHAR_STRING_VECTOR;
 //typedef basic_string<TCHAR> T_STR;
 //typedef basic_string<wchar_t> W_STG;
 //typedef basic_string<char>  C_STR;

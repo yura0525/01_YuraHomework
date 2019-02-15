@@ -83,7 +83,7 @@ LRESULT	Sample::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		break;
 	
 	}
-	return -1;
+	return xCore::MsgProc(hWnd, msg, wParam, lParam);
 }
 
 Sample::Sample()

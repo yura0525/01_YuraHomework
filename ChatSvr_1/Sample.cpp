@@ -32,7 +32,7 @@ LRESULT Sample::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	}
-	return 0;
+	return xCore::MsgProc(hWnd, message, wParam, lParam);
 }
 
 Sample::Sample()
