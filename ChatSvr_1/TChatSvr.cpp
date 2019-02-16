@@ -6,7 +6,7 @@
 bool TChatSvr::Init()
 {
 	TServer::Init();
-	I_Debug.Print("%s", "서버 시작합니다.");
+	I_Debug.Print(const_cast<char*>("%s"), "서버 시작합니다.");
 	m_Acceptor.Set(10000, NULL);
 	return true;
 }
@@ -34,7 +34,7 @@ bool TChatSvr::AddUser(SOCKET socket, SOCKADDR_IN address)
 		pUser->m_Socket = socket;
 		pUser->m_UserAddress = address;
 
-		I_Debug.Print("IP=%s, PORT=%d", inet_ntoa(address.sin_addr), ntohs(address.sin_port));
+		I_Debug.Print(const_cast<char*>("IP=%s, PORT=%d"), inet_ntoa(address.sin_addr), ntohs(address.sin_port));
 
 		if (pUser)
 		{
@@ -61,7 +61,7 @@ void TChatSvr::DeleteUser(SOCKET socket)
 			{
 				char buffer[256] = { 0, };
 				sprintf_s(buffer, "%s%s", pUser->m_szName.c_str(), "님이 나가셨습니다.");
-				I_Debug.Print("%s%s", pUser->m_szName.c_str(), "님이 나가셨습니다.");
+				I_Debug.Print(const_cast<char*>("%s%s"), pUser->m_szName.c_str(), "님이 나가셨습니다.");
 				Broadcastting(buffer, PACKET_CHAT_MSG, pUser->m_Socket);
 				closesocket(pUser->m_Socket);
 				delUser = iter;
@@ -86,7 +86,7 @@ void TChatSvr::DeleteUser(TChatUser* pDeleteUser)
 			{
 				char buffer[256] = { 0, };
 				sprintf_s(buffer, "%s%s", pUser->m_szName.c_str(), "님이 나가셨습니다.");
-				I_Debug.Print("%s%s", pUser->m_szName.c_str(), "님이 나가셨습니다.");
+				I_Debug.Print(const_cast<char*>("%s%s"), pUser->m_szName.c_str(), "님이 나가셨습니다.");
 				Broadcastting(buffer, PACKET_CHAT_MSG, pUser->m_Socket);
 				closesocket(pUser->m_Socket);
 				delUser = iter;
@@ -113,7 +113,7 @@ void TChatSvr::Broadcastting(char* msg, WORD code, SOCKET SendSocket)
 					continue;
 				}
 			}
-			I_Debug.Print("%s에게 %s 보냈습니다.", pUser->m_szName.c_str(), msg);
+			I_Debug.Print(const_cast<char*>("%s에게 %s 보냈습니다."), pUser->m_szName.c_str(), msg);
 		}
 	}
 }
@@ -136,7 +136,7 @@ void TChatSvr::Broadcastting(T_PACKET* pUserData)
 					continue;
 				}
 			}
-			I_Debug.Print("%s에게 %s님의 %s 보냈습니다.", pUser->m_szName.c_str(),
+			I_Debug.Print(const_cast<char*>("%s에게 %s님의 %s 보냈습니다."), pUser->m_szName.c_str(),
 				pUserData->pUser->m_szName.c_str(),
 				pUserData->packet.msg);
 		}
@@ -159,7 +159,7 @@ void TChatSvr::Broadcastting(UPACKET* pPacket, SOCKET SendSocket)
 					continue;
 				}
 			}
-			I_Debug.Print("%s에게 %s 보냈습니다.", pUser->m_szName.c_str(), pPacket->msg);
+			I_Debug.Print(const_cast<char*>("%s에게 %s 보냈습니다."), pUser->m_szName.c_str(), pPacket->msg);
 		}
 	}
 }

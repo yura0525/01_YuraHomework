@@ -17,7 +17,7 @@ bool TUdpSocket::Init()
 	int retval = ::bind(m_RecvSocket, (SOCKADDR*)&m_RecvAddr, sizeof(m_RecvAddr));
 	if (retval == SOCKET_ERROR)
 	{
-		I_Debug.Print("[%s]", "Error!!!!!");
+		I_Debug.Print(const_cast<char*>("[%s]"), "Error!!!!!");
 		return false;
 	}
 
@@ -25,7 +25,7 @@ bool TUdpSocket::Init()
 	retval = setsockopt(m_Socket, SOL_SOCKET, SO_BROADCAST, (char*)&bEnable, sizeof(bEnable));
 	if (retval == SOCKET_ERROR)
 	{
-		I_Debug.Print("[%s]", "Error!!!!!");
+		I_Debug.Print(const_cast<char*>("[%s]"), "Error!!!!!");
 		return false;
 	}
 
@@ -55,7 +55,7 @@ bool TUdpSocket::Run()
 			break;
 
 		buf[retval] = 0;
-		I_Debug.Print("[RECV]IP=%s, PORT=%d, %s", inet_ntoa(PeerAddr.sin_addr), ntohs(PeerAddr.sin_port), buf);
+		I_Debug.Print(const_cast<char*>("[RECV]IP=%s, PORT=%d, %s"), inet_ntoa(PeerAddr.sin_addr), ntohs(PeerAddr.sin_port), buf);
 		Sleep(1000);
 	}
 	closesocket(m_Socket);

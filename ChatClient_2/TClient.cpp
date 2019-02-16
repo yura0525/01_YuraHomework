@@ -4,7 +4,7 @@
 
 unsigned __stdcall sendMessage(LPVOID arg)
 {
-	I_Debug.Print("%s", "send 스레드 시작");
+	I_Debug.Print(const_cast<char*>("%s"), "send 스레드 시작");
 	
 	TClient* pClient = (TClient*)arg;
 
@@ -30,7 +30,7 @@ unsigned __stdcall sendMessage(LPVOID arg)
 
 unsigned __stdcall receiveMessage(LPVOID arg)
 {
-	I_Debug.Print("%s", "receive 스레드 시작");
+	I_Debug.Print(const_cast<char*>("%s"), "receive 스레드 시작");
 	TClient* pClient = (TClient*)arg;
 
 	SOCKET iSocket = pClient->m_iSocket;
@@ -96,7 +96,7 @@ bool TClient::Frame()
 {
 	if (m_bExit)
 	{
-		I_Debug.Print("%s", "서버가 종료되었습니다.");
+		I_Debug.Print(const_cast<char*>("%s"), "서버가 종료되었습니다.");
 		m_bExit = false;
 	}
 	return true;
@@ -160,19 +160,19 @@ int	 TClient::CreateConnectSocket(int iPort)
 		(char*)&socketType1, &typeLen1);
 
 	if (socketType1 == SOCK_STREAM)
-		I_Debug.Print("%s", "SOCK_STREAM.");
+		I_Debug.Print(const_cast<char*>("%s"), "SOCK_STREAM.");
 	else
-		I_Debug.Print("%s", "SOCK_DGRAM");
+		I_Debug.Print(const_cast<char*>("%s"), "SOCK_DGRAM");
 
 	getsockopt(m_iSocket, SOL_SOCKET,
 		SO_SNDBUF,
 		(char*)&socketType1, &typeLen1);
-	I_Debug.Print("%s=%d", "SO_SNDBUF", socketType1);
+	I_Debug.Print(const_cast<char*>("%s=%d"), "SO_SNDBUF", socketType1);
 
 	getsockopt(m_iSocket, SOL_SOCKET,
 		SO_RCVBUF,
 		(char*)&socketType1, &typeLen1);
-	I_Debug.Print("%s=%d", "SO_RCVBUF", socketType1);
+	I_Debug.Print(const_cast<char*>("%s=%d"), "SO_RCVBUF", socketType1);
 
 	//////////////////////////////////////// 주의 /////////////////////////////////
 	//비동기 소켓의 경우에 스레드의 루틴이 무한 반복될 수 있기 때문에 
@@ -266,13 +266,13 @@ int	 TClient::ProcessPacket()
 			break;
 			case PACKET_CHAT_NAME_REQ:
 			{
-				I_Debug.Print("%s", pPacket->msg);
+				I_Debug.Print(const_cast<char*>("%s"), pPacket->msg);
 
 			}
 			break;
 			case PACKET_CHAT_MSG:
 			{
-				I_Debug.Print("%s", pPacket->msg);
+				I_Debug.Print(const_cast<char*>("%s"), pPacket->msg);
 			}
 			break;
 			}

@@ -39,11 +39,11 @@ bool TUdpSocket_1::Run()
 		retval = recvfrom(m_Socket, buf, 2048, 0, (SOCKADDR*)&PeerAddr, &addrlen);
 		if (retval == SOCKET_ERROR)
 		{
-			I_Debug.Print("[%s]", "Error!!!!!");
+			I_Debug.Print(const_cast<char*>("[%s]", "Error!!!!!"));
 			break;
 		}
 
-		I_Debug.Print("\n[RECV]IP=%s, PORT=%d, %s\n",
+		I_Debug.Print(const_cast<char*>("\n[RECV]IP=%s, PORT=%d, %s\n"),
 			inet_ntoa(PeerAddr.sin_addr),
 			ntohs(PeerAddr.sin_port), buf);
 
@@ -53,10 +53,10 @@ bool TUdpSocket_1::Run()
 		if (retval == SOCKET_ERROR)
 		{
 			I_Debug.T_ERROR(true);
-			I_Debug.Print("[%s]", "Error!!!!!");
+			I_Debug.Print(const_cast<char*>("[%s]"), "Error!!!!!");
 			break;
 		}
-		I_Debug.Print("[SEND]IP=%s, PORT=%d, %s\n",
+		I_Debug.Print(const_cast<char*>("[SEND]IP=%s, PORT=%d, %s\n"),
 			inet_ntoa(PeerAddr.sin_addr),
 			ntohs(PeerAddr.sin_port), buf);
 	}

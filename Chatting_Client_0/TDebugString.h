@@ -12,7 +12,7 @@ public:
 	HWND				m_hButton;
 public:
 	void				DisplayText(char* fmt, ...);
-	void				Print(char* fmt, ...);
+	void				Print(const char* fmt, ...);
 
 	TCHAR*				GetMbtoWcs(const char* srcmsg);
 	char*				GetWcstoMbs(WCHAR* srcmsg);

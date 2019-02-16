@@ -1,7 +1,7 @@
 #include "TDebugString.h"
 #include "TSynchronize.h"
 
-void TDebugString::Print(const char* fmt, ...)
+void TDebugString::Print(char* fmt, ...)
 {
 	if (m_hList == NULL)
 		return;
