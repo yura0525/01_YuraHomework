@@ -56,7 +56,7 @@ bool	Sample::Init()
 	/*서버의 주소 정보를 저장할 구조체 serverAddress 선언*/
 	sockaddr_in serverAddress;
 	memset(&serverAddress, 0, sizeof(serverAddress));
-	serverAddress.sin_addr.s_addr = inet_addr("127.0.0.1");
+	serverAddress.sin_addr.s_addr = inet_addr("192.168.0.2");
 	serverAddress.sin_family = AF_INET;
 	serverAddress.sin_port = htons(PORT);
 

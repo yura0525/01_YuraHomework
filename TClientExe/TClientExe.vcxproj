@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{637B9797-A055-48B3-9E51-0FC4C0ADEF95}</ProjectGuid>
+    <ProjectGuid>{D36E47A4-DBA3-4E7C-84C0-B49F3C38BB71}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>ChattingServer0</RootNamespace>
+    <RootNamespace>TClientExe</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>../output/Chatting_Server_0/</OutDir>
-    <IntDir>../output/Chatting_Server_0/</IntDir>
+    <OutDir>../output/TClientExe/</OutDir>
+    <IntDir>../output/TClientExe/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -91,13 +91,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../data/include_Server;../data/include_3D;../data/dx/Include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../data/include_3D;../data/dx/Include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>xCoreLib_3D.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../data/lib;../data/dx/Lib/x64;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>TBasisServer.lib;xCoreLib_3D.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -148,14 +148,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Sample_1.h" />
-    <ClInclude Include="TAcceptor_1.h" />
-    <ClInclude Include="TThread_1.h" />
+    <ClInclude Include="Sample_2.h" />
+    <ClInclude Include="TDebugString_1.h" />
+    <ClInclude Include="TProtocol.h" />
+    <ClInclude Include="TServerStd.h" />
+    <ClInclude Include="TStreamPacket_2.h" />
+    <ClInclude Include="TThread_2.h" />
+    <ClInclude Include="TUdpSocket_2.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sample_1.cpp" />
-    <ClCompile Include="TAcceptor_1.cpp" />
-    <ClCompile Include="TThread_1.cpp" />
+    <ClCompile Include="Sample_2.cpp" />
+    <ClCompile Include="TDebugString_1.cpp" />
+    <ClCompile Include="TStreamPacket_2.cpp" />
+    <ClCompile Include="TThread_2.cpp" />
+    <ClCompile Include="TUdpSocket_2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

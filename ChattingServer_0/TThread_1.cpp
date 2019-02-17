@@ -26,5 +26,9 @@ TThread_1::TThread_1() : m_bStarted(false)
 
 TThread_1::~TThread_1()
 {
-	CloseHandle((HANDLE)m_hThread);
+	if (m_hThread != NULL)
+	{
+		CloseHandle((HANDLE)m_hThread);
+		m_hThread = NULL;
+	}
 }
