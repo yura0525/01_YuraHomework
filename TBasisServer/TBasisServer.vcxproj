@@ -100,7 +100,7 @@
     </Link>
     <PostBuildEvent>
       <Command>copy "*.h" "../data/include_Server"
-copy "TBasisServer.lib" "../data/lib"</Command>
+copy "*.lib" "../data/lib"</Command>
     </PostBuildEvent>
     <Lib>
       <OutputFile>TBasisServer.lib</OutputFile>

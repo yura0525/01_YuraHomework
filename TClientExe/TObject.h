@@ -1,4 +1,5 @@
 #pragma once
+#include "TBasisStd.h"
 #include "TImage.h"
 
 class TObject
@@ -9,8 +10,8 @@ public:
 	TImage*		m_phMask;
 	TImage*		m_hBackScreen;
 
-	TCHAR_STRING	m_strColor;
-	TCHAR_STRING	m_strMask;
+	T_STR	m_strColor;
+	T_STR	m_strMask;
 	RECT			m_rtCollision;
 
 	RECT			m_rtLeftAnim[3];
@@ -31,8 +32,8 @@ public:
 		m_dwMaskID = dwMaskID;
 	}
 	void			SetBackScreen(TImage*		pBackScreen,
-		TCHAR_STRING color,
-		TCHAR_STRING mask)
+									T_STR color,
+									T_STR mask)
 	{
 		m_hBackScreen = pBackScreen;
 		m_strColor = color;

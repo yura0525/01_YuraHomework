@@ -1,30 +1,169 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "Sample_2.h"
+#include "TBasisSys.h"
+#include "TInput.h"
+#include "TSound.h"
+#include "TObjectMgr.h"
+#include "TDebugString_1.h"
 
 bool Sample_2::Init()
 {
 	TCore::Init();
+	I_ObjectMgr.m_iWidth = m_iWidth;
+	I_ObjectMgr.m_iHeight = m_iHeight;
+	I_ObjectMgr.m_rtClient = m_rtClient;
+
+	I_DebugStr.Init();
+	m_bLogin = true;
+	m_Client.Init();
+	I_ObjectMgr.Init();
+
+	I_GameUser.Init();
+
+	m_Udp.Init();
 	return true;
 }
 bool Sample_2::PreRender()
 {
+	RECT rt;
+	SetRect(&rt, 0, 0, m_iWidth, m_iHeight);
+	FillRect(I_ObjectMgr.m_hBackScreen.hDC, &rt, (HBRUSH)GetStockObject(WHITE_BRUSH));
 	return true;
 }
 bool Sample_2::Render()
 {
-	return true;
+	if (m_bLogin == false) return true;
+	if (PreRender())
+	{
+		I_ObjectMgr.m_ObjMap_A.RenderMap();
+		I_GameUser.Render();
+		for (int iObj = 0; iObj < m_UserList.size(); iObj++)
+		{
+			m_UserList[iObj].Render();
+		}
+	}
+	return PostRender();
 }
 bool Sample_2::PostRender()
 {
+	HFONT font, oldfont;
+	SetBkMode(I_ObjectMgr.m_hBackScreen.hDC, TRANSPARENT);
+	font = CreateFont(12, 0, 0, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±Ã¼­");
+	oldfont = (HFONT)SelectObject(I_ObjectMgr.m_hBackScreen.hDC, font);
+
+	TextOut(I_ObjectMgr.m_hBackScreen.hDC, 0, 0, m_Time.m_strBuffer, lstrlen(m_Time.m_strBuffer));
+
+	TCHAR  strBuffer[256] = { 0, };
+	_stprintf(strBuffer, _T(" PosX:%d, PosY:%d "),
+		m_CursorPos.x, m_CursorPos.y);
+
+	TextOut(I_ObjectMgr.m_hBackScreen.hDC, 0, 50, strBuffer, lstrlen(strBuffer));
+
+	// Msg
+	EnterCriticalSection(&I_DebugStr.m_CS);
+	std::list<T_STR>::iterator	iter;
+	int iHeightStep = 0;
+	for (iter = I_DebugStr.m_Msg.begin();
+		iter != I_DebugStr.m_Msg.end();
+		iter++)
+	{
+		ZeroMemory(strBuffer, sizeof(strBuffer));
+		T_STR pMsg = (T_STR)(*iter);
+		_stprintf(strBuffer, _T("%s"), pMsg.c_str());
+		TextOut(I_ObjectMgr.m_hBackScreen.hDC, 0, 500 + iHeightStep, strBuffer, pMsg.size());
+		iHeightStep += 15;
+	}
+	LeaveCriticalSection(&I_DebugStr.m_CS);
+
+
+	SelectObject(I_ObjectMgr.m_hBackScreen.hDC, oldfont);
+	DeleteObject(font);
+
+	HDC hScreenDC = GetDC(g_hWnd);
+	BitBlt(hScreenDC, 0, 0, 800, 600,
+		I_ObjectMgr.m_hBackScreen.hDC, 0, 0, SRCCOPY);
+	ReleaseDC(g_hWnd, hScreenDC);
 	return true;
 }
 bool Sample_2::Frame()
 {
 	TCore::Frame();
+	if (m_bLogin == false) return true;
+	m_Client.Frame();
+	GetCursorPos(&m_CursorPos);
+	ScreenToClient(g_hWnd, &m_CursorPos);
+
+	if (I_Input.KeyCheck(VK_LEFT) == KEY_PUSH)
+	{
+		TPACKET_USER_POSITION userdata;
+		userdata.direction = VK_LEFT;
+		userdata.posX = I_GameUser.m_fPosX;
+		userdata.posY = I_GameUser.m_fPosY;
+		userdata.user_idx = m_iSerIndex;
+		char buffer[256] = { 0, };
+		int iSize = sizeof(userdata);
+		memcpy(buffer, &userdata, iSize);
+		m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
+			PACKET_USER_POSITION);
+	}
+	if (I_Input.KeyCheck(VK_RIGHT) == KEY_PUSH)
+	{
+		TPACKET_USER_POSITION userdata;
+		userdata.direction = VK_RIGHT;
+		userdata.posX = I_GameUser.m_fPosX;
+		userdata.posY = I_GameUser.m_fPosY;
+		userdata.user_idx = m_iSerIndex;
+		char buffer[256] = { 0, };
+		int iSize = sizeof(userdata);
+		memcpy(buffer, &userdata, iSize);
+		m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
+			PACKET_USER_POSITION);
+	}
+	if (I_Input.KeyCheck(VK_UP) == KEY_PUSH)
+	{
+		TPACKET_USER_POSITION userdata;
+		userdata.direction = VK_UP;
+		userdata.posX = I_GameUser.m_fPosX;
+		userdata.posY = I_GameUser.m_fPosY;
+		userdata.user_idx = m_iSerIndex;
+		char buffer[256] = { 0, };
+		int iSize = sizeof(userdata);
+		memcpy(buffer, &userdata, iSize);
+		m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
+			PACKET_USER_POSITION);
+	}
+	if (I_Input.KeyCheck(VK_DOWN) == KEY_PUSH)
+	{
+		TPACKET_USER_POSITION userdata;
+		userdata.direction = VK_DOWN;
+		userdata.posX = I_GameUser.m_fPosX;
+		userdata.posY = I_GameUser.m_fPosY;
+		userdata.user_idx = m_iSerIndex;
+		char buffer[256] = { 0, };
+		int iSize = sizeof(userdata);
+		memcpy(buffer, &userdata, iSize);
+		m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
+			PACKET_USER_POSITION);
+	}
+
+	I_GameUser.Frame();
+	for (int iObj = 0; iObj < m_UserList.size(); iObj++)
+	{
+		m_UserList[iObj].Frame();
+	}
+
+	Sleep(30);
 	return true;
 }
 bool Sample_2::Release()
 {
 	TCore::Release();
+	I_DebugStr.Release();
+	m_Client.m_bExit = true;
+	I_GameUser.Release();
+	I_ObjectMgr.Release();
+	m_Client.Release();
+	m_Udp.Release();
 	return true;
 }
 
@@ -45,6 +184,6 @@ INT WINAPI wWinMain(HINSTANCE hInst,
 	INT nShow)
 {
 	Sample_2 sWin;
-	sWin.SetWindow(hInst, L"SampleObject_0", 800, 600);
+	sWin.SetWindow(hInst, 800, 600, L"SampleObject_0");
 	return 0;
 }

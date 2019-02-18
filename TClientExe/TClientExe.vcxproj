@@ -96,7 +96,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>xCoreLib_3D.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>TBasis2D.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../data/lib;../data/fmod/lib;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -149,20 +149,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Sample_2.h" />
+    <ClInclude Include="TClient_1.h" />
     <ClInclude Include="TDebugString_1.h" />
     <ClInclude Include="TGameUser.h" />
     <ClInclude Include="TObject.h" />
+    <ClInclude Include="TObjectMgr.h" />
     <ClInclude Include="TProtocol.h" />
-    <ClInclude Include="TServerStd.h" />
     <ClInclude Include="TStreamPacket_2.h" />
     <ClInclude Include="TThread_2.h" />
     <ClInclude Include="TUdpSocket_2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample_2.cpp" />
+    <ClCompile Include="TClient_1.cpp" />
     <ClCompile Include="TDebugString_1.cpp" />
     <ClCompile Include="TGameUser.cpp" />
     <ClCompile Include="TObject.cpp" />
+    <ClCompile Include="TObjectMgr.cpp" />
     <ClCompile Include="TStreamPacket_2.cpp" />
     <ClCompile Include="TThread_2.cpp" />
     <ClCompile Include="TUdpSocket_2.cpp" />

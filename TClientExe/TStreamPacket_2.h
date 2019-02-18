@@ -1,6 +1,5 @@
 #pragma once
-#include "TServerStd.h"
-#include <process.h>
+#include "TBasisStd.h"
 #include "TProtocol.h"
 
 class TStreamPacket_2

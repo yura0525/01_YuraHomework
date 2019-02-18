@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "TUdpSocket_2.h"
 #include "TDebugString_1.h"
 

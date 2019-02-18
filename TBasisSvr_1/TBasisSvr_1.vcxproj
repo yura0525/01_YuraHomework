@@ -23,7 +23,7 @@
     <ProjectGuid>{4325E118-8CBA-40EE-BF63-B4F0835B5F6F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>TBasisSvr1</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -96,6 +96,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
     </Link>
+    <Lib>
+      <OutputFile>TBasisSvr.lib</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy "*.h" "../data/include_TBasisSvr"
+copy "*.lib" "../data/lib"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -145,6 +152,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="TAcceptor_2.h" />
+    <ClInclude Include="TDebugString_2.h" />
+    <ClInclude Include="TProtocol.h" />
+    <ClInclude Include="TServerIOCP_1.h" />
+    <ClInclude Include="TServerObj_1.h" />
+    <ClInclude Include="TServerStd.h" />
+    <ClInclude Include="TServer_1.h" />
+    <ClInclude Include="TStreamPacket_3.h" />
+    <ClInclude Include="TSynchronize_1.h" />
+    <ClInclude Include="TThread_3.h" />
+    <ClInclude Include="TWorkThread_1.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="TAcceptor_2.cpp" />
+    <ClCompile Include="TDebugString_2.cpp" />
+    <ClCompile Include="TServerIOCP_1.cpp" />
+    <ClCompile Include="TServerObj_1.cpp" />
+    <ClCompile Include="TServer_1.cpp" />
+    <ClCompile Include="TStreamPacket_3.cpp" />
+    <ClCompile Include="TSynchronize_1.cpp" />
+    <ClCompile Include="TThread_3.cpp" />
+    <ClCompile Include="TWorkThread_1.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

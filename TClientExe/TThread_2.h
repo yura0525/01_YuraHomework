@@ -1,6 +1,5 @@
 #pragma once
-#include <process.h>
-#include "TServerStd.h"
+#include "TBasisStd.h"
 
 class TThread_2
 {

@@ -1,7 +1,6 @@
 #pragma once
-#include "TServerStd.h"
+#include "TBasisStd.h"
 #include "TThread_2.h"
-#include <ws2tcpip.h>
 
 class TUdpSocket_2 : public TThread_2
 {

@@ -14,6 +14,7 @@ enum KeyState{
 	KEY_UP,
 	KEY_HOLD,
 };
+
 class TInput : public TSingleton<TInput>
 {
 private:
