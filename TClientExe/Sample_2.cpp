@@ -2,7 +2,7 @@
 
 bool Sample_2::Init()
 {
-	xCore::Init();
+	TCore::Init();
 	return true;
 }
 bool Sample_2::PreRender()
@@ -19,12 +19,12 @@ bool Sample_2::PostRender()
 }
 bool Sample_2::Frame()
 {
-	xCore::Frame();
+	TCore::Frame();
 	return true;
 }
 bool Sample_2::Release()
 {
-	xCore::Release();
+	TCore::Release();
 	return true;
 }
 

@@ -7,7 +7,6 @@
 #include <WinSock2.h>
 #include <tchar.h>
 #include <vector>
-#include "xStd.h"
 
 using namespace std;
 #pragma comment( lib, "ws2_32.lib")

@@ -1,8 +1,19 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS
 #include "TServerStd.h"
+#include <list>
 
 typedef basic_string<TCHAR> T_STR;
+
+template<class T> class TSingleton
+{
+public:
+	static T& GetInstance()
+	{
+		static T theSingleInstance;
+		return theSingleInstance;
+	}
+};
 
 class TDebugString_1 : public TSingleton<TDebugString_1>
 {
