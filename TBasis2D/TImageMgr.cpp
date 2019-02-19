@@ -42,7 +42,7 @@ bool TImageMgr::Release()
 	}
 	return true;
 }
-int TImageMgr::Load( HWND hWnd, HDC hdc, TCHAR_STRING pFileName  ) 
+int TImageMgr::Load( HWND hWnd, HDC hdc, T_STR pFileName  )
 {
 	// 중복제거
 	TCHAR szFileName[MAX_PATH] = {0,};

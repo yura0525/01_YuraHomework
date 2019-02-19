@@ -1,95 +1,93 @@
 #pragma once
-#include "TServerObj_1.h"
-#include "TProtocol.h"
-#include "TStreamPacket_3.h"
-#include "TAcceptor_2.h"
-#include "TDebugString_2.h"
+#include "TUser.h"
 
-// 어떤 메세지인지 구분해야 한다. ( 필요성 )
-// 프로토콜 생성
-typedef struct _OVERLAPPED2 : OVERLAPPED
-{
-	enum
-	{
-		MODE_RECV = 0,
-		MODE_SEND = 1
-	};
-	int		m_iFlags;
-	_OVERLAPPED2()
-	{
-		m_iFlags = MODE_RECV;
-	}
-}OVERLAPPED2;
-
-struct TUser
-{
-	OVERLAPPED2		m_ov;
-	int				m_iEvent;	 // 이벤트 배열의 인덱스
-	string			m_Name;
-	SOCKET			m_Socket;
-	WSABUF			m_wsaBuffer;
-	char			m_strBuffer[2048];
-	TStreamPacket_3	m_StreamPacket;
-	bool			m_bUsed;
-	void			Dispatch(DWORD dwByteSize, LPOVERLAPPED ov)
-	{
-		OVERLAPPED2* pOV = (OVERLAPPED2*)ov;
-		if (dwByteSize == 0)
-			return;
-		// send
-		// recv
-		// 패킷처리
-		if (pOV->m_iFlags == OVERLAPPED2::MODE_RECV)
-		{
-			m_StreamPacket.Put(m_wsaBuffer.buf, dwByteSize, this);
-			WaitForPacketReceive();
-		}
-	}
-	void WaitForPacketReceive()
-	{
-		int iRet = 0;
-		DWORD cbTransferred, flags = 0;
-		m_ov.m_iFlags = OVERLAPPED2::MODE_RECV;
-		m_wsaBuffer.buf = m_strBuffer;
-		m_wsaBuffer.len = 2048;
-		iRet = WSARecv(m_Socket, &(m_wsaBuffer), 1, &cbTransferred, &flags, (LPOVERLAPPED)&m_ov, NULL);
-		if (iRet == SOCKET_ERROR)
-		{
-			if (WSAGetLastError() != WSA_IO_PENDING)
-			{
-				I_DebugStr.T_ERROR();
-			}
-		}
-	}
-};
-
-class TServer_1 : public TSingleton<TServer_1>//, public TThread
+class TServer_1 : public TSingleton<TServer_1>
 {
 private:
 	friend class TSingleton<TServer_1>;
 
 public:
+	HANDLE				m_Mutex;
+	TAcceptor_2			m_Acceptor;
+	TNpcManager			m_NPCMgr;
 	TStreamPacket_3		m_StreamPacket;
-	std::list<TUser*>	m_UserList;
-	typedef std::list<TUser*>::iterator m_ListItor;
+
+	std::map<tGUID, TUser*, GUIDComparer> m_UserList;
+	typedef std::map<tGUID, TUser*, GUIDComparer>::iterator m_ListItor;
+	
+	typedef void(TServer_1::*CallFunction)(T_PACKET& t);
+	std::map<int, CallFunction>					m_fnExecutePacket;
+public:
+	virtual bool	Init();
+	virtual bool	Frame();
+	virtual bool	Render();
+	virtual bool	Release();
 
 public:
-	int					m_iClientNumber;
-	HANDLE				m_Mutex;
-	int					m_iEventCount;// 이벤트 배열의 개수
-	WSABUF				m_wsaBuffer;
+	virtual void	ProcessPacket();
+	virtual void	AddPacket(T_PACKET& pack);
+	virtual int		SendPacket(TUser* pUser, UPACKET& PacketMsg);
+	void			SendPacket(TUser* pUser, int iSendByte);
+	virtual void	Broadcast(T_PACKET& pSendUser);
+	virtual void	Broadcast(UPACKET& pSendUser);
+	void			Broadcast(stringstream& SendStream);
 public:
-	TAcceptor_2			m_Acceptor;
+	virtual TUser*	GetUser(int iIndex);
+	virtual bool	DelUser(int iIndex);
 public:
-	bool				Init();
-	bool				Frame();
-	bool				Render();
-	bool				Release();
-	void				ProcessPacket();
+	virtual void		MoveAction(T_PACKET& pSendUser);
+	virtual void		Msg(T_PACKET& pSendUser);
+	virtual void		AckChatName(T_PACKET& pSendUser);
+	virtual void		ReqChatName(T_PACKET& pSendUser);
+	virtual void		CreateAccount(T_PACKET& pSendUser);
+	virtual void		DeleteAccount(T_PACKET& pSendUser);
+	virtual void		Login(T_PACKET& pSendUser);
+	virtual void		Logout(T_PACKET& pSendUser);
+	virtual void		CreateCharacter(T_PACKET& pSendUser);
+	virtual void		DeleteCharacter(T_PACKET& pSendUser);
+	virtual void		HitCharacter(T_PACKET& pSendUser);
+	virtual void		HitMonster(T_PACKET& pSendUser);
+
+	virtual void		AttackCharacter(T_PACKET& pSendUser);
+	virtual void		AttackMonster(T_PACKET& pSendUser);
+	virtual void		DeadCharacters(T_PACKET& pSendUser);
+	virtual void		DeadMonster(T_PACKET& pSendUser);
+	virtual void		DamageCharacter(T_PACKET& pSendUser);
+	virtual void		DamageMonster(T_PACKET& pSendUser);
+	virtual void		SpawnCharacters(T_PACKET& pSendUser);
+	virtual void		SpawnMonster(T_PACKET& pSendUser);
+	virtual void		SyncCharacters(T_PACKET& pSendUser);
+	virtual void		SyncMonster(T_PACKET& pSendUser);
 public:
-	TUser*				GetUser(int iIndex);
-	bool				DelUser(int iIndex);
+	friend ostream& operator<<(ostream& stream, TServer_1& info)
+	{
+		stream << info.m_UserList.size() << endl;
+		for (auto& user : info.m_UserList)
+		{
+			stream << user.first << endl;
+			stream << *user.second << endl;
+		}
+		return stream;
+	}
+	friend istream& operator>>(istream& stream, TServer_1& info)
+	{
+		int iNumUsers = 0;
+		tGUID guid;
+		TUser* pUser = NULL;
+		SAFE_NEW(pUser, TUser);
+		info.m_UserList.clear();
+
+		stream >> iNumUsers;
+		for (int i = 0; i < iNumUsers; i++)
+		{
+			stream >> guid;
+			stream >> *pUser;
+			info.m_UserList[guid] = pUser;
+		}
+		return stream;
+	}
 public:
+
 	TServer_1();
 	~TServer_1();
 };

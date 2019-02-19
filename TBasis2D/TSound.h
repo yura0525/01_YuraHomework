@@ -18,7 +18,7 @@ public:
 	FMOD::Channel*	m_pChannel;// 사운드의 실행 통로
 	TCHAR			m_strBuffer[MAX_PATH];
 	float			m_fVolume;
-	TCHAR_STRING	m_strName;
+	T_STR	m_strName;
 	int				m_iIndex;
 public:
 	bool Init();

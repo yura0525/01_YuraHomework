@@ -7,13 +7,13 @@ public:
 	HBITMAP			hBitmap;
 	HBITMAP			hOldBitmap;
 	int				m_iIndex;
-	TCHAR_STRING	m_strName;
+	T_STR	m_strName;
 public:
 	bool	Init();
 	bool	Frame();
 	bool	Render();
 	bool	Release();	
-	bool	Load( HWND hWnd, HDC hdc, TCHAR_STRING name );
+	bool	Load( HWND hWnd, HDC hdc, T_STR name );
 	bool	InitImage( HWND hWnd, HDC hdc, UINT id );
 	bool	InitImage(  HWND hWnd, HDC hdc, int x, int y );
 	

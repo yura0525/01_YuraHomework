@@ -1,9 +1,24 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "TDebugString_2.h"
 #include "TSynchronize_1.h"
 
 void	TDebugString_2::DisplayText(char* fmt, ...)
 {
-
+	{
+		TSynchronize_1 sync(this);
+		va_list arg;
+		va_start(arg, fmt);
+		char buf[1024 + 256] = { 0, };
+		vsprintf(buf, fmt, arg);
+		int nLen = GetWindowTextLength(m_hEdit);
+		if (nLen > 3000)
+		{
+			SendMessage(m_hEdit, EM_SETSEL, 0, -1);
+			SendMessage(m_hEdit, WM_CLEAR, 0, 0);
+		}
+		SendMessage(m_hEdit, EM_REPLACESEL, FALSE, (LPARAM)GetMbtoWcs(buf));
+		va_end(arg);
+	}
 }
 TCHAR*	TDebugString_2::GetMbtoWcs(const char* srcmsg)
 {
@@ -14,9 +29,9 @@ TCHAR*	TDebugString_2::GetMbtoWcs(const char* srcmsg)
 }
 char*	TDebugString_2::GetWcstoMbs(WCHAR* srcmsg)
 {
-	// 멀티바이트 => 유니코드 변환.
+	// 유니코드 => 멀티바이트 변환.
 	char msg[1024] = { 0, };
-	ConvertAnsiStringToWideCh(srcmsg, msg, 1024);
+	ConvertWideStringToAnsiCh(msg, srcmsg, 1024);
 	return msg;
 }
 HRESULT	TDebugString_2::ConvertAnsiStringToWideCh(WCHAR* wstrDestination, const CHAR* strSource, int cchDestChar)

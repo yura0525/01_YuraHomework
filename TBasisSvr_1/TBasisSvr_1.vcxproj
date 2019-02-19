@@ -153,7 +153,9 @@ copy "*.lib" "../data/lib"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="TAcceptor_2.h" />
+    <ClInclude Include="TCharacter.h" />
     <ClInclude Include="TDebugString_2.h" />
+    <ClInclude Include="TNpc.h" />
     <ClInclude Include="TProtocol.h" />
     <ClInclude Include="TServerIOCP_1.h" />
     <ClInclude Include="TServerObj_1.h" />
@@ -162,17 +164,21 @@ copy "*.lib" "../data/lib"</Command>
     <ClInclude Include="TStreamPacket_3.h" />
     <ClInclude Include="TSynchronize_1.h" />
     <ClInclude Include="TThread_3.h" />
+    <ClInclude Include="TUser.h" />
     <ClInclude Include="TWorkThread_1.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TAcceptor_2.cpp" />
+    <ClCompile Include="TCharacter.cpp" />
     <ClCompile Include="TDebugString_2.cpp" />
+    <ClCompile Include="TNpc.cpp" />
     <ClCompile Include="TServerIOCP_1.cpp" />
     <ClCompile Include="TServerObj_1.cpp" />
     <ClCompile Include="TServer_1.cpp" />
     <ClCompile Include="TStreamPacket_3.cpp" />
     <ClCompile Include="TSynchronize_1.cpp" />
     <ClCompile Include="TThread_3.cpp" />
+    <ClCompile Include="TUser.cpp" />
     <ClCompile Include="TWorkThread_1.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -14,7 +14,7 @@ public:
 	bool		Frame();
 	bool		Render();
 	bool		Release();
-	int			Load( HWND hWnd, HDC hdc, TCHAR_STRING name  ); // 사운드 추가
+	int			Load( HWND hWnd, HDC hdc, T_STR name  ); // 사운드 추가
 	TImage*		GetPtr( int iIndex );
 public:
 	bool	InitImage( TImage* pImage, HWND hWnd, HDC hdc, UINT id );

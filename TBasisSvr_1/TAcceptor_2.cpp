@@ -33,13 +33,14 @@ bool TAcceptor_2::Run()
 
 			I_ServerIOCP.AddHandleToIOCP((HANDLE)client_sock, (ULONG_PTR)pUser);
 
-			WSAEVENT hEvent = WSACreateEvent();
 			ZeroMemory(&(pUser->m_ov), sizeof(pUser->m_ov));
 			pUser->m_ov.m_iFlags = OVERLAPPED2::MODE_SEND;
-			pUser->m_ov.hEvent = hEvent;
 			pUser->m_iEvent = pUser->m_Socket;
-			I_Server.m_iClientNumber++;
-			I_Server.m_UserList.push_back(pUser);
+
+			tGUID uuid;
+			RPC_STATUS ret_val = ::UuidCreate(&uuid);
+			pUser->m_Guid = uuid;
+			I_Server.m_UserList.insert(make_pair(uuid, pUser));
 
 			// 환영메세지
 			UPACKET sendmsg;

@@ -33,7 +33,7 @@ HBITMAP TImage::GetRotatedBitmap(float fAngle, int iSizeWidth, int iSizeHeight, 
 	DeleteObject( m_hRotationDC );
 	return hbmResult;
 }
-bool TImage::Load( HWND hWnd, HDC hdc, TCHAR_STRING name )
+bool TImage::Load( HWND hWnd, HDC hdc, T_STR name )
 {
 	hDC = CreateCompatibleDC( hdc );
 	hBitmap = (HBITMAP)LoadImage(

@@ -48,6 +48,15 @@
     <ClInclude Include="TServer_1.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="TUser.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TCharacter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TNpc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TServerObj_1.cpp">
@@ -75,6 +84,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="TServer_1.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TUser.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TCharacter.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TNpc.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

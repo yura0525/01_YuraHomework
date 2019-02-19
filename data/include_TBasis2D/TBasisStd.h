@@ -17,7 +17,7 @@ using namespace std;
 #pragma comment (lib, "winmm.lib")
 
 typedef vector<basic_string<TCHAR>> TCHAR_STRING_VECTOR;
-typedef basic_string<TCHAR>		TCHAR_STRING;
+typedef basic_string<TCHAR>		T_STR;
 typedef basic_string<CHAR>		C_STR;
 //typedef basic_string<wchar_t> W_STG;
 
