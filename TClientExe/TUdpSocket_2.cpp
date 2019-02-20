@@ -78,7 +78,7 @@ bool TUdpSocket_2::Run()
 		else
 		{
 			buf[retval] = 0;
-			I_DebugStr.DisplayText(const_cast<char*>("[MSG]:%s"), buf);
+			I_DebugStr.DisplayText(const_cast<char*>("\n[MSG]:%s"), buf);
 		}
 		Sleep(1000);
 	}

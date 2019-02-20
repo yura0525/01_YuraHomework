@@ -99,7 +99,7 @@ void	TDebugString_2::T_ERROR(bool bPrint)
 			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 			(char*)&lpMsgBuf, 0, NULL);
 		if (bPrint)
-			I_DebugStr.DisplayText(const_cast<char*>("ERROR WSASend:%s\r\n"), (char*)lpMsgBuf);
+			I_DebugStr.DisplayText(const_cast<char*>("\nERROR WSASend:%s\r\n"), (char*)lpMsgBuf);
 		else
 			OutputDebugStringA((char*)lpMsgBuf);
 		LocalFree(lpMsgBuf);

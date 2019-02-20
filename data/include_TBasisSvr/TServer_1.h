@@ -29,7 +29,7 @@ public:
 	virtual int		SendPacket(TUser* pUser, UPACKET& PacketMsg);
 	void			SendPacket(TUser* pUser, int iSendByte);
 	virtual void	Broadcast(T_PACKET& pSendUser);
-	virtual void	Broadcast(UPACKET& pSendUser);
+	virtual void	Broadcast(UPACKET& packet);
 	void			Broadcast(stringstream& SendStream);
 public:
 	virtual TUser*	GetUser(int iIndex);

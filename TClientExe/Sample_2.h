@@ -15,6 +15,11 @@ public:
 	bool					m_bLogin;
 	int						m_iSerIndex;
 	POINT					m_CursorPos;
+	int						m_iPlayState;
+	int						m_iValueW;
+	int						m_iValueS;
+	int						m_iValueD;
+	int						m_iValueA;
 
 public:
 	bool					Init();

@@ -23,7 +23,7 @@ bool TAcceptor_2::Run()
 		}
 		TCHAR buf[INET_ADDRSTRLEN], buf6[INET6_ADDRSTRLEN];
 		InetNtop(AF_INET, &clientaddr.sin_addr, buf, sizeof(buf));
-		I_DebugStr.DisplayText(const_cast<char*>("[IP:%s,PORT:%d]\r\n"), inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
+		I_DebugStr.DisplayText(const_cast<char*>("\n[IP:%s,PORT:%d]\r\n"), inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
 		//WaitForSingleObject( pServer->m_Mutex, INFINITE );
 		{
 			TSynchronize_1 sync(this);

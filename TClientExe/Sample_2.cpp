@@ -21,6 +21,10 @@ bool Sample_2::Init()
 	I_GameUser.Init();
 
 	m_Udp.Init();
+	m_iValueW = 0;
+	m_iValueS = 0;
+	m_iValueD = 0;
+	m_iValueA = 0;
 	return true;
 }
 bool Sample_2::PreRender()
@@ -54,8 +58,9 @@ bool Sample_2::PostRender()
 	TextOut(I_ObjectMgr.m_hBackScreen.hDC, 0, 0, m_Time.m_strBuffer, lstrlen(m_Time.m_strBuffer));
 
 	TCHAR  strBuffer[256] = { 0, };
-	_stprintf(strBuffer, _T(" PosX:%d, PosY:%d "),
-		m_CursorPos.x, m_CursorPos.y);
+	_stprintf(strBuffer, _T(" PosX:%d, PosY:%d : %d [%d] [%d] [%d] [%d]"),
+		m_CursorPos.x, m_CursorPos.y, m_iPlayState, m_iValueW, m_iValueS, m_iValueA, m_iValueD
+	);
 
 	TextOut(I_ObjectMgr.m_hBackScreen.hDC, 0, 50, strBuffer, lstrlen(strBuffer));
 
@@ -87,13 +92,13 @@ bool Sample_2::PostRender()
 }
 bool Sample_2::Frame()
 {
-	TCore::Frame();
+	//TCore::Frame();
 	if (m_bLogin == false) return true;
 	m_Client.Frame();
 	GetCursorPos(&m_CursorPos);
 	ScreenToClient(g_hWnd, &m_CursorPos);
 
-	if (I_Input.KeyCheck(VK_LEFT) == KEY_PUSH)
+	if (m_iPlayState != 0 && (I_Input.KeyCheck(VK_LEFT) == KEY_PUSH))
 	{
 		TPACKET_USER_POSITION userdata;
 		userdata.direction = VK_LEFT;
@@ -105,8 +110,10 @@ bool Sample_2::Frame()
 		memcpy(buffer, &userdata, iSize);
 		m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
 			PACKET_USER_POSITION);
+		m_iValueW++;
+		m_iPlayState = 0;
 	}
-	if (I_Input.KeyCheck(VK_RIGHT) == KEY_PUSH)
+	if (m_iPlayState != 1 && (I_Input.KeyCheck(VK_RIGHT) == KEY_PUSH))
 	{
 		TPACKET_USER_POSITION userdata;
 		userdata.direction = VK_RIGHT;
@@ -118,8 +125,10 @@ bool Sample_2::Frame()
 		memcpy(buffer, &userdata, iSize);
 		m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
 			PACKET_USER_POSITION);
+		m_iValueS++;
+		m_iPlayState = 1;
 	}
-	if (I_Input.KeyCheck(VK_UP) == KEY_PUSH)
+	if (m_iPlayState != 2 && (I_Input.KeyCheck(VK_UP) == KEY_PUSH))
 	{
 		TPACKET_USER_POSITION userdata;
 		userdata.direction = VK_UP;
@@ -131,8 +140,10 @@ bool Sample_2::Frame()
 		memcpy(buffer, &userdata, iSize);
 		m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
 			PACKET_USER_POSITION);
+		m_iValueA++;
+		m_iPlayState = 2;
 	}
-	if (I_Input.KeyCheck(VK_DOWN) == KEY_PUSH)
+	if (m_iPlayState != 3 && (I_Input.KeyCheck(VK_DOWN) == KEY_PUSH))
 	{
 		TPACKET_USER_POSITION userdata;
 		userdata.direction = VK_DOWN;
@@ -144,6 +155,8 @@ bool Sample_2::Frame()
 		memcpy(buffer, &userdata, iSize);
 		m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
 			PACKET_USER_POSITION);
+		m_iValueD++;
+		m_iPlayState = 3;
 	}
 
 	I_GameUser.Frame();

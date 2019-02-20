@@ -105,26 +105,61 @@ void	TServer_1::AddPacket(T_PACKET& pack)
 
 int	 TServer_1::SendPacket(TUser* pUser, UPACKET& PacketMsg)
 {
-	//TODO:해야함.
+	pUser->m_wsaBuffer.buf = (char*)&PacketMsg;
+	pUser->m_wsaBuffer.len = PacketMsg.ph.len;
+	pUser->m_ov.m_iFlags = OVERLAPPED2::MODE_SEND;
+	DWORD dwSendByte = PacketMsg.ph.len;
+
+	int iRet = WSASend(pUser->m_Socket, &pUser->m_wsaBuffer, 1, &dwSendByte, 0, (LPOVERLAPPED)&pUser->m_ov, NULL);
+	if (iRet == SOCKET_ERROR && WSAGetLastError() != WSA_IO_PENDING)
+	{
+		I_DebugStr.T_ERROR();
+		return 0;
+	}
 	return 1;
 }
 void TServer_1::SendPacket(TUser* pUser, int iSendByte)
 {
-//TODO:해야함.
+	pUser->m_wsaBuffer.buf = pUser->m_sendBuffer;
+	pUser->m_wsaBuffer.len = iSendByte;
+	pUser->m_ov.m_iFlags = OVERLAPPED2::MODE_SEND;
+	DWORD dwSendByte = iSendByte;
+
+	int iRet = WSASend(pUser->m_Socket, &(pUser->m_wsaBuffer), 1, &dwSendByte, 0, (LPOVERLAPPED)&pUser->m_ov, NULL);
+	if (iRet == SOCKET_ERROR && WSAGetLastError() != WSA_IO_PENDING)
+	{
+		I_DebugStr.T_ERROR();
+	}
 }
 void TServer_1::Broadcast(T_PACKET& pSendUser)
 {
-//TODO:해야함.
+	for (m_ListItor iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
+	{
+		TUser* pUser = (TUser*)iter->second;
+		if (pUser->m_Socket != pSendUser.pUser->m_Socket)
+		{
+			if (SendPacket(pUser, pSendUser.packet) <= 0)
+				continue;
+		}
+	}
 }
-void TServer_1::Broadcast(UPACKET& pSendUser)
+void TServer_1::Broadcast(UPACKET& packet)
 {
-//TODO:해야함.
+	for (m_ListItor iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
+	{
+		TUser* pUser = (TUser*)iter->second;
+		if (SendPacket(pUser, packet) <= 0)
+			continue;
+	}
 }
 void TServer_1::Broadcast(stringstream& SendStream)
 {
-//TODO:해야함.
+	for (auto user : m_UserList)
+	{
+		CopyMemory(user.second->m_sendBuffer, (CHAR*)SendStream.str().c_str(), SendStream.str().length());
+		SendPacket(user.second, SendStream.str().length());
+	}
 }
-
 
 TUser* TServer_1::GetUser(int iIndex)
 {
@@ -156,7 +191,7 @@ bool TServer_1::DelUser(int iIndex)
 		TUser* pUser = (TUser*)iter->second;
 		if (pUser->m_iEvent == iIndex)
 		{
-			I_DebugStr.DisplayText(const_cast<char*>("%s%s\r\n"), pUser->m_Name.c_str(), "님이 나가셨습니다.");
+			I_DebugStr.DisplayText(const_cast<char*>("\n%s%s\r\n"), pUser->m_Name.c_str(), "님이 나가셨습니다.");
 			closesocket(pUser->m_Socket);
 			m_UserList.erase(iter);
 			break;
@@ -172,7 +207,7 @@ void TServer_1::MoveAction(T_PACKET& pSendUser)
 	UPACKET* pPacket = &(pSendUser.packet);
 	TPACKET_USER_POSITION* pData = (TPACKET_USER_POSITION*)pPacket->msg;
 
-	I_DebugStr.DisplayText(const_cast<char*>("POS->%d:%d,%d:%d\r\n"), pData->user_idx, pData->direction,
+	I_DebugStr.DisplayText(const_cast<char*>("\nPOS->%d:%d,%d:%d\r\n"), pData->user_idx, pData->direction,
 		pData->posX, pData->posY);
 	m_ListItor iter;
 	for (iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
@@ -187,7 +222,7 @@ void TServer_1::MoveAction(T_PACKET& pSendUser)
 void TServer_1::Msg(T_PACKET& pSendUser)
 {
 	UPACKET* pPacket = &(pSendUser.packet);
-	I_DebugStr.DisplayText(const_cast<char*>("Message:%s\r\n"), pPacket->msg);
+	I_DebugStr.DisplayText(const_cast<char*>("\nMessage:%s\r\n"), pPacket->msg);
 	m_ListItor iter;
 	int iClientUser = I_Server.m_UserList.size();
 	for (iter = I_Server.m_UserList.begin();
@@ -222,7 +257,7 @@ void TServer_1::AckChatName(T_PACKET& pSendUser)
 	strcpy(&PacketMsg.msg[pPacket->ph.len - PACKET_HEADER_SIZE], buffer);
 	PacketMsg.ph.len += strlen(buffer);
 
-	I_DebugStr.DisplayText(const_cast<char*>("Message:%s\r\n"), PacketMsg.msg);
+	I_DebugStr.DisplayText(const_cast<char*>("\nMessage:%s\r\n"), PacketMsg.msg);
 
 	Broadcast(PacketMsg);
 }

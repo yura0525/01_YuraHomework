@@ -34,28 +34,28 @@ bool TGameUser::Release()
 void TGameUser::MoveLeft(int iUserID)
 {
 	float fPos = m_fPosX;
-	fPos -= 1;//10.0f * g_fSecPerFrame;
+	fPos -= 100.0f * g_fSecPerFrame;
 	if (fPos < 0) fPos = 0;
 	m_fPosX = fPos;
 }
 void TGameUser::MoveRight(int iUserID)
 {
 	float fPos = m_fPosX;
-	fPos += 1;//10.0f * g_fSecPerFrame;
+	fPos += 100.0f * g_fSecPerFrame;
 	if (fPos > 780) fPos = 780;
 	m_fPosX = fPos;
 }
 void TGameUser::MoveUp(int iUserID)
 {
 	float fPos = m_fPosY;
-	fPos -= 1;//10.0f * g_fSecPerFrame;
+	fPos -= 100.0f * g_fSecPerFrame;
 	if (fPos < 0) fPos = 0;
 	m_fPosY = fPos;
 }
 void TGameUser::MoveDown(int iUserID)
 {
 	float fPos = m_fPosY;
-	fPos += 1;//10.0f * g_fSecPerFrame;
+	fPos += 100.0f * g_fSecPerFrame;
 	if (fPos > 590) fPos = 590;
 	m_fPosY = fPos;
 }

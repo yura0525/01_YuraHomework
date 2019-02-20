@@ -23,7 +23,7 @@ void TStreamPacket_2::Put(char* recvBuffer, int iRecvSize)
 			UPACKET  addPacket = { 0, };
 			ZeroMemory(&addPacket, sizeof(UPACKET));
 			addPacket.ph = m_PacketData.ph;
-			memcpy(&addPacket.msg, &m_PacketData.msg, m_PacketData.ph.len - 4);
+			memcpy(&addPacket.msg, &m_PacketData.msg, m_PacketData.ph.len - PACKET_HEADER_SIZE);
 			m_PacketList.push_back(addPacket);
 
 			ZeroMemory(&m_PacketData, sizeof(UPACKET));
@@ -36,7 +36,7 @@ void TStreamPacket_2::Put(char* recvBuffer, int iRecvSize)
 			m_pPacketData = (P_UPACKET)&m_strBuffer[m_iRecvPos];//addPacket.ph.len];
 
 		} while (m_iWritePos >= m_pPacketData->ph.len);
-		I_DebugStr.DisplayText(const_cast<char*>("%d\r\n"), iCount);
+		I_DebugStr.DisplayText(const_cast<char*>("\n%d\r\n"), iCount);
 		iCount = 0;
 		TCHAR strTmp[256] = { 0, };
 		memcpy(strTmp, &m_strBuffer[m_iRecvPos], m_iWritePos);
@@ -48,7 +48,7 @@ void TStreamPacket_2::Put(char* recvBuffer, int iRecvSize)
 	else
 	{
 		//경우3:완성된 패킷을 만들기 부족한 데이터가 있을 경우.
-		I_DebugStr.DisplayText(const_cast<char*>("%d\r\n"), m_iWritePos);
+		I_DebugStr.DisplayText(const_cast<char*>("\n%d\r\n"), m_iWritePos);
 	}
 }
 

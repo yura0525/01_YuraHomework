@@ -5,7 +5,7 @@
 
 unsigned __stdcall sendMessage(void* arg)
 {
-	I_DebugStr.DisplayText(const_cast<char*>("%s\r\n"), "send 스레드 시작");
+	I_DebugStr.DisplayText(const_cast<char*>("\n%s\r\n"), "send 스레드 시작");
 	TClient_1* pClient = (TClient_1*)arg;
 
 	while (!pClient->m_bExit)
@@ -22,7 +22,7 @@ unsigned __stdcall sendMessage(void* arg)
 
 unsigned __stdcall receiveMessage(void* arg)
 {
-	I_DebugStr.DisplayText(const_cast<char*>("%s\r\n"), "receive 스레드 시작");
+	I_DebugStr.DisplayText(const_cast<char*>("\n%s\r\n"), "receive 스레드 시작");
 	TClient_1* pClient = (TClient_1*)arg;
 	int iSocket = pClient->m_iSocket;
 	char strBuffer[2048] = { 0, };
@@ -147,19 +147,19 @@ int	 TClient_1::CreateConnectSocket(int iPort)
 		(char*)&socketType1, &typeLen1);
 
 	if (socketType1 == SOCK_STREAM)
-		I_DebugStr.DisplayText(const_cast<char*>("%s\r\n"), "SOCK_STREAM.");
+		I_DebugStr.DisplayText(const_cast<char*>("\n%s\r\n"), "SOCK_STREAM.");
 	else
-		I_DebugStr.DisplayText(const_cast<char*>("%s\r\n"), "SOCK_DGRAM");
+		I_DebugStr.DisplayText(const_cast<char*>("\n%s\r\n"), "SOCK_DGRAM");
 
 	getsockopt(m_iSocket, SOL_SOCKET,
 		SO_SNDBUF,
 		(char*)&socketType1, &typeLen1);
-	I_DebugStr.DisplayText(const_cast<char*>("%s=%d\r\n"), "SO_SNDBUF", socketType1);
+	I_DebugStr.DisplayText(const_cast<char*>("\n%s=%d\r\n"), "SO_SNDBUF", socketType1);
 
 	getsockopt(m_iSocket, SOL_SOCKET,
 		SO_RCVBUF,
 		(char*)&socketType1, &typeLen1);
-	I_DebugStr.DisplayText(const_cast<char*>("%s=%d\r\n"), "SO_RCVBUF", socketType1);
+	I_DebugStr.DisplayText(const_cast<char*>("\n%s=%d\r\n"), "SO_RCVBUF", socketType1);
 
 
 	// If iMode = 0, blocking is enabled; 
@@ -198,7 +198,7 @@ int	 TClient_1::ProcessPacket()
 		{
 		case PACKET_CHAT_NAME_REQ:
 		{
-			I_DebugStr.DisplayText(const_cast<char*>("%s\r\n"), pPacket->msg);
+			I_DebugStr.DisplayText(const_cast<char*>("\n%s\r\n"), pPacket->msg);
 
 			strcpy(m_strBuffer, "홍길동");
 			m_bSend = true;
@@ -213,13 +213,13 @@ int	 TClient_1::ProcessPacket()
 		}break;
 		case PACKET_CHAT_MSG:
 		{
-			I_DebugStr.DisplayText(const_cast<char*>("%s\r\n"), pPacket->msg);
+			I_DebugStr.DisplayText(const_cast<char*>("\n%s\r\n"), pPacket->msg);
 		}break;
 		case PACKET_USER_POSITION:
 		{
 			pPacket->msg;
 			TPACKET_USER_POSITION user;
-			memcpy(&user, pPacket->msg, sizeof(char)* pPacket->ph.len - 4);
+			memcpy(&user, pPacket->msg, sizeof(char)* pPacket->ph.len - PACKET_HEADER_SIZE);
 			if (user.direction == VK_LEFT)
 			{
 				I_GameUser.m_Direction = VK_LEFT;

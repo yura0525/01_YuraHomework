@@ -72,7 +72,7 @@ bool TUdpSocket::Run()
 			I_DebugStr.T_ERROR();
 		}
 		buf[retval] = 0;
-		I_DebugStr.DisplayText(const_cast<char*>("Message:%s"), buf);
+		I_DebugStr.DisplayText(const_cast<char*>("\nMessage:%s"), buf);
 
 		// 송신자는 멀티캐스트 그룹에 가입할 필요가 없으나
 		// 이곳에서는 다시 받기 위해서 가입하였다.
