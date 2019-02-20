@@ -18,10 +18,9 @@ bool TAcceptor_2::Run()
 		{
 			continue;
 		}
-		TCHAR buf[INET_ADDRSTRLEN], buf6[INET6_ADDRSTRLEN];
+		TCHAR buf[INET_ADDRSTRLEN];/*, buf6[INET6_ADDRSTRLEN]*/
 		InetNtop(AF_INET, &clientaddr.sin_addr, buf, sizeof(buf));
-		I_DebugStr.DisplayText(const_cast<char*>("\n####[IP:%s,PORT:%d]\n"), inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
-		//WaitForSingleObject( pServer->m_Mutex, INFINITE );
+		I_DebugStr.DisplayText(const_cast<char*>("\n[IP:%s,PORT:%d]\n"), inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
 		{
 			TSynchronize_1 sync(this);
 			TUser*	pUser = NULL;
@@ -122,7 +121,6 @@ int	 TAcceptor_2::GetIPList(vector<string>& ipList)
 
 		if (pHost != NULL)
 		{
-
 			for (i = 0; i<255; i++)
 			{
 				if (pHost->h_addr_list[i])

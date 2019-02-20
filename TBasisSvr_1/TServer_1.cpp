@@ -66,9 +66,11 @@ bool TServer_1::Release()
 	}
 
 	m_UserList.clear();
-	CloseHandle(m_Mutex);
-	m_Mutex = NULL;
-
+	if (m_Mutex != NULL)
+	{
+		CloseHandle(m_Mutex);
+		m_Mutex = NULL;
+	}
 	return true;
 }
 void TServer_1::ProcessPacket()
@@ -119,13 +121,12 @@ int	 TServer_1::SendPacket(TUser* pUser, UPACKET& PacketMsg)
 }
 void TServer_1::SendPacket(TUser* pUser, int iSendByte)
 {
-	DWORD dwFlags = 0;
 	pUser->m_wsaBuffer.buf = pUser->m_sendBuffer;
 	pUser->m_wsaBuffer.len = iSendByte;
 	pUser->m_ov.m_iFlags = OVERLAPPED2::MODE_SEND;
 	DWORD dwSendByte = iSendByte;
 
-	int iRet = WSASend(pUser->m_Socket, &(pUser->m_wsaBuffer), 1, &dwSendByte, dwFlags, (LPOVERLAPPED)&pUser->m_ov, NULL);
+	int iRet = WSASend(pUser->m_Socket, &(pUser->m_wsaBuffer), 1, &dwSendByte, 0, (LPOVERLAPPED)&pUser->m_ov, NULL);
 	if (iRet == SOCKET_ERROR && WSAGetLastError() != WSA_IO_PENDING)
 	{
 		I_DebugStr.T_ERROR();
@@ -182,21 +183,20 @@ TUser* TServer_1::GetUser(int iIndex)
 bool TServer_1::DelUser(int iIndex)
 {
 	// 방에서 나감
-	WaitForSingleObject(I_Server.m_Mutex, INFINITE);
+	WaitForSingleObject(m_Mutex, INFINITE);
 	m_ListItor	iter;
-	m_ListItor delUser = I_Server.m_UserList.end();
+	m_ListItor delUser = m_UserList.end();
 
-	for (iter = I_Server.m_UserList.begin(); iter != I_Server.m_UserList.end();)
+	for (iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
 	{
 		TUser* pUser = (TUser*)iter->second;
 		if (pUser->m_iEvent == iIndex)
 		{
 			I_DebugStr.DisplayText(const_cast<char*>("\n%s%s\n"), pUser->m_Name.c_str(), "님이 나가셨습니다.");
 			closesocket(pUser->m_Socket);
-			I_Server.m_UserList.erase(iter);
+			m_UserList.erase(iter);
 			break;
 		}
-		iter++;
 	}
 
 	ReleaseMutex(m_Mutex);
@@ -208,9 +208,9 @@ void TServer_1::MoveAction(T_PACKET& pSendUser)
 	UPACKET* pPacket = &(pSendUser.packet);
 	TPACKET_USER_POSITION* pData = (TPACKET_USER_POSITION*)pPacket->msg;
 
-	I_DebugStr.DisplayText(const_cast<char*>("\n####TServer_1::MoveAction()POS->%d:%d,%d:%d\n"), pData->user_idx, pData->direction, pData->posX, pData->posY);
+	I_DebugStr.DisplayText(const_cast<char*>("\nTServer_1::MoveAction() POS->%d:%d,%d:%d\n"), pData->user_idx, pData->direction, pData->posX, pData->posY);
 	m_ListItor iter;
-	for (iter = I_Server.m_UserList.begin(); iter != I_Server.m_UserList.end(); iter++)
+	for (iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
 	{
 		TUser* pUser = (TUser*)iter->second;
 		{
@@ -224,10 +224,8 @@ void TServer_1::Msg(T_PACKET& pSendUser)
 	UPACKET* pPacket = &(pSendUser.packet);
 	I_DebugStr.DisplayText(const_cast<char*>("\nTServer_1::Msg() Message:%s\n"), pPacket->msg);
 	m_ListItor iter;
-	int iClientUser = I_Server.m_UserList.size();
-	for (iter = I_Server.m_UserList.begin();
-		iter != I_Server.m_UserList.end();
-		iter++)
+
+	for (iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
 	{
 		TUser* pUser = (TUser*)iter->second;
 		if (pUser->m_Socket != pSendUser.pUser->m_Socket)

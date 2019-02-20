@@ -5,7 +5,7 @@ class TDebugString_2 : public TSingleton<TDebugString_2>, public TServerObj_1
 private:
 	friend class TSingleton<TDebugString_2>;
 public:
-	TCHAR_STRING_VECTOR	m_Message;
+	T_STR_VEC		m_Message;
 	HWND			m_hEdit;
 	HWND			m_hWnd;
 	HINSTANCE		m_hInst;

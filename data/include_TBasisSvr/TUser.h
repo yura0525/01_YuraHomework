@@ -42,7 +42,8 @@ public:
 	TCharacter*		m_pCharacter;
 	std::map<tGUID, TCharacter, GUIDComparer> m_CharacterList;
 
-	void			Dispatch(DWORD dwByteSize, LPOVERLAPPED ov)
+public:
+	void Dispatch(DWORD dwByteSize, LPOVERLAPPED ov)
 	{
 		OVERLAPPED2* pOV = (OVERLAPPED2*)ov;
 		if (dwByteSize == 0)

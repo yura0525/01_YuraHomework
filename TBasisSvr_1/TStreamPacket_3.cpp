@@ -46,7 +46,7 @@ void TStreamPacket_3::Put(char* recvBuffer, int iRecvSize, TUser* pUser)
 				// 패킷의 시작 위치
 				m_iStartPos += m_pPacket->ph.len;
 
-				// 잔여량이 패킷 헤더모다 작을 경우
+				// 잔여량이 패킷 헤더보다 작을 경우
 				if (m_iReadPos < PACKET_HEADER_SIZE)
 				{
 					break;

@@ -14,7 +14,8 @@ bool TWorkThread_1::Run()
 		bReturn = ::GetQueuedCompletionStatus(I_ServerIOCP.m_hIOCP, &bytesTransfer, &keyValue, &overlapped, INFINITE);
 		
 		TUser* pSession = (TUser*)keyValue;
-		if (pSession == 0) continue;
+		if (pSession == NULL)
+			continue;
 
 		if (bReturn == TRUE && bytesTransfer != 0 && overlapped != 0)
 		{
@@ -31,8 +32,10 @@ bool TWorkThread_1::Run()
 				if (bytesTransfer == 0)
 				{
 					if (bReturn == FALSE)
-						I_DebugStr.DisplayText("%s%s\r\n",
-							pSession->m_Name.c_str(), "비동기 소켓 오류.");
+					{
+						I_DebugStr.DisplayText("\n%s%s\n", pSession->m_Name.c_str(), "비동기 소켓 오류.");
+					}
+
 					// 클라이언트 접속 종료
 					I_Server.DelUser(pSession->m_iEvent);
 					continue;

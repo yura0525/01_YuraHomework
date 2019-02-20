@@ -64,7 +64,7 @@ TNpc::TNpc()
 	m_fTraceRange = 700.0f;
 	m_fHitRange = 200.0f;
 	m_fMovePoint = 5.0f;
-	m_fHitPoint = 0.1f;
+	m_fHitPoint = 1.0f;
 }
 
 
@@ -107,9 +107,9 @@ bool TNpcManager::Run()
 			for (auto& player : I_Server.m_UserList)
 			{
 				TCharacter* playCharacter = player.second->m_pCharacter;
-				if (player.second->m_pCharacter != NULL)
+				if (playCharacter != NULL)
 				{
-					if (!player.second->m_pCharacter->m_bAlive || !monster.m_bAlive)
+					if (!playCharacter->m_bAlive || !monster.m_bAlive)
 						continue;
 
 					if (monster.IsPlayerInHitRange(*playCharacter) && !monster.m_bAttacking)
@@ -136,6 +136,8 @@ bool TNpcManager::Run()
 			ph.type = PACKET_SYNC_MONSTER;
 			SendStream << ph.len << endl;
 			SendStream << ph.type << endl;
+			/*SendStream << ph.iotype << endl;
+			SendStream << ph.time << endl;*/
 			SendStream << *this << endl;
 			count = 0;
 			I_Server.Broadcast(SendStream);
