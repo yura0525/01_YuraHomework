@@ -53,8 +53,8 @@ public:
 		if (pOV->m_iFlags == OVERLAPPED2::MODE_RECV)
 		{
 			m_StreamPacket.Put(m_wsaBuffer.buf, dwByteSize, this);
-			WaitForPacketReceive();
 		}
+		WaitForPacketReceive();
 	}
 	void WaitForPacketReceive()
 	{

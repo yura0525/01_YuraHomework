@@ -209,11 +209,12 @@ int	 TClient_1::ProcessPacket()
 		{
 			I_DebugStr.DisplayText(const_cast<char*>("\n#### TClient_1::ProcessPacket() PACKET_CHAT_NAME_REQ : %s\n"), pPacket->msg);
 
+			memset(m_strBuffer, 0, sizeof(char) * 128);
 			strcpy(m_strBuffer, "ȫ�浿");
 			m_bSend = true;
 			while (!m_bExit)
 			{
-				if (m_bSend && SendMsg(m_strBuffer, sizeof(m_strBuffer), PACKET_CHAT_NAME_ACK))
+				if (m_bSend && SendMsg(m_strBuffer, strlen(m_strBuffer), PACKET_CHAT_NAME_ACK))
 				{
 					m_bLoginOK = true;
 					break;

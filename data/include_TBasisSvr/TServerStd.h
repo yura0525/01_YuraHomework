@@ -19,6 +19,7 @@ typedef basic_string<TCHAR>		T_STR;
 typedef basic_string<CHAR>		C_STR;
 
 typedef std::vector<T_STR> TCHAR_STRING_VECTOR;
+
 template<class T> class TSingleton
 {
 public:
