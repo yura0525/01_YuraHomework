@@ -4,7 +4,7 @@
 
 struct tGUID : public GUID
 {
-	friend ostream& operator<<(ostream& stream, const tGUID& tGuid)
+	friend ostream& operator<<(ostream &stream, const tGUID& tGuid)
 	{
 		stream << tGuid.Data1;
 		stream << tGuid.Data2;
@@ -19,6 +19,7 @@ struct tGUID : public GUID
 		stream << tGuid.Data4[7];
 		return stream;
 	}
+
 	friend istream& operator>>(istream& stream, const tGUID& tGuid)
 	{
 		stream >> DWORD(tGuid.Data1);
@@ -35,6 +36,7 @@ struct tGUID : public GUID
 		return stream;
 	}
 };
+
 typedef struct {
 	WORD	len;	// msg 바이트 크기
 	WORD	type;	// 어떤 패킷이다.

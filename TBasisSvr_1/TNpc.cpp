@@ -111,13 +111,50 @@ bool TNpcManager::Run()
 				{
 					if (!player.second->m_pCharacter->m_bAlive || !monster.m_bAlive)
 						continue;
+
+					if (monster.IsPlayerInHitRange(*playCharacter) && !monster.m_bAttacking)
+					{
+						monster.HitPlayer(*playCharacter);
+						continue;
+					}
+
+					if (monster.IsPlayerInTraceRange(*playCharacter) && !monster.m_bAttacking)
+					{
+						monster.MoveTo(*playCharacter);
+						continue;
+					}
 				}
 			}
 		}
+		count++;
+		// 1.0초마다 클라이언트에게 몬스터 정보 전송
+		if (count > 30)
+		{
+			stringstream SendStream;
+			PACKET_HEADER ph;
+			ph.len = sizeof(TPACKET_CHARACTER_INFO) * m_NpcList.size() + PACKET_HEADER_SIZE;
+			ph.type = PACKET_SYNC_MONSTER;
+			SendStream << ph.len << endl;
+			SendStream << ph.type << endl;
+			SendStream << *this << endl;
+			count = 0;
+			I_Server.Broadcast(SendStream);
+		}
+		Sleep(33);
 	}
+	return true;
 }
 bool TNpcManager::Set()
 {
 	CreateThread();
 	return true;
+}
+
+TNpcManager::TNpcManager()
+{
+
+}
+TNpcManager::~TNpcManager()
+{
+
 }

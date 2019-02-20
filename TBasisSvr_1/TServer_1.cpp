@@ -13,29 +13,29 @@ bool TServer_1::Init()
 		return -1;
 	}
 
-	m_fnExecutePacket[PACKET_CHAT_NAME_REQ] = &TServer::ReqChatName;
-	m_fnExecutePacket[PACKET_CHAT_NAME_ACK] = &TServer::AckChatName;
-	m_fnExecutePacket[PACKET_CHAT_MSG] = &TServer::Msg;
-	m_fnExecutePacket[PACKET_USER_POSITION] = &TServer::MoveAction;
-	m_fnExecutePacket[PACKET_LOGIN] = &TServer::Login;
-	m_fnExecutePacket[PACKET_LOGIOUT] = &TServer::Logout;
-	m_fnExecutePacket[PACKET_CREATE_ACCOUNT] = &TServer::CreateAccount;
-	m_fnExecutePacket[PACKET_DELETE_ACCOUNT] = &TServer::DeleteAccount;
-	m_fnExecutePacket[PACKET_CREATE_CHARACTER] = &TServer::CreateCharacter;
-	m_fnExecutePacket[PACKET_DELETE_CHARACTER] = &TServer::DeleteCharacter;
+	m_fnExecutePacket[PACKET_CHAT_NAME_REQ]		= &TServer_1::ReqChatName;
+	m_fnExecutePacket[PACKET_CHAT_NAME_ACK]		= &TServer_1::AckChatName;
+	m_fnExecutePacket[PACKET_CHAT_MSG]			= &TServer_1::Msg;
+	m_fnExecutePacket[PACKET_USER_POSITION]		= &TServer_1::MoveAction;
+	m_fnExecutePacket[PACKET_LOGIN]				= &TServer_1::Login;
+	m_fnExecutePacket[PACKET_LOGOUT]			= &TServer_1::Logout;
+	m_fnExecutePacket[PACKET_CREATE_ACCOUNT]	= &TServer_1::CreateAccount;
+	m_fnExecutePacket[PACKET_DELETE_ACCOUNT]	= &TServer_1::DeleteAccount;
+	m_fnExecutePacket[PACKET_CREATE_CHARACTER]	= &TServer_1::CreateCharacter;
+	m_fnExecutePacket[PACKET_DELETE_CHARACTER]	= &TServer_1::DeleteCharacter;
 
-	m_fnExecutePacket[PACKET_HIT_CHARACTER] = &TServer::HitCharacter;
-	m_fnExecutePacket[PACKET_HIT_MONSTER] = &TServer::HitMonster;
-	m_fnExecutePacket[PACKET_ATTACK_CHARACTER] = &TServer::AttackCharacter;
-	m_fnExecutePacket[PACKET_ATTACK_MONSTER] = &TServer::AttackMonster;
-	m_fnExecutePacket[PACKET_DEAD_CHARACTER] = &TServer::DeadCharacters;
-	m_fnExecutePacket[PACKET_DEAD_MONSTER] = &TServer::DeadMonster;
-	m_fnExecutePacket[PACKET_DAMAGE_CHARACTER] = &TServer::DamageCharacter;
-	m_fnExecutePacket[PACKET_DAMAGE_MONSTER] = &TServer::DamageMonster;
-	m_fnExecutePacket[PACKET_SPAWN_CHARACTER] = &TServer::SpawnCharacters;
-	m_fnExecutePacket[PACKET_SPAWN_MONSTER] = &TServer::SpawnMonster;
-	m_fnExecutePacket[PACKET_SYNC_CHARACTER] = &TServer::SyncCharacters;
-	m_fnExecutePacket[PACKET_SYNC_MONSTER] = &TServer::SyncMonster;
+	m_fnExecutePacket[PACKET_HIT_CHARACTER]		= &TServer_1::HitCharacter;
+	m_fnExecutePacket[PACKET_HIT_MONSTER]		= &TServer_1::HitMonster;
+	m_fnExecutePacket[PACKET_ATTACK_CHARACTER]	= &TServer_1::AttackCharacter;
+	m_fnExecutePacket[PACKET_ATTACK_MONSTER]	= &TServer_1::AttackMonster;
+	m_fnExecutePacket[PACKET_DEAD_CHARACTER]	= &TServer_1::DeadCharacters;
+	m_fnExecutePacket[PACKET_DEAD_MONSTER]		= &TServer_1::DeadMonster;
+	m_fnExecutePacket[PACKET_DAMAGE_CHARACTER]	= &TServer_1::DamageCharacter;
+	m_fnExecutePacket[PACKET_DAMAGE_MONSTER]	= &TServer_1::DamageMonster;
+	m_fnExecutePacket[PACKET_SPAWN_CHARACTER]	= &TServer_1::SpawnCharacters;
+	m_fnExecutePacket[PACKET_SPAWN_MONSTER]		= &TServer_1::SpawnMonster;
+	m_fnExecutePacket[PACKET_SYNC_CHARACTER]	= &TServer_1::SyncCharacters;
+	m_fnExecutePacket[PACKET_SYNC_MONSTER]		= &TServer_1::SyncMonster;
 
 	// IOCP 생성
 	I_ServerIOCP.Init();
@@ -102,6 +102,30 @@ void	TServer_1::AddPacket(T_PACKET& pack)
 		m_StreamPacket.m_PacketList.push_back(pack);
 	ReleaseMutex(m_Mutex);
 }
+
+int	 TServer_1::SendPacket(TUser* pUser, UPACKET& PacketMsg)
+{
+	//TODO:해야함.
+	return 1;
+}
+void TServer_1::SendPacket(TUser* pUser, int iSendByte)
+{
+//TODO:해야함.
+}
+void TServer_1::Broadcast(T_PACKET& pSendUser)
+{
+//TODO:해야함.
+}
+void TServer_1::Broadcast(UPACKET& pSendUser)
+{
+//TODO:해야함.
+}
+void TServer_1::Broadcast(stringstream& SendStream)
+{
+//TODO:해야함.
+}
+
+
 TUser* TServer_1::GetUser(int iIndex)
 {
 	WaitForSingleObject(m_Mutex, INFINITE);
@@ -127,7 +151,7 @@ bool TServer_1::DelUser(int iIndex)
 	m_ListItor	iter;
 	m_ListItor delUser = m_UserList.end();
 
-	for (iter = m_UserList.begin(); iter != m_UserList.end(); iter++;)
+	for (iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
 	{
 		TUser* pUser = (TUser*)iter->second;
 		if (pUser->m_iEvent == iIndex)
@@ -207,7 +231,7 @@ void TServer_1::ReqChatName(T_PACKET& pSendUser) {}
 void TServer_1::CreateAccount(T_PACKET& pSendUser)
 {
 	tGUID	uuid;
-	RPC_STATUS ret_val = ::UuidCreate(uuid);
+	RPC_STATUS ret_val = ::UuidCreate(&uuid);
 }
 void TServer_1::DeleteAccount(T_PACKET& pSendUser) {}
 

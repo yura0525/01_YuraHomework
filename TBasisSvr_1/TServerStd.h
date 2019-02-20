@@ -9,9 +9,11 @@
 #include <string>
 #include <map>
 #include <list>
+#include <sstream>
 using namespace std;
 
 #pragma comment (lib, "ws2_32.lib")
+#pragma comment(lib, "Rpcrt4.lib")
 
 typedef basic_string<TCHAR>		T_STR;
 typedef basic_string<CHAR>		C_STR;
