@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include "TServer_1.h"
 #include "TDebugString_2.h"
 #include "TServerIOCP_1.h"
@@ -120,12 +119,13 @@ int	 TServer_1::SendPacket(TUser* pUser, UPACKET& PacketMsg)
 }
 void TServer_1::SendPacket(TUser* pUser, int iSendByte)
 {
+	DWORD dwFlags = 0;
 	pUser->m_wsaBuffer.buf = pUser->m_sendBuffer;
 	pUser->m_wsaBuffer.len = iSendByte;
 	pUser->m_ov.m_iFlags = OVERLAPPED2::MODE_SEND;
 	DWORD dwSendByte = iSendByte;
 
-	int iRet = WSASend(pUser->m_Socket, &(pUser->m_wsaBuffer), 1, &dwSendByte, 0, (LPOVERLAPPED)&pUser->m_ov, NULL);
+	int iRet = WSASend(pUser->m_Socket, &(pUser->m_wsaBuffer), 1, &dwSendByte, dwFlags, (LPOVERLAPPED)&pUser->m_ov, NULL);
 	if (iRet == SOCKET_ERROR && WSAGetLastError() != WSA_IO_PENDING)
 	{
 		I_DebugStr.T_ERROR();
@@ -133,7 +133,7 @@ void TServer_1::SendPacket(TUser* pUser, int iSendByte)
 }
 void TServer_1::Broadcast(T_PACKET& pSendUser)
 {
-	for (m_ListItor iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
+	for (m_ListItor iter = I_Server.m_UserList.begin(); iter != I_Server.m_UserList.end(); iter++)
 	{
 		TUser* pUser = (TUser*)iter->second;
 		if (pUser->m_Socket != pSendUser.pUser->m_Socket)
@@ -145,7 +145,7 @@ void TServer_1::Broadcast(T_PACKET& pSendUser)
 }
 void TServer_1::Broadcast(UPACKET& packet)
 {
-	for (m_ListItor iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
+	for (m_ListItor iter = I_Server.m_UserList.begin(); iter != I_Server.m_UserList.end(); iter++)
 	{
 		TUser* pUser = (TUser*)iter->second;
 		if (SendPacket(pUser, packet) <= 0)
@@ -182,20 +182,21 @@ TUser* TServer_1::GetUser(int iIndex)
 bool TServer_1::DelUser(int iIndex)
 {
 	// 방에서 나감
-	WaitForSingleObject(m_Mutex, INFINITE);
+	WaitForSingleObject(I_Server.m_Mutex, INFINITE);
 	m_ListItor	iter;
-	m_ListItor delUser = m_UserList.end();
+	m_ListItor delUser = I_Server.m_UserList.end();
 
-	for (iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
+	for (iter = I_Server.m_UserList.begin(); iter != I_Server.m_UserList.end();)
 	{
 		TUser* pUser = (TUser*)iter->second;
 		if (pUser->m_iEvent == iIndex)
 		{
-			I_DebugStr.DisplayText(const_cast<char*>("\n%s%s\r\n"), pUser->m_Name.c_str(), "님이 나가셨습니다.");
+			I_DebugStr.DisplayText(const_cast<char*>("\n%s%s\n"), pUser->m_Name.c_str(), "님이 나가셨습니다.");
 			closesocket(pUser->m_Socket);
-			m_UserList.erase(iter);
+			I_Server.m_UserList.erase(iter);
 			break;
 		}
+		iter++;
 	}
 
 	ReleaseMutex(m_Mutex);
@@ -207,10 +208,9 @@ void TServer_1::MoveAction(T_PACKET& pSendUser)
 	UPACKET* pPacket = &(pSendUser.packet);
 	TPACKET_USER_POSITION* pData = (TPACKET_USER_POSITION*)pPacket->msg;
 
-	I_DebugStr.DisplayText(const_cast<char*>("\nPOS->%d:%d,%d:%d\r\n"), pData->user_idx, pData->direction,
-		pData->posX, pData->posY);
+	I_DebugStr.DisplayText(const_cast<char*>("\n####TServer_1::MoveAction()POS->%d:%d,%d:%d\n"), pData->user_idx, pData->direction, pData->posX, pData->posY);
 	m_ListItor iter;
-	for (iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
+	for (iter = I_Server.m_UserList.begin(); iter != I_Server.m_UserList.end(); iter++)
 	{
 		TUser* pUser = (TUser*)iter->second;
 		{
@@ -222,7 +222,7 @@ void TServer_1::MoveAction(T_PACKET& pSendUser)
 void TServer_1::Msg(T_PACKET& pSendUser)
 {
 	UPACKET* pPacket = &(pSendUser.packet);
-	I_DebugStr.DisplayText(const_cast<char*>("\nMessage:%s\r\n"), pPacket->msg);
+	I_DebugStr.DisplayText(const_cast<char*>("\nTServer_1::Msg() Message:%s\n"), pPacket->msg);
 	m_ListItor iter;
 	int iClientUser = I_Server.m_UserList.size();
 	for (iter = I_Server.m_UserList.begin();
@@ -253,11 +253,11 @@ void TServer_1::AckChatName(T_PACKET& pSendUser)
 	C_STR name = pPacket->msg;
 	memcpy(&PacketMsg.msg, &pPacket->msg, pPacket->ph.len - PACKET_HEADER_SIZE);
 
-	char buffer[64] = "님이 입장하였습니다.";
+	char buffer[64] = "님이 입장하였습니다.\n";
 	strcpy(&PacketMsg.msg[pPacket->ph.len - PACKET_HEADER_SIZE], buffer);
 	PacketMsg.ph.len += strlen(buffer);
 
-	I_DebugStr.DisplayText(const_cast<char*>("\nMessage:%s\r\n"), PacketMsg.msg);
+	I_DebugStr.DisplayText(const_cast<char*>("\nTServer_1::AckChatName() Message:%s\n"), PacketMsg.msg);
 
 	Broadcast(PacketMsg);
 }

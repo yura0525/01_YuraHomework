@@ -1,6 +1,5 @@
 #pragma once
 #include "TServerStd.h"
-#include <WS2tcpip.h>
 #include "TServer_1.h"
 #include "TDebugString_2.h"
 #include "TThread_3.h"

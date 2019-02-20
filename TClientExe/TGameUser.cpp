@@ -1,6 +1,7 @@
 #include "TGameUser.h"
 #include "TBasisSys.h"
 #include "TObjectMgr.h"
+#include "TDebugString_1.h"
 
 bool TGameUser::Init()
 {
@@ -33,6 +34,7 @@ bool TGameUser::Release()
 }
 void TGameUser::MoveLeft(int iUserID)
 {
+	I_DebugStr.DisplayText(const_cast<char*>("\n####TGameUser::MoveLeft\n"));
 	float fPos = m_fPosX;
 	fPos -= 100.0f * g_fSecPerFrame;
 	if (fPos < 0) fPos = 0;
@@ -40,6 +42,7 @@ void TGameUser::MoveLeft(int iUserID)
 }
 void TGameUser::MoveRight(int iUserID)
 {
+	I_DebugStr.DisplayText(const_cast<char*>("\n####TGameUser::MoveRight\n"));
 	float fPos = m_fPosX;
 	fPos += 100.0f * g_fSecPerFrame;
 	if (fPos > 780) fPos = 780;
@@ -47,6 +50,7 @@ void TGameUser::MoveRight(int iUserID)
 }
 void TGameUser::MoveUp(int iUserID)
 {
+	I_DebugStr.DisplayText(const_cast<char*>("\n####TGameUser::MoveUp\n"));
 	float fPos = m_fPosY;
 	fPos -= 100.0f * g_fSecPerFrame;
 	if (fPos < 0) fPos = 0;
@@ -54,6 +58,7 @@ void TGameUser::MoveUp(int iUserID)
 }
 void TGameUser::MoveDown(int iUserID)
 {
+	I_DebugStr.DisplayText(const_cast<char*>("\n####TGameUser::MoveDown\n"));
 	float fPos = m_fPosY;
 	fPos += 100.0f * g_fSecPerFrame;
 	if (fPos > 590) fPos = 590;

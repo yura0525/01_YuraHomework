@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include "TDebugString_2.h"
 #include "TSynchronize_1.h"
 

@@ -31,11 +31,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // TODO: 여기에 코드를 입력합니다.
+	// TODO: 여기에 코드를 입력합니다.
+	MSG msg;
+	HACCEL hAccelTable;
 
     // 전역 문자열을 초기화합니다.
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_TSVREXE1, szWindowClass, MAX_LOADSTRING);
+	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+	LoadString(hInstance, IDC_TSVREXE1, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
     // 응용 프로그램 초기화를 수행합니다:
@@ -49,9 +51,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	I_DebugStr.Init();
 	g_Udp.Init();
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_TSVREXE1));
-
-    MSG msg;
+    hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_TSVREXE1));
 
     // 기본 메시지 루프입니다:
     while (GetMessage(&msg, nullptr, 0, 0))
@@ -79,7 +79,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 //
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-    WNDCLASSEXW wcex;
+	WNDCLASSEX wcex;
 
     wcex.cbSize = sizeof(WNDCLASSEX);
 
@@ -95,7 +95,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
-    return RegisterClassExW(&wcex);
+    return RegisterClassEx(&wcex);
 }
 
 //
@@ -110,9 +110,11 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
+	HWND hWnd;
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+	hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
+
+   hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
@@ -141,11 +143,16 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	int wmId, wmEvent;
+	PAINTSTRUCT ps;
+	HDC hdc;
+
     switch (message)
     {
     case WM_COMMAND:
         {
-            int wmId = LOWORD(wParam);
+            wmId = LOWORD(wParam);
+			wmEvent = HIWORD(wParam);
             // 메뉴 선택을 구문 분석합니다:
             switch (wmId)
             {
@@ -162,8 +169,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_PAINT:
         {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
+            hdc = BeginPaint(hWnd, &ps);
             // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
             EndPaint(hWnd, &ps);
         }

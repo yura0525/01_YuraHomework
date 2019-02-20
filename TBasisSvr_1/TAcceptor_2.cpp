@@ -1,6 +1,3 @@
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS
-
 #include "TAcceptor_2.h"
 #include "TDebugString_2.h"
 #include "TSynchronize_1.h"
@@ -23,7 +20,7 @@ bool TAcceptor_2::Run()
 		}
 		TCHAR buf[INET_ADDRSTRLEN], buf6[INET6_ADDRSTRLEN];
 		InetNtop(AF_INET, &clientaddr.sin_addr, buf, sizeof(buf));
-		I_DebugStr.DisplayText(const_cast<char*>("\n[IP:%s,PORT:%d]\r\n"), inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
+		I_DebugStr.DisplayText(const_cast<char*>("\n####[IP:%s,PORT:%d]\n"), inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
 		//WaitForSingleObject( pServer->m_Mutex, INFINITE );
 		{
 			TSynchronize_1 sync(this);
@@ -45,7 +42,7 @@ bool TAcceptor_2::Run()
 			// 환영메세지
 			UPACKET sendmsg;
 			ZeroMemory(&sendmsg, sizeof(sendmsg));
-			sprintf(sendmsg.msg, "[서버]환영합니다. 대화명을 입력해 주세여");
+			sprintf(sendmsg.msg, "\n[서버]환영합니다. 대화명을 입력해 주세요\n");
 			sendmsg.ph.type = PACKET_CHAT_NAME_REQ;
 			sendmsg.ph.len = sizeof(PACKET_HEADER) + strlen(sendmsg.msg);
 			ZeroMemory(&pUser->m_strBuffer, sizeof(char) * 2048);

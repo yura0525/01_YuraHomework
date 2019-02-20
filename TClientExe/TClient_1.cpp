@@ -177,12 +177,21 @@ int	 TClient_1::SendMsg(char* pMsg, int iSize, WORD code)
 	//sprintf(sendmsg.msg, pMsg);
 	memcpy(sendmsg.msg, pMsg, iSize);
 	sendmsg.ph.type = code;
-	sendmsg.ph.len = sizeof(PACKET_HEADER) + iSize;
-	int iret = send(m_iSocket, (char*)&sendmsg, sendmsg.ph.len, 0);
-	if (iret <= 0)
+	sendmsg.ph.len = PACKET_HEADER_SIZE + iSize;
+	int iSend = 0;
+	int sendbytes = 0;
+	if (sendmsg.ph.len == 0)
 	{
-		return 0;
+		int kkk = 0;
 	}
+	do {
+		iSend = send(m_iSocket, (char*)&sendmsg, sendmsg.ph.len, 0);
+		if (iSend <= 0)
+		{
+			return 0;
+		}
+		sendbytes += iSend;
+	} while (sendbytes < sendmsg.ph.len);
 	m_bSend = false;
 	return 1;
 }
@@ -198,7 +207,7 @@ int	 TClient_1::ProcessPacket()
 		{
 		case PACKET_CHAT_NAME_REQ:
 		{
-			I_DebugStr.DisplayText(const_cast<char*>("\n%s\r\n"), pPacket->msg);
+			I_DebugStr.DisplayText(const_cast<char*>("\n#### TClient_1::ProcessPacket() PACKET_CHAT_NAME_REQ : %s\n"), pPacket->msg);
 
 			strcpy(m_strBuffer, "ȫ�浿");
 			m_bSend = true;
@@ -213,13 +222,14 @@ int	 TClient_1::ProcessPacket()
 		}break;
 		case PACKET_CHAT_MSG:
 		{
-			I_DebugStr.DisplayText(const_cast<char*>("\n%s\r\n"), pPacket->msg);
+			I_DebugStr.DisplayText(const_cast<char*>("\n#### TClient_1::ProcessPacket() PACKET_CHAT_MSG : %s\n"), pPacket->msg);
 		}break;
 		case PACKET_USER_POSITION:
 		{
 			pPacket->msg;
 			TPACKET_USER_POSITION user;
 			memcpy(&user, pPacket->msg, sizeof(char)* pPacket->ph.len - PACKET_HEADER_SIZE);
+			I_DebugStr.DisplayText(const_cast<char*>("\n####TClient_1::ProcessPacket() PACKET_USER_POSITION = %d\n"), user.direction);
 			if (user.direction == VK_LEFT)
 			{
 				I_GameUser.m_Direction = VK_LEFT;

@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+#include "TSvrExe_1.h"
 #include "TUdpSocket.h"
 
 //IP_ADD_MEMBERSHIP		- 멀티캐스트 그룹에 가입

@@ -1,5 +1,4 @@
 #include "TUser.h"
-#include "TCharacter.h"
 
 
 TUser::TUser()
