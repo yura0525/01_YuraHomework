@@ -7,7 +7,7 @@ bool Sample_1::Init()
 	WSADATA wsadata;
 	WSAStartup(MAKEWORD(2, 2), &wsadata);
 
-	m_Acceptor.Set(10000, "192.168.0.2");
+	m_Acceptor.Set(10000, "127.0.0.1");
 	return true;
 }
 bool Sample_1::PreRender()

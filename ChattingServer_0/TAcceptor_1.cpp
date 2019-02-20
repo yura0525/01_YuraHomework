@@ -39,7 +39,7 @@ unsigned __stdcall broadcastAllClient(void* arg)
 	sprintf(fromClient, "%d 님이 방을 나갔습니다.", myClientSocket);
 	for (i = 0; i<clientNumber; i++)
 	{
-		//if (allClientSocket[i] != myClientSocket)
+		if (allClientSocket[i] != myClientSocket)
 		{
 			send(allClientSocket[i], fromClient, sizeof(fromClient), 0);
 		}
@@ -86,7 +86,7 @@ bool TAcceptor_1::Run()
 		ReleaseMutex(m_Mutex);
 
 		char greetMessage[256] = { 0, };
-		sprintf(greetMessage, "[서버]환영합니다. 대화명을 입력해 주세요.");
+		sprintf(greetMessage, "[서버]환영합니다. 대화명을 입력해 주세요.\n");
 		send(clientSocket, greetMessage, sizeof(greetMessage), 0);
 		unsigned long thread;
 		thread = _beginthreadex(NULL, 0, broadcastAllClient, (void*)clientSocket, 0, &threadID);

@@ -6,7 +6,7 @@ class TDebugString : public TSingleton<TDebugString> ,public TServerObj
 private:
 	friend class TSingleton<TDebugString>;
 public:
-	TCHAR_STRING_VECTOR m_Message;
+	T_STR_VEC			m_Message;
 	HWND				m_hEdit;
 	HWND				m_hList;
 	HWND				m_hButton;

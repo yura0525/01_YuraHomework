@@ -53,8 +53,8 @@ HRESULT	TDebugString::ConvertAnsiStringToWideCh(WCHAR* wstrDestination, const CH
 	if (wstrDestination == NULL || strSource == NULL || cchDestChar < 1)
 		return E_INVALIDARG;
 
-	int nResult = MultiByteToWideChar(CP_ACP, 0, strSource, -1,
-		wstrDestination, cchDestChar);
+	int nResult = MultiByteToWideChar(CP_ACP, 0, strSource, -1, wstrDestination, cchDestChar);
+
 	wstrDestination[cchDestChar - 1] = 0;
 
 	if (nResult == 0)
@@ -66,8 +66,8 @@ HRESULT	TDebugString::ConvertWideStringToAnsiCh(CHAR* strDestination, const WCHA
 	if (strDestination == NULL || wstrSource == NULL || cchDestChar < 1)
 		return E_INVALIDARG;
 
-	int nResult = WideCharToMultiByte(CP_ACP, 0, wstrSource, -1, strDestination,
-		cchDestChar * sizeof(CHAR), NULL, NULL);
+	int nResult = WideCharToMultiByte(CP_ACP, 0, wstrSource, -1, strDestination, cchDestChar * sizeof(CHAR), NULL, NULL);
+
 	strDestination[cchDestChar - 1] = 0;
 
 	if (nResult == 0)
@@ -132,7 +132,7 @@ void TDebugString::T_ERROR(bool bPrint)
 			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 			(char*)&lpMsgBuf, 0, NULL);
 		if (bPrint)
-			I_DebugStr.Print("ERROR WSASend:%s", (char*)lpMsgBuf);
+			I_DebugStr.Print("\nERROR WSASend:%s\n", (char*)lpMsgBuf);
 		else
 			OutputDebugStringA((char*)lpMsgBuf);
 		LocalFree(lpMsgBuf);

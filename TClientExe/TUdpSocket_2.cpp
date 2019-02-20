@@ -63,7 +63,7 @@ bool TUdpSocket_2::Run()
 	while (1)
 	{
 		ZeroMemory(buf, sizeof(buf));
-		sprintf(buf, "[UDP][%d]ChattingMsg[1Sec Per Msg]----------------", iCnt++);
+		sprintf(buf, "\n[UDP][%d]ChattingMsg[1Sec Per Msg]----------------\n", iCnt++);
 		retval = sendto(m_Socket, buf, strlen(buf), 0, (SOCKADDR*)&m_SenderAddr, sizeof(m_SenderAddr));
 		if (retval == SOCKET_ERROR)
 		{
@@ -78,7 +78,7 @@ bool TUdpSocket_2::Run()
 		else
 		{
 			buf[retval] = 0;
-			I_DebugStr.DisplayText(const_cast<char*>("\n[MSG]:%s"), buf);
+			I_DebugStr.DisplayText(const_cast<char*>("\n[MSG]:%s\n"), buf);
 		}
 		Sleep(1000);
 	}

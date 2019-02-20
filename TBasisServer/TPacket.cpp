@@ -30,7 +30,7 @@ void TPacket::ReadData(void* buffer, int iSize)
 }
 void TPacket::WriteData(void* buffer, int iSize)
 {
-	if (m_iReceivedSize >= PACKETBUFFERSIZE - 4)
+	if (m_iReceivedSize >= PACKET_BUFFER_SIZE - PACKET_HEADER_SIZE)
 	{
 		// ¿À·ù
 	}
@@ -119,7 +119,7 @@ TPacket& TPacket::operator << (TPacket& arg)
 
 	WriteData(&type, sizeof(unsigned short));
 	WriteData(&size, sizeof(unsigned short));
-	WriteData(arg.m_pstrWritePosition, size - 4);
+	WriteData(arg.m_pstrWritePosition, size - PACKET_HEADER_SIZE);
 	return *this;
 }
 TPacket& TPacket::operator >> (TPacket& arg)
@@ -129,10 +129,10 @@ TPacket& TPacket::operator >> (TPacket& arg)
 
 	ReadData(&type, sizeof(unsigned short));
 	ReadData(&size, sizeof(unsigned short));
-	ReadData(buffer, size - 4);
+	ReadData(buffer, size - PACKET_HEADER_SIZE);
 
 	arg.SetID(type);
-	arg.WriteData(buffer, size - 4);
+	arg.WriteData(buffer, size - PACKET_HEADER_SIZE);
 	return *this;
 }
 
@@ -142,7 +142,7 @@ char* TPacket::GetData()
 }
 void TPacket::Clear()
 {
-	ZeroMemory(m_strPacketBuffer, PACKETBUFFERSIZE);
+	ZeroMemory(m_strPacketBuffer, PACKET_BUFFER_SIZE);
 	m_PacketHeader.len = (WORD*)m_strPacketBuffer + 0;
 	m_PacketHeader.type = (WORD*)m_strPacketBuffer + 2;
 	m_pstrWritePosition = &m_strPacketBuffer[4];

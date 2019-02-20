@@ -30,9 +30,9 @@ unsigned __stdcall receiveMessage(void* arg)
 			break;
 		}
 		fromServer[strlen] = 0;
-		I_DebugStr.Print(const_cast<char*>("%s"), fromServer);
+		I_DebugStr.Print(const_cast<char*>("\n%s\n"), fromServer);
 	}
-	I_DebugStr.Print("%s", "서버가 종료되었습니다.");
+	I_DebugStr.Print("%s", "\n서버가 종료되었습니다.\n");
 	return 0;
 }
 bool	Sample::Init()
@@ -48,25 +48,25 @@ bool	Sample::Init()
 	/*클라이언트 소켓생성에 실패하면 에러메시지를 출력하고 함수 종료*/
 	if (mySocket == -1)
 	{
-		I_DebugStr.Print("클라이언트 소켓을 생성하는데 실패 했습니다.");
+		I_DebugStr.Print("\n클라이언트 소켓을 생성하는데 실패 했습니다.\n");
 		return 0;
 	}
-	I_DebugStr.Print("클라이언트 소켓을 생성 했습니다.");
+	I_DebugStr.Print("\n클라이언트 소켓을 생성 했습니다.\n");
 
 	/*서버의 주소 정보를 저장할 구조체 serverAddress 선언*/
 	sockaddr_in serverAddress;
 	memset(&serverAddress, 0, sizeof(serverAddress));
-	serverAddress.sin_addr.s_addr = inet_addr("192.168.0.2");
+	serverAddress.sin_addr.s_addr = inet_addr("127.0.0.1");
 	serverAddress.sin_family = AF_INET;
 	serverAddress.sin_port = htons(PORT);
 
 	if (connect(mySocket, (sockaddr *)&serverAddress, sizeof(serverAddress)) == -1)
 	{
-		I_DebugStr.Print("서버와 연결하는데 실패했습니다");
+		I_DebugStr.Print("\n서버와 연결하는데 실패했습니다\n");
 		return 0;
 	}
 
-	I_DebugStr.Print("채팅을 시작합니다.");
+	I_DebugStr.Print("\n채팅을 시작합니다.\n");
 	hReceiveThread = _beginthreadex(NULL, 0, receiveMessage, (void*)mySocket, 0, &receiveThread);
 	return true;
 }
@@ -114,7 +114,7 @@ LRESULT	Sample::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			SendMessage(I_DebugStr.m_hEdit, WM_GETTEXT, 1024, (LPARAM)m_SendMsg);
 			char toServer[2014] = { 0, };
 			char* strMsg = I_DebugStr.GetWcstoMbs(m_SendMsg);
-			sprintf(toServer, "%s 님이 입장하셨습니다.", strMsg);
+			sprintf(toServer, "%s 님이 입장하셨습니다.\n", strMsg);
 
 			int iLength = strlen(myName);
 			if (iLength > 0)

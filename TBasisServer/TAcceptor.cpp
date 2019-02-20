@@ -85,8 +85,7 @@ bool TAcceptor::Set(int iPort, const char* strAddress)
 		I_Debug.T_ERROR();
 	}*/
 	int optvalexe = 1;
-	iRet = setsockopt(m_ListenSock, SOL_SOCKET, SO_EXCLUSIVEADDRUSE,
-		(char *)&optvalexe, sizeof(optvalexe));
+	iRet = setsockopt(m_ListenSock, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, (char *)&optvalexe, sizeof(optvalexe));
 	if (iRet == SOCKET_ERROR)
 	{
 		I_Debug.T_ERROR();
@@ -95,57 +94,44 @@ bool TAcceptor::Set(int iPort, const char* strAddress)
 
 	linger optval2;
 	int iSize = sizeof(optval2);
-	optval2.l_linger = 1000;
 	optval2.l_onoff = 1;
-	getsockopt(m_ListenSock, SOL_SOCKET,
-		SO_LINGER, (char*)&optval2,
-		&iSize);
-	setsockopt(m_ListenSock, SOL_SOCKET,
-		SO_LINGER, (char*)&optval2,
-		iSize);
+	optval2.l_linger = 1000;
+	
+	getsockopt(m_ListenSock, SOL_SOCKET, SO_LINGER, (char*)&optval2, &iSize);
+	setsockopt(m_ListenSock, SOL_SOCKET, SO_LINGER, (char*)&optval2, iSize);
+
 	int socketType1;
 	int typeLen1 = sizeof(socketType1);
-	getsockopt(m_ListenSock, SOL_SOCKET,
-		SO_TYPE, (char*)&socketType1,
-		&typeLen1);
-	//if( socketType1 == SOCK_STREAM )
+	getsockopt(m_ListenSock, SOL_SOCKET, SO_TYPE, (char*)&socketType1, &typeLen1);
 
-	if (getsockopt(m_ListenSock, SOL_SOCKET,
-		SO_SNDBUF, (char*)&socketType1,
-		&typeLen1) < 0)
+	if (getsockopt(m_ListenSock, SOL_SOCKET, SO_SNDBUF, (char*)&socketType1, &typeLen1) < 0)
 	{
 		I_Debug.T_ERROR();
 	}
-	if (getsockopt(m_ListenSock, SOL_SOCKET,
-		SO_RCVBUF, (char*)&socketType1,
-		&typeLen1) < 0)
+	if (getsockopt(m_ListenSock, SOL_SOCKET, SO_RCVBUF, (char*)&socketType1, &typeLen1) < 0)
 	{
 		I_Debug.T_ERROR();
 	}
 
 	int sdnBufferSize = 10000;
 	int sndBufferSizeLen = sizeof(sndBufferSizeLen);
-	if (setsockopt(m_ListenSock, SOL_SOCKET, SO_SNDBUF,
-		(char*)&sdnBufferSize, sndBufferSizeLen) < 0)
+	if (setsockopt(m_ListenSock, SOL_SOCKET, SO_SNDBUF, (char*)&sdnBufferSize, sndBufferSizeLen) < 0)
 	{
 		I_Debug.T_ERROR();
 	}
 
 	int rcvBufferSizeLen = sizeof(int);
 	int rcvBufferSize = 10000;
-	if (setsockopt(m_ListenSock, SOL_SOCKET, SO_RCVBUF,
-		(char*)&rcvBufferSize, rcvBufferSizeLen) < 0)
+	if (setsockopt(m_ListenSock, SOL_SOCKET, SO_RCVBUF, (char*)&rcvBufferSize, rcvBufferSizeLen) < 0)
 	{
 		I_Debug.T_ERROR();
 	}
 
-	if (getsockopt(m_ListenSock, SOL_SOCKET, SO_SNDBUF, (char*)&socketType1,
-		&typeLen1) == SOCKET_ERROR)
+	if (getsockopt(m_ListenSock, SOL_SOCKET, SO_SNDBUF, (char*)&socketType1, &typeLen1) == SOCKET_ERROR)
 	{
 		I_Debug.T_ERROR();
 	}
-	if (getsockopt(m_ListenSock, SOL_SOCKET, SO_RCVBUF, (char*)&socketType1,
-		&typeLen1) == SOCKET_ERROR)
+	if (getsockopt(m_ListenSock, SOL_SOCKET, SO_RCVBUF, (char*)&socketType1, &typeLen1) == SOCKET_ERROR)
 	{
 		I_Debug.T_ERROR();
 	}

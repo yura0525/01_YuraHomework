@@ -23,8 +23,7 @@ void TThread_2::CreateThread()
 	// 유저 당 1개 스레드 붙임.
 	//unsigned int dwThread;
 	//int hThreadID = 
-	m_hThread = _beginthreadex(NULL, 0, HandleRunner,
-		(LPVOID)this, 0, &m_iThreadID);
+	m_hThread = _beginthreadex(NULL, 0, HandleRunner, (LPVOID)this, 0, &m_iThreadID);
 
 	//m_hThread = ::CreateThread( 0, 0,  HandleRunner, this, 0, &m_iThreadID );
 	m_bStarted = true;

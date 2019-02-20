@@ -1,8 +1,7 @@
 #pragma once
-#include <Windows.h>
 #include "TProtocol.h"
 
-#define PACKETBUFFERSIZE 8192
+#define PACKET_BUFFER_SIZE 8192
 
 class TPacket
 {
@@ -14,7 +13,7 @@ public:
 	}PACKETHEADER;
 public:
 	PACKETHEADER	m_PacketHeader;
-	char			m_strPacketBuffer[PACKETBUFFERSIZE];
+	char			m_strPacketBuffer[PACKET_BUFFER_SIZE];
 	char*			m_pstrWritePosition;
 	char*			m_pstrReadPosition;
 	int				m_iReceivedSize;

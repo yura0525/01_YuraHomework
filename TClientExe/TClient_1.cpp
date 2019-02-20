@@ -24,12 +24,12 @@ unsigned __stdcall receiveMessage(void* arg)
 {
 	I_DebugStr.DisplayText(const_cast<char*>("\n%s\r\n"), "receive 스레드 시작");
 	TClient_1* pClient = (TClient_1*)arg;
-	int iSocket = pClient->m_iSocket;
+
 	char strBuffer[2048] = { 0, };
 
 	while (!pClient->m_bExit)
 	{
-		int iRet = recv(iSocket, strBuffer, sizeof(strBuffer), 0);
+		int iRet = recv(pClient->m_iSocket, strBuffer, sizeof(strBuffer), 0);
 		if (iRet <= 0)
 		{
 			//비동기 소켓
@@ -54,7 +54,7 @@ unsigned __stdcall receiveMessage(void* arg)
 bool TClient_1::Init()
 {
 	InitializeCriticalSection(&m_CS);
-	int rv;
+
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
@@ -65,12 +65,9 @@ bool TClient_1::Init()
 	{
 		// send thread		
 		unsigned  sendThread, receiveThread;
-		m_hSendThread = _beginthreadex(NULL, 0, sendMessage,
-			(void*)this, 0, &sendThread);
+		m_hSendThread = _beginthreadex(NULL, 0, sendMessage, (void*)this, 0, &sendThread);
 		// recv thread
-		m_hReceiveThread = _beginthreadex(NULL, 0, receiveMessage,
-			(void*)this, 0, &receiveThread);
-
+		m_hReceiveThread = _beginthreadex(NULL, 0, receiveMessage, (void*)this, 0, &receiveThread);
 	}
 	return true;
 }
@@ -94,13 +91,13 @@ bool TClient_1::Release()
 	if (m_hReceiveThread != NULL)
 	{
 		CloseHandle((HANDLE)m_hReceiveThread);
-		m_hReceiveThread = 0;
+		m_hReceiveThread = NULL;
 	}
 	
 	if (m_hSendThread != NULL)
 	{
 		CloseHandle((HANDLE)m_hSendThread);
-		m_hSendThread = 0;
+		m_hSendThread = NULL;
 	}
 	DeleteCriticalSection(&m_CS);
 
@@ -109,7 +106,6 @@ bool TClient_1::Release()
 }
 int	 TClient_1::CreateConnectSocket(int iPort)
 {
-	int     rv;
 	m_iSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (m_iSocket == INVALID_SOCKET)
 	{
@@ -121,7 +117,7 @@ int	 TClient_1::CreateConnectSocket(int iPort)
 	serveraddr.sin_family = AF_INET;
 	serveraddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 	serveraddr.sin_port = htons(iPort);
-	rv = connect(m_iSocket, (sockaddr*)&serveraddr, sizeof(serveraddr));
+	int rv = connect(m_iSocket, (sockaddr*)&serveraddr, sizeof(serveraddr));
 	if (rv == SOCKET_ERROR)
 	{
 		return -1;
@@ -142,23 +138,17 @@ int	 TClient_1::CreateConnectSocket(int iPort)
 
 	int socketType1;
 	int typeLen1 = sizeof(socketType1);
-	getsockopt(m_iSocket, SOL_SOCKET,
-		SO_TYPE,
-		(char*)&socketType1, &typeLen1);
+	getsockopt(m_iSocket, SOL_SOCKET, SO_TYPE, (char*)&socketType1, &typeLen1);
 
 	if (socketType1 == SOCK_STREAM)
 		I_DebugStr.DisplayText(const_cast<char*>("\n%s\r\n"), "SOCK_STREAM.");
 	else
 		I_DebugStr.DisplayText(const_cast<char*>("\n%s\r\n"), "SOCK_DGRAM");
 
-	getsockopt(m_iSocket, SOL_SOCKET,
-		SO_SNDBUF,
-		(char*)&socketType1, &typeLen1);
+	getsockopt(m_iSocket, SOL_SOCKET, SO_SNDBUF, (char*)&socketType1, &typeLen1);
 	I_DebugStr.DisplayText(const_cast<char*>("\n%s=%d\r\n"), "SO_SNDBUF", socketType1);
 
-	getsockopt(m_iSocket, SOL_SOCKET,
-		SO_RCVBUF,
-		(char*)&socketType1, &typeLen1);
+	getsockopt(m_iSocket, SOL_SOCKET, SO_RCVBUF, (char*)&socketType1, &typeLen1);
 	I_DebugStr.DisplayText(const_cast<char*>("\n%s=%d\r\n"), "SO_RCVBUF", socketType1);
 
 
@@ -166,7 +156,6 @@ int	 TClient_1::CreateConnectSocket(int iPort)
 	// If iMode != 0, non-blocking mode is enabled.
 	int iMode = 238;
 	ioctlsocket(m_iSocket, FIONBIO, (u_long FAR*) &iMode);
-
 
 	return 0;
 }
@@ -184,6 +173,7 @@ int	 TClient_1::SendMsg(char* pMsg, int iSize, WORD code)
 	{
 		int kkk = 0;
 	}
+
 	do {
 		iSend = send(m_iSocket, (char*)&sendmsg, sendmsg.ph.len, 0);
 		if (iSend <= 0)
@@ -207,7 +197,7 @@ int	 TClient_1::ProcessPacket()
 		{
 		case PACKET_CHAT_NAME_REQ:
 		{
-			I_DebugStr.DisplayText(const_cast<char*>("\n#### TClient_1::ProcessPacket() PACKET_CHAT_NAME_REQ : %s\n"), pPacket->msg);
+			I_DebugStr.DisplayText(const_cast<char*>("\nTClient_1::ProcessPacket() PACKET_CHAT_NAME_REQ : %s\n"), pPacket->msg);
 
 			memset(m_strBuffer, 0, sizeof(char) * 128);
 			strcpy(m_strBuffer, "홍길동");
@@ -220,17 +210,18 @@ int	 TClient_1::ProcessPacket()
 					break;
 				}
 			}
-		}break;
+		}
+		break;
 		case PACKET_CHAT_MSG:
 		{
-			I_DebugStr.DisplayText(const_cast<char*>("\n#### TClient_1::ProcessPacket() PACKET_CHAT_MSG : %s\n"), pPacket->msg);
-		}break;
+			I_DebugStr.DisplayText(const_cast<char*>("\nTClient_1::ProcessPacket() PACKET_CHAT_MSG : %s\n"), pPacket->msg);
+		}
+		break;
 		case PACKET_USER_POSITION:
 		{
-			pPacket->msg;
 			TPACKET_USER_POSITION user;
 			memcpy(&user, pPacket->msg, sizeof(char)* pPacket->ph.len - PACKET_HEADER_SIZE);
-			I_DebugStr.DisplayText(const_cast<char*>("\n####TClient_1::ProcessPacket() PACKET_USER_POSITION = %d\n"), user.direction);
+			I_DebugStr.DisplayText(const_cast<char*>("\nTClient_1::ProcessPacket() PACKET_USER_POSITION = %d\n"), user.direction);
 			if (user.direction == VK_LEFT)
 			{
 				I_GameUser.m_Direction = VK_LEFT;
@@ -248,7 +239,8 @@ int	 TClient_1::ProcessPacket()
 				I_GameUser.m_Direction = VK_DOWN;
 			}
 
-		}break;
+		}
+		break;
 		}
 	}
 	m_StreamPacket.m_PacketList.clear();

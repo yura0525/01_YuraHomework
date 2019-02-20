@@ -72,7 +72,6 @@ void TUser_1::Dispatch(DWORD dwByteSize, LPOVERLAPPED ov)
 
 	}
 	WaitForPacketReceive();
-
 }
 
 TUser_1::TUser_1()

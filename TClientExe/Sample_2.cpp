@@ -92,7 +92,7 @@ bool Sample_2::PostRender()
 }
 bool Sample_2::Frame()
 {
-	//TCore::Frame();
+	TCore::Frame();
 	if (m_bLogin == false) return true;
 	m_Client.Frame();
 	GetCursorPos(&m_CursorPos);
@@ -108,10 +108,9 @@ bool Sample_2::Frame()
 		char buffer[256] = { 0, };
 		int iSize = sizeof(userdata);
 		memcpy(buffer, &userdata, iSize);
-		m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
-			PACKET_USER_POSITION);
+		m_Client.SendMsg(buffer, iSize, PACKET_USER_POSITION);
 
-		I_DebugStr.DisplayText(const_cast<char*>("\n####m_Client.SendMsg(PACKET_USER_POSITION)(VK_LEFT)\n"));
+		I_DebugStr.DisplayText(const_cast<char*>("\nm_Client.SendMsg(PACKET_USER_POSITION)(VK_LEFT)\n"));
 		m_iValueW++;
 		m_iPlayState = 0;
 	}
@@ -126,7 +125,7 @@ bool Sample_2::Frame()
 		int iSize = sizeof(userdata);
 		memcpy(buffer, &userdata, iSize);
 		m_Client.SendMsg(buffer, iSize, PACKET_USER_POSITION);
-		I_DebugStr.DisplayText(const_cast<char*>("\n####m_Client.SendMsg(PACKET_USER_POSITION)(VK_RIGHT)\n"));
+		I_DebugStr.DisplayText(const_cast<char*>("\nm_Client.SendMsg(PACKET_USER_POSITION)(VK_RIGHT)\n"));
 		m_iValueS++;
 		m_iPlayState = 1;
 	}
@@ -141,7 +140,7 @@ bool Sample_2::Frame()
 		int iSize = sizeof(userdata);
 		memcpy(buffer, &userdata, iSize);
 		m_Client.SendMsg(buffer, iSize, PACKET_USER_POSITION);
-		I_DebugStr.DisplayText(const_cast<char*>("\n####m_Client.SendMsg(PACKET_USER_POSITION)(VK_UP)\n"));
+		I_DebugStr.DisplayText(const_cast<char*>("\nm_Client.SendMsg(PACKET_USER_POSITION)(VK_UP)\n"));
 		m_iValueA++;
 		m_iPlayState = 2;
 	}
@@ -156,7 +155,7 @@ bool Sample_2::Frame()
 		int iSize = sizeof(userdata);
 		memcpy(buffer, &userdata, iSize);
 		m_Client.SendMsg(buffer, iSize, PACKET_USER_POSITION);
-		I_DebugStr.DisplayText(const_cast<char*>("\n####m_Client.SendMsg(PACKET_USER_POSITION)(VK_DOWN)\n"));
+		I_DebugStr.DisplayText(const_cast<char*>("\nm_Client.SendMsg(PACKET_USER_POSITION)(VK_DOWN)\n"));
 		m_iValueD++;
 		m_iPlayState = 3;
 	}
