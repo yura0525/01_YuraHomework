@@ -1,8 +1,8 @@
-#include "TSynchronize_2.h"
+#include "TSynchronize.h"
 
 
 
-TSynchronize_2::TSynchronize_2(TServerObj_2 * pSvrObj) : m_pServerObj(pSvrObj)
+TSynchronize::TSynchronize(TServerObj * pSvrObj) : m_pServerObj(pSvrObj)
 {
 	if (m_pServerObj == NULL)
 		return;
@@ -11,7 +11,7 @@ TSynchronize_2::TSynchronize_2(TServerObj_2 * pSvrObj) : m_pServerObj(pSvrObj)
 }
 
 
-TSynchronize_2::~TSynchronize_2()
+TSynchronize::~TSynchronize()
 {
 	if (m_pServerObj == NULL)
 		return;
