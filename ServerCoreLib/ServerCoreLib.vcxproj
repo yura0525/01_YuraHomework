@@ -155,7 +155,9 @@ copy "*.h" "../data/include_ServerCoreLib_Team"</Command>
   <ItemGroup>
     <ClInclude Include="FVector.h" />
     <ClInclude Include="TAcceptor.h" />
+    <ClInclude Include="TCharacter.h" />
     <ClInclude Include="TDebugString.h" />
+    <ClInclude Include="TNPC.h" />
     <ClInclude Include="TProtocol.h" />
     <ClInclude Include="TServer.h" />
     <ClInclude Include="TServerIOCP.h" />
@@ -163,19 +165,25 @@ copy "*.h" "../data/include_ServerCoreLib_Team"</Command>
     <ClInclude Include="TServerStd.h" />
     <ClInclude Include="TStreamPacket.h" />
     <ClInclude Include="TSynchronize.h" />
+    <ClInclude Include="TTargetPointMgr.h" />
     <ClInclude Include="TThread.h" />
+    <ClInclude Include="TUser.h" />
     <ClInclude Include="TWorkThread.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FVector.cpp" />
     <ClCompile Include="TAcceptor.cpp" />
+    <ClCompile Include="TCharacter.cpp" />
     <ClCompile Include="TDebugString.cpp" />
+    <ClCompile Include="TNPC.cpp" />
     <ClCompile Include="TServer.cpp" />
     <ClCompile Include="TServerIOCP.cpp" />
     <ClCompile Include="TServerObj.cpp" />
     <ClCompile Include="TStreamPacket.cpp" />
     <ClCompile Include="TSynchronize.cpp" />
+    <ClCompile Include="TTargetPointMgr.cpp" />
     <ClCompile Include="TThread.cpp" />
+    <ClCompile Include="TUser.cpp" />
     <ClCompile Include="TWorkThread.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

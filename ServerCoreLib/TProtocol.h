@@ -1,7 +1,5 @@
 #pragma once
-#include <windows.h>
-#include <iostream>
-#include <sstream>
+#include "FVector.h"
 using namespace std;
 
 enum class CONNECT_TYPE
@@ -121,9 +119,9 @@ typedef struct
 typedef struct
 {
 	tGUID	tGuid;
-	float	fPos[3];
-	float	fVelocity[3];
-	float	fRotation[3];
+	FVector	vPosition;
+	FVector	vVelocity;
+	FRotator vRotation;
 	float	fHealth;
 	int		iType;
 	bool	bAlive;
@@ -134,7 +132,7 @@ typedef struct
 typedef struct
 {
 	int		iType;
-	float	fPos[3];
+	FVector	vPosition;
 }TPACKET_TARGETPOINT_INFO;
 
 #pragma pack(pop)

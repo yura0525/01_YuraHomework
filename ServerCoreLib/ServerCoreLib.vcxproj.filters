@@ -51,6 +51,18 @@
     <ClInclude Include="FVector.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="TUser.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TCharacter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TNPC.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TTargetPointMgr.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TThread.cpp">
@@ -81,6 +93,18 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="FVector.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TUser.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TCharacter.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TNPC.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TTargetPointMgr.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
