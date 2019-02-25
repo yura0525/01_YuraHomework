@@ -1,6 +1,5 @@
-#include "TNPC.h"
+#include "TNpc.h"
 #include <thread>
-#include "TDebugString.h"
 #include "TServer.h"
 
 void TNPC::SendMove(TCharacter& pDest)
@@ -8,14 +7,16 @@ void TNPC::SendMove(TCharacter& pDest)
 	stringstream data;
 	data << *this;
 	data << pDest;
-	I_Server.Broadcast(MakePacket(PACKET_NPC_TARGETMOVE, data));
+	std::stringstream stream = MakePacket(PACKET_NPC_TARGETMOVE, data);
+	I_Server.Broadcast(stream);
 }
 void TNPC::SendAttack(TCharacter& pDest)
 {
 	stringstream data;
 	data << *this;
 	data << pDest;
-	I_Server.Broadcast(MakePacket(PACKET_ATTACK_MONSTER, data));
+	std::stringstream stream = MakePacket(PACKET_ATTACK_MONSTER, data);
+	I_Server.Broadcast(stream);
 	I_DebugStr.DisplayText("\n[%s]\n", "PACKET_ATTACK_MONSTER");
 }
 void TNPC::MoveTo(TCharacter& target)
@@ -191,7 +192,8 @@ void TNPCManager::SyncNPC()
 	{
 		stringstream data;
 		data << *this;
-		I_Server.Broadcast(MakePacket(PACKET_SYNC_MONSTER, data));
+		std::stringstream stream = MakePacket(PACKET_SYNC_MONSTER, data);
+		I_Server.Broadcast(stream);
 		std::this_thread::sleep_for(1s);
 	});
 	t.detach();
@@ -221,7 +223,8 @@ void TNPCManager::SendMove(TNPC* pNPC, TCharacter* pDest)
 	stringstream data;
 	data << *pNPC;
 	data << *pDest;
-	I_Server.Broadcast(MakePacket(PACKET_NPC_TARGETMOVE, data));
+	std::stringstream stream = MakePacket(PACKET_NPC_TARGETMOVE, data);
+	I_Server.Broadcast(stream);
 }
 void TNPCManager::Add(FVector vPosition, FRotator vRotation, FVector vVelocity)
 {

@@ -1,4 +1,5 @@
 #include "TStreamPacket.h"
+#include "TServer.h"
 
 void TStreamPacket::Put(char* recvBuffer, int iRecvSize, TUser* pUser)
 {

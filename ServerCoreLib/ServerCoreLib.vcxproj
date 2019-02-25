@@ -177,8 +177,13 @@ copy "*.h" "../data/include_ServerCoreLib_Team"</Command>
     <ClCompile Include="TDebugString.cpp" />
     <ClCompile Include="TNPC.cpp" />
     <ClCompile Include="TServer.cpp" />
+    <ClCompile Include="TServerCallFuncion.cpp" />
+    <ClCompile Include="TServerChatCallFuncion.cpp" />
     <ClCompile Include="TServerIOCP.cpp" />
+    <ClCompile Include="TServerLoginAccountCallFunction.cpp" />
+    <ClCompile Include="TServerNPCCallFunction.cpp" />
     <ClCompile Include="TServerObj.cpp" />
+    <ClCompile Include="TServerZoneCallFuncion.cpp" />
     <ClCompile Include="TStreamPacket.cpp" />
     <ClCompile Include="TSynchronize.cpp" />
     <ClCompile Include="TTargetPointMgr.cpp" />

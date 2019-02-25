@@ -1,6 +1,5 @@
 #pragma once
 #include "TNPC.h"
-#include "TStreamPacket.h"
 
 #define MAX_BUFFER 2048
 

@@ -1,7 +1,10 @@
 #pragma once
 #include "TServerObj.h"
 #include "TProtocol.h"
-#include "TSynchronize.h"
+#include "TStreamPacket.h"
+#include "TAcceptor.h"
+#include "TDebugString.h"
+#include "TTargetPointMgr.h"
 
 class TCharacter : public TServerObj
 {

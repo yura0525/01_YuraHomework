@@ -175,7 +175,7 @@ enum TPACKET_TYPE
 	PACKET_DAMAGE_MONSTER,					// 몬스터 데미지 받음
 	PACKET_SPAWN_CHARACTER,					// 캐릭터 스폰
 	PACKET_SPAWN_MONSTER,					// 몬스터 스폰
-	PACKET_SYNC_CHRACTER,					// 캐릭터 동기화
+	PACKET_SYNC_CHARACTER,					// 캐릭터 동기화
 	PACKET_SYNC_MONSTER,					// 몬스터 동기화	
 	PACKET_DESTROY_MONSTER,					// NPC 소멸
 	PACKET_NPC_TARGETMOVE,					// NPC 타켓이동	

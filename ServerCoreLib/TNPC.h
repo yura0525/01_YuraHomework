@@ -1,6 +1,5 @@
 #pragma once
 #include "TCharacter.h"
-#include "TThread.h"
 
 class TNPC : public TCharacter
 {
