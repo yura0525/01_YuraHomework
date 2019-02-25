@@ -11,7 +11,7 @@ TTargetPointMgr& TServer::GetTargetPointMgr()
 {
 	return m_tpMgr;
 }
-TActiveCharacter& TServer::GetUserCharacterList()			// active
+TActiveCharacter& TServer::GetActiveCharacterList()			// active
 {
 	return m_UserCharacterList;
 }

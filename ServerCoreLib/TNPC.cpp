@@ -143,7 +143,7 @@ bool TNPCManager::Run()
 				auto& tNPC = npc.second;
 				{
 					TSynchronize sync(I_Server.GetPtr());
-					for(auto& player : I_Server.GetUserCharacterList().Get())
+					for(auto& player : I_Server.GetActiveCharacterList().Get())
 					{
 						TCharacter* playCharacter = &player.second;
 						if (!playCharacter->m_Info.bAlive || !tNPC.m_Info.bAlive)
@@ -163,10 +163,11 @@ bool TNPCManager::Run()
 					}
 				}
 			}
-			if (m_NPCList.size() > 0)
+			//TODO:
+			/*if (m_NPCList.size() > 0)
 			{
 				SyncNPC();
-			}
+			}*/
 		}
 		Sleep(1);
 	}

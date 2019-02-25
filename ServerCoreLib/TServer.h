@@ -24,7 +24,7 @@ private:
 public:
 	TAcceptor&				GetAcceptor();
 	TTargetPointMgr&		GetTargetPointMgr();
-	TActiveCharacter&		GetUserCharacterList();			// active
+	TActiveCharacter&		GetActiveCharacterList();			// active
 	TServer*				GetPtr();
 
 public:
@@ -32,6 +32,7 @@ public:
 	virtual bool			Frame();
 	virtual bool			Render();
 	virtual bool			Release();
+public:
 	virtual void			ProcessPacket();
 	virtual void			AddPacket(T_PACKET& pack);
 	virtual int				SendPacket(TUser* pUser, UPACKET& packetMsg);
@@ -50,28 +51,39 @@ public:
 
 	void					ChangeSuperUser();
 	void					PrintGuid(tGUID& tguid, const char* msg);
-public:
-	virtual void			ReqVerification(T_PACKET& pSendUsert);
-	virtual void			SyncAllCharacters(TUser* pUser);
-	virtual void			SendDeadPlayer(TUser* pUSer);
-	virtual void			SendLogoutPlayer(tGUID tGuid);
 
 public:
-	virtual void			MoveAction(T_PACKET& pSendUser);
 	virtual void			Msg(T_PACKET& pSendUser);
 	virtual void			ReqChatName(T_PACKET& pSendUser);
 	virtual void			AckChatName(T_PACKET& pSendUser);
+
+public:
+	virtual void			ReqVerification(T_PACKET& pSendUsert);
+	virtual void			SendLogoutPlayer(tGUID tGuid);
 	virtual void			CreateAccount(T_PACKET& pSendUser);
 	virtual void			DeleteAccount(T_PACKET& pSendUser);
 	virtual void			LogIn(T_PACKET& pSendUser);
 	virtual void			LogOut(T_PACKET& pSendUser);
+
+public:
+	virtual void			ReqZoneEntry(T_PACKET& pSendUser);
+	virtual void			AckZoneEntry(T_PACKET& pSendUser);
+	virtual void			RecvZoneTargetPoint(T_PACKET& pSendUser);
+
+public:
+	virtual void			SpawnMonster(T_PACKET& pSendUser);
+	virtual void			SyncMonster(T_PACKET& pSendUser);
+	void					SpawnMonsterList();
+public:
+	virtual void			SyncAllCharacters(TUser* pUser);
+	virtual void			SendDeadPlayer(TUser* pUSer);
+	virtual void			MoveAction(T_PACKET& pSendUser);
+
 	virtual void			CreateCharacter(T_PACKET& pSendUser);
 	virtual void			DeleteCharacter(T_PACKET& pSendUser);
 	virtual void			HitCharacter(T_PACKET& pSendUser);
 	virtual void			HitMonster(T_PACKET& pSendUser);
-	virtual void			ReqZoneEntry(T_PACKET& pSendUser);
-	virtual void			AckZoneEntry(T_PACKET& pSendUser);
-	virtual void			RecvZoneTargetPoint(T_PACKET& pSendUser);
+
 	virtual void			AttackCharacter(T_PACKET& pSendUser);
 	virtual void			AttackMonster(T_PACKET& pSendUser);
 	virtual void			DeadCharacter(T_PACKET& pSendUser);
@@ -79,13 +91,8 @@ public:
 	virtual void			DamageCharacter(T_PACKET& pSendUser);
 	virtual void			DamageMonster(T_PACKET& pSendUser);
 	virtual void			SpawnCharacter(T_PACKET& pSendUser);
-	virtual void			SpawnMonster(T_PACKET& pSendUser);
 	virtual void			SyncCharacters(T_PACKET& pSendUser);
-	virtual void			SyncMonster(T_PACKET& pSendUser);
 
-public:
-	void					SpawnMonsterList();
-	
 public:
 	friend ostream& operator<<(ostream& stream, TServer& info);
 	friend istream& operator>>(istream& stream, TServer& info);
