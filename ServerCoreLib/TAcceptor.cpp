@@ -23,7 +23,7 @@ bool TAcceptor::Run()
 			TSynchronize sync(this);
 			TCHAR buf[INET_ADDRSTRLEN] = { 0, };
 			InetNtop(AF_INET, &clientaddr.sin_addr, buf, sizeof(buf));
-			I_DebugStr.DisplayText("[IP:%s, PORT:%d\n", inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
+			I_DebugStr.DisplayText("TAcceptor::Run() [IP:%s, PORT:%d\n", inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
 			I_Server.AddUser(client_sock);
 		}
 		Sleep(1);

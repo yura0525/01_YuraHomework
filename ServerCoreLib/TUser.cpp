@@ -5,8 +5,8 @@ ostream& operator<<(ostream& stream, TActiveCharacter& info)
 {
 	{
 		TSynchronize sync(&info);
-		stream << info.m_List.size();
-		for (auto& data : info.m_List)
+		stream << info.m_CharList.size();
+		for (auto& data : info.m_CharList)
 		{
 			stream << data.first;
 			stream << data.second;
@@ -18,9 +18,9 @@ istream& operator>>(istream& stream, TActiveCharacter& info)
 {
 	{
 		TSynchronize sync(&info);
-		info.m_List.clear();
+		info.m_CharList.clear();
 
-		size_t nPlayer = 0;
+		size_t		nPlayer = 0;
 		tGUID		tGuid;
 		TCharacter	tChar;
 		stream >> nPlayer;
@@ -28,7 +28,7 @@ istream& operator>>(istream& stream, TActiveCharacter& info)
 		{
 			stream >> tGuid;
 			stream >> tChar;
-			info.m_List.insert(make_pair(tGuid, tChar));
+			info.m_CharList.insert(make_pair(tGuid, tChar));
 		}
 	}
 	return stream;
@@ -36,7 +36,7 @@ istream& operator>>(istream& stream, TActiveCharacter& info)
 
 TCharacterList& TActiveCharacter::Get()
 {
-	return m_List;
+	return m_CharList;
 }
 
 

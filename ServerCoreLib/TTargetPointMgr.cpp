@@ -2,14 +2,14 @@
 
 std::map<int, TPACKET_TARGETPOINT_INFO>& TTargetPointMgr::Get()
 {
-	return m_tpMap;
+	return m_TargetPointMap;
 }
 
 ostream& operator<<(ostream& stream, TTargetPointMgr& tpList)
 {
-	size_t iNumCount = tpList.m_tpMap.size();
+	size_t iNumCount = tpList.m_TargetPointMap.size();
 	tBlockWrite<size_t>(stream, iNumCount);
-	for (auto& tp : tpList.m_tpMap)
+	for (auto& tp : tpList.m_TargetPointMap)
 	{
 		tBlockWrite<TPACKET_TARGETPOINT_INFO>(stream, tp.second);
 	}
@@ -18,7 +18,7 @@ ostream& operator<<(ostream& stream, TTargetPointMgr& tpList)
 
 istream& operator>>(istream& stream, TTargetPointMgr& tpList)
 {
-	tpList.m_tpMap.clear();
+	tpList.m_TargetPointMap.clear();
 	size_t iNumCount;
 	tBlockRead<size_t>(stream, iNumCount);
 
@@ -26,7 +26,7 @@ istream& operator>>(istream& stream, TTargetPointMgr& tpList)
 	for (int iIndex = 0; iIndex < iNumCount; iIndex++)
 	{
 		tBlockRead<TPACKET_TARGETPOINT_INFO>(stream, tp);
-		tpList.m_tpMap[iIndex] = tp;
+		tpList.m_TargetPointMap[iIndex] = tp;
 	}
 	return stream;
 }

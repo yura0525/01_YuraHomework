@@ -24,7 +24,7 @@ typedef std::map<tGUID, TCharacter, GUIDComparer> TCharacterList;
 class TActiveCharacter : public TServerObj
 {
 private:
-	TCharacterList m_List;
+	TCharacterList m_CharList;
 public:
 	TCharacterList& Get();
 public:

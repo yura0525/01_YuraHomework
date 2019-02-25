@@ -17,7 +17,7 @@ void TNPC::SendAttack(TCharacter& pDest)
 	data << pDest;
 	std::stringstream stream = MakePacket(PACKET_ATTACK_MONSTER, data);
 	I_Server.Broadcast(stream);
-	I_DebugStr.DisplayText("\n[%s]\n", "PACKET_ATTACK_MONSTER");
+	I_DebugStr.DisplayText("TNPC::SendAttack()[%s]\n", "PACKET_ATTACK_MONSTER");
 }
 void TNPC::MoveTo(TCharacter& target)
 {

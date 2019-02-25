@@ -1,11 +1,11 @@
 #include "FVector.h"
 
-const FVector FVector::ZeroVector(0.f, 0.f, 0.f);
-const FVector FVector::OneVector(1.f, 1.f, 1.f);
-const FVector FVector::UpVector(0.f, 0.f, 1.f);
-const FVector FVector::ForwardVector(1.f, 0.f, 0.f);
-const FVector FVector::RightVector(0.f, 1.f, 0.f);
-const FRotator FRotator::ZeroRotator(0.f, 0.f, 0.f);
+const FVector FVector::ZeroVector(0.0f, 0.0f, 0.0f);
+const FVector FVector::OneVector(1.0f, 1.0f, 1.0f);
+const FVector FVector::UpVector(0.0f, 0.0f, 1.0f);
+const FVector FVector::ForwardVector(1.0f, 0.0f, 0.0f);
+const FVector FVector::RightVector(0.0f, 1.0f, 0.0f);
+const FRotator FRotator::ZeroRotator(0.0f, 0.0f, 0.0f);
 
 FVector FVector::operator^(const FVector& V) const
 {
@@ -167,11 +167,11 @@ void FVector::Set(float fX, float fY, float fZ)
 }
 float FVector::Size() const
 {
-	return sqrt(m_fX * m_fX + m_fY * m_fY + m_fZ * m_fZ);
+	return sqrt((m_fX * m_fX) + (m_fY * m_fY) + (m_fZ * m_fZ));
 }
 float FVector::SizeSquared() const
 {
-	return (m_fX * m_fX + m_fY * m_fY + m_fZ * m_fZ);
+	return ((m_fX * m_fX) + (m_fY * m_fY) + (m_fZ * m_fZ));
 }
 bool FVector::IsZero() const
 {

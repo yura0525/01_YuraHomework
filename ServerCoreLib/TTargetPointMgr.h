@@ -5,7 +5,7 @@
 class TTargetPointMgr
 {
 private:
-	std::map<int, TPACKET_TARGETPOINT_INFO> m_tpMap;
+	std::map<int, TPACKET_TARGETPOINT_INFO> m_TargetPointMap;
 public:
 	std::map<int, TPACKET_TARGETPOINT_INFO>& Get();
 public:

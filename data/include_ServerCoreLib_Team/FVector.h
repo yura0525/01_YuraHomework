@@ -37,14 +37,15 @@ class FVector
 {
 public:
 	float m_fX, m_fY, m_fZ;
+
 public:
 	static const FVector ZeroVector;		/** A zero vector (0,0,0) */
 	static const FVector OneVector;			/** One vector (1,1,1) */
 	static const FVector UpVector;			/** World up vector (0,0,1) */
 	static const FVector ForwardVector;		/** Unreal forward vector (1,0,0) */
 	static const FVector RightVector;		/** Unreal right vector (0,1,0) */
+
 public:
-	
 	FVector operator^(const FVector& V) const;
 	FVector CrossProduct(const FVector& A, const FVector& B);
 	float operator|(const FVector& V) const;
