@@ -5,6 +5,7 @@ void TStreamPacket::Put(char* recvBuffer, int iRecvSize, TUser* pUser)
 {
 	{
 		TSynchronize sync(this);
+		
 		// WSARecv 버퍼가 1개의 패킷 크기보다 충분히 크면 패킷은 비동기 처리로 1개씩 들어온다.
 		m_pPacket = (P_UPACKET)recvBuffer;
 		if (m_pPacket->ph.iotype == 777 && m_pPacket->ph.len == iRecvSize)
@@ -19,7 +20,10 @@ void TStreamPacket::Put(char* recvBuffer, int iRecvSize, TUser* pUser)
 			}
 			return;
 		}
+
+		//TODO:수정한곳
 		//return;
+
 		// 하지만  보낸 패킷의 크기보다 WSARecv 버퍼가 작으면 쪼개져서 들어온다.
 		// 받는 버퍼의 용량이 부족하면
 		if ((m_iWritePos + iRecvSize) >= MAX_RECV_SIZE)

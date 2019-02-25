@@ -5,6 +5,7 @@ const FVector FVector::OneVector(1.f, 1.f, 1.f);
 const FVector FVector::UpVector(0.f, 0.f, 1.f);
 const FVector FVector::ForwardVector(1.f, 0.f, 0.f);
 const FVector FVector::RightVector(0.f, 1.f, 0.f);
+const FRotator FRotator::ZeroRotator(0.f, 0.f, 0.f);
 
 FVector FVector::operator^(const FVector& V) const
 {

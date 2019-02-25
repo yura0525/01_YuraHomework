@@ -16,7 +16,7 @@ void TServer::Msg(T_PACKET& pSendUser)
 		RecvStream >> recvMsg;
 		I_DebugStr.DisplayText("Message:%s\r\n", recvMsg.c_str());
 
-		TUserMapItor iter;
+		TUserListItor iter;
 		for (iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
 		{
 			TUser* pUser = (TUser*)iter->second;

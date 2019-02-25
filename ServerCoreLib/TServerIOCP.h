@@ -17,7 +17,7 @@ public:
 	bool			Release();
 
 	//ULONG_PTR 32bit, 64bit ¡÷¿«
-	void			AddhandleToIOCP(HANDLE hClientSocket, ULONG_PTR dwReturnKey);
+	void			AddHandleToIOCP(HANDLE hClientSocket, ULONG_PTR dwReturnKey);
 public:
 	TServerIOCP();
 	virtual ~TServerIOCP();

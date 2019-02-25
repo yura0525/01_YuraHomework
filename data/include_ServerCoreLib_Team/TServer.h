@@ -1,9 +1,9 @@
 #pragma once
 #include "TUser.h"
 
-typedef std::map<tGUID, TCharacter, GUIDComparer>::iterator TCharMapItor;
-typedef std::map<tGUID, TUser*, GUIDComparer>				TUserMapList;
-typedef std::map<tGUID, TUser*, GUIDComparer>::iterator		TUserMapItor;
+typedef std::map<tGUID, TCharacter, GUIDComparer>::iterator TCharacterListItor;
+typedef std::map<tGUID, TUser*, GUIDComparer>				TUserList;
+typedef std::map<tGUID, TUser*, GUIDComparer>::iterator		TUserListItor;
 
 
 class TServer : public TSingleton<TServer>, public TServerObj
@@ -17,7 +17,7 @@ private:
 	TStreamPacket		m_StreamPacket;
 	TActiveCharacter	m_UserCharacterList;
 	TTargetPointMgr		m_tpMgr;
-	TUserMapList		m_UserList;
+	TUserList			m_UserList;
 
 	typedef void(TServer::*CallFunction)(T_PACKET& t);
 	std::map<int, CallFunction>			m_fnExecutePacket;

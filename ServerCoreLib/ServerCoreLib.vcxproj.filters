@@ -9,42 +9,20 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="리소스 파일">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="TServerCallFunction">
+      <UniqueIdentifier>{ec3f2b89-b9c6-4c3f-99fa-f1902298ea4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{243f00cc-8e16-420b-9d24-08e65ddebe05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\헤더 파일">
+      <UniqueIdentifier>{32c61cfe-688f-497c-9bc1-e136a697f61e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\소스 파일">
+      <UniqueIdentifier>{da4e372d-e3f8-4b32-8f20-2be3c0d68e8c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TThread.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="TDebugString.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="TServerObj.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="TSynchronize.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="TServerStd.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="TServerIOCP.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="TWorkThread.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="TServer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="TProtocol.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="TStreamPacket.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="TAcceptor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -63,32 +41,38 @@
     <ClInclude Include="TTargetPointMgr.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="TServer.h">
+      <Filter>TServerCallFunction</Filter>
+    </ClInclude>
+    <ClInclude Include="TProtocol.h">
+      <Filter>Core\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TServerObj.h">
+      <Filter>Core\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TServerStd.h">
+      <Filter>Core\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TSynchronize.h">
+      <Filter>Core\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TDebugString.h">
+      <Filter>Core\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TStreamPacket.h">
+      <Filter>Core\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TThread.h">
+      <Filter>Core\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TServerIOCP.h">
+      <Filter>Core\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TWorkThread.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TThread.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TDebugString.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TSynchronize.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TServerObj.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TServerIOCP.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TWorkThread.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TServer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TStreamPacket.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="TAcceptor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -107,19 +91,43 @@
     <ClCompile Include="TTargetPointMgr.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TServer.cpp">
+      <Filter>TServerCallFunction</Filter>
+    </ClCompile>
     <ClCompile Include="TServerCallFuncion.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>TServerCallFunction</Filter>
     </ClCompile>
     <ClCompile Include="TServerChatCallFuncion.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>TServerCallFunction</Filter>
     </ClCompile>
     <ClCompile Include="TServerLoginAccountCallFunction.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>TServerCallFunction</Filter>
     </ClCompile>
     <ClCompile Include="TServerNPCCallFunction.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>TServerCallFunction</Filter>
     </ClCompile>
     <ClCompile Include="TServerZoneCallFuncion.cpp">
+      <Filter>TServerCallFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="TServerObj.cpp">
+      <Filter>Core\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TSynchronize.cpp">
+      <Filter>Core\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TDebugString.cpp">
+      <Filter>Core\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TStreamPacket.cpp">
+      <Filter>Core\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TThread.cpp">
+      <Filter>Core\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TServerIOCP.cpp">
+      <Filter>Core\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TWorkThread.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

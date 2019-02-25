@@ -18,7 +18,7 @@ bool TServerIOCP::Release()
 {
 	return true;
 }
-void TServerIOCP::AddhandleToIOCP(HANDLE hClientSocket, ULONG_PTR dwReturnKey)
+void TServerIOCP::AddHandleToIOCP(HANDLE hClientSocket, ULONG_PTR dwReturnKey)
 {
 	::CreateIoCompletionPort(hClientSocket, m_hIOCP, dwReturnKey, 0);
 }

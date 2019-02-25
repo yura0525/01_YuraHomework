@@ -78,7 +78,7 @@ bool TServer::Release()
 	WSACleanup();
 	{
 		TSynchronize sync(this);
-		TUserMapItor iter;
+		TUserListItor iter;
 		for (iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
 		{
 			TUser* pUser = (TUser*)iter->second;
@@ -160,7 +160,7 @@ int	 TServer::SendPacket(TUser* pUser, stringstream& SendStream)
 void TServer::SendPacket(TUser* pUser, size_t iSendByte)
 {
 	pUser->m_wsaRecvBuffer.buf = pUser->m_sendBuffer;
-	pUser->m_wsaRecvBuffer.len = iSendByte;
+	pUser->m_wsaRecvBuffer.len = (ULONG)iSendByte;
 	pUser->m_OV.m_iFlags = OVERLAPPED2::MODE_SEND;
 	DWORD dwSendByte = (DWORD)iSendByte;
 
@@ -177,7 +177,7 @@ void TServer::Broadcast(T_PACKET& pSendUser)
 {
 	{
 		TSynchronize sync(this);
-		for (TUserMapItor iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
+		for (TUserListItor iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
 		{
 			TUser* pUser = (TUser*)iter->second;
 			if (pUser->m_Socket != pSendUser.pUser->m_Socket)
@@ -192,7 +192,7 @@ void TServer::Broadcast(UPACKET& pSendUser)
 {
 	{
 		TSynchronize sync(this);
-		for (TUserMapItor iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
+		for (TUserListItor iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
 		{
 			TUser* pUser = (TUser*)iter->second;
 			if (SendPacket(pUser, pSendUser) <= 0)
@@ -240,7 +240,7 @@ TUser* TServer::GetUser(int iIndex)
 {
 	{
 		TSynchronize sync(this);
-		TUserMapItor iter;
+		TUserListItor iter;
 		for (iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
 		{
 			TUser* pUser = (TUser*)iter->second;
@@ -259,8 +259,8 @@ bool TServer::DelUser(int iIndex)
 {
 	{
 		TSynchronize sync(this);
-		TUserMapItor iter;
-		TUserMapItor delUser = m_UserList.end();
+		TUserListItor iter;
+		TUserListItor delUser = m_UserList.end();
 		bool bSuperUserChange = false;
 
 		for (iter = m_UserList.begin(); iter != m_UserList.end(); )
@@ -295,7 +295,7 @@ bool TServer::DelUser(tGUID tGuid)
 {
 	{
 		TSynchronize sync(this);
-		TUserMapItor delUser = m_UserList.find(tGuid);
+		TUserListItor delUser = m_UserList.find(tGuid);
 		bool bSuperUserChange = false;
 
 		if(delUser != m_UserList.end())
@@ -357,7 +357,7 @@ void TServer::AddUser(SOCKET sock)
 		{
 			pUser->SetActiveCharacter((TCharacter*)(&(iter->second)), true);
 		}
-		I_ServerIOCP.AddhandleToIOCP((HANDLE)sock, (ULONG_PTR)pUser);
+		I_ServerIOCP.AddHandleToIOCP((HANDLE)sock, (ULONG_PTR)pUser);
 		m_UserList.insert(make_pair(uuid, pUser));
 		pUser->WaitForPacketReceive();
 	}
@@ -366,7 +366,7 @@ void TServer::AddUser(SOCKET sock)
 
 void TServer::ChangeSuperUser()
 {
-	TUserMapItor superUser = m_UserList.begin();
+	TUserListItor superUser = m_UserList.begin();
 	if (superUser == m_UserList.end())
 		return;
 
@@ -374,7 +374,7 @@ void TServer::ChangeSuperUser()
 	if (pUser)
 	{
 		pUser->m_iType = 1;
-		TCharMapItor iter = m_UserCharacterList.Get().find(pUser->m_GuidActiveCharacter);
+		TCharacterListItor iter = m_UserCharacterList.Get().find(pUser->m_GuidActiveCharacter);
 		if (iter != m_UserCharacterList.Get().end())
 		{
 			iter->second.m_Info.iType = 1;

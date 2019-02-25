@@ -29,8 +29,7 @@ void	TDebugString::GetMbToWc(TCHAR* destMsg, const char* srcMsg)
 }
 void	TDebugString::GetWcToMb(char* destMsg, WCHAR* srcMsg)
 {
-	//유티코드 => 멀티바이트 변환
-	//char msg[1024] = { 0, };
+	//유니코드 => 멀티바이트 변환
 	ConvertWideStringToAnsiCh(destMsg, srcMsg, 1024);
 	return;
 }
@@ -72,7 +71,7 @@ void	TDebugString::T_ERROR(bool bPrint)
 
 		if (bPrint)
 		{
-			I_DebugStr.DisplayText("T_ERROR WSASend : %s\n", (char*)lpMsgBuf);
+			I_DebugStr.DisplayText("TDebugString::T_ERROR() WSASend : %s\n", (char*)lpMsgBuf);
 		}
 		else
 		{

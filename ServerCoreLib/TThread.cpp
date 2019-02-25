@@ -23,5 +23,5 @@ TThread::TThread() : m_bStarted(false)
 
 TThread::~TThread()
 {
-	CloseHandle((HANDLE)m_hThread);
+	SAFE_CLOSE_HANDLE(m_hThread);
 }
