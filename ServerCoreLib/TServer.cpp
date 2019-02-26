@@ -234,7 +234,7 @@ void TServer::BroadcastNewPlayer(TCharacter& player)
 	data << player;
 	std::stringstream stream = MakePacket(PACKET_ZONE_NEW_PLAYER, data);
 	Broadcast(stream);
-	I_DebugStr.DisplayText("PACKET_ZONE_NEW_PLAYER Send\n");
+	I_DebugStr.DisplayText("\nPACKET_ZONE_NEW_PLAYER Send\n");
 }
 TUser* TServer::GetUser(int iIndex)
 {
@@ -271,15 +271,15 @@ bool TServer::DelUser(int iIndex)
 				if (pUser->m_iType == 1)
 					bSuperUserChange = true;
 
-				I_DebugStr.DisplayText("%s%s\n", pUser->m_Name.c_str(), "´ÔÀÌ ³ª°¡¼Ì½À´Ï´Ù.");
+				I_DebugStr.DisplayText("\n%s%s\n", pUser->m_Name.c_str(), "´ÔÀÌ ³ª°¡¼Ì½À´Ï´Ù.");
 				SendLogoutPlayer(pUser->m_GuidActiveCharacter);
 				closesocket(pUser->m_Socket);
 
 				m_UserCharacterList.Get().erase(pUser->m_GuidActiveCharacter);
 				SAFE_DEL(pUser);
 				m_UserList.erase(iter);
-				I_DebugStr.DisplayText("%s%d\n", "User Count=", m_UserList.size());
-				I_DebugStr.DisplayText("%s%d\n", "char Count=", m_UserCharacterList.Get().size());
+				I_DebugStr.DisplayText("\nTServer::DelUser() %s%d\n", "m_UserList.size() Count=", m_UserList.size());
+				I_DebugStr.DisplayText("\nTServer::DelUser() %s%d\n", "m_UserCharacterList.size() Count=", m_UserCharacterList.Get().size());
 				break;
 			}
 			iter++;
@@ -306,15 +306,15 @@ bool TServer::DelUser(tGUID tGuid)
 				if (pUser->m_iType == 1)
 					bSuperUserChange = true;
 
-				I_DebugStr.DisplayText("%s%s\n", pUser->m_Name.c_str(), "´ÔÀÌ ³ª°¡¼Ì½À´Ï´Ù.");
+				I_DebugStr.DisplayText("\n%s%s\n", pUser->m_Name.c_str(), "´ÔÀÌ ³ª°¡¼Ì½À´Ï´Ù.");
 				SendLogoutPlayer(pUser->m_GuidActiveCharacter);
 				closesocket(pUser->m_Socket);
 				m_UserCharacterList.Get().erase(pUser->m_GuidActiveCharacter);
 				SAFE_DEL(pUser);
 			}
 			m_UserList.erase(delUser);
-			I_DebugStr.DisplayText("%s%d\n", "User Count=", m_UserList.size());
-			I_DebugStr.DisplayText("%s%d\n", "char Count=", m_UserCharacterList.Get().size());
+			I_DebugStr.DisplayText("\nTServer::DelUser() %s%d\n", "m_UserList.size() Count=", m_UserList.size());
+			I_DebugStr.DisplayText("\nTServer::DelUser() %s%d\n", "m_UserCharacterList.size() Count=", m_UserCharacterList.Get().size());
 		}
 		if (bSuperUserChange)
 		{
@@ -361,7 +361,7 @@ void TServer::AddUser(SOCKET sock)
 		m_UserList.insert(make_pair(uuid, pUser));
 		pUser->WaitForPacketReceive();
 	}
-	I_DebugStr.DisplayText("%s%d\n", "User Count=", I_Server.m_UserList.size());
+	I_DebugStr.DisplayText("\nTServer::AddUser() %s[%d]\n", "User Count=", I_Server.m_UserList.size());
 }
 
 void TServer::ChangeSuperUser()
@@ -392,7 +392,7 @@ void TServer::PrintGuid(tGUID& tguid, const char* msg)
 		guidString = (char*)szUuid;
 		::RpcStringFreeA(&szUuid);
 	}
-	I_DebugStr.DisplayText("%s=%s\r\n", guidString.c_str(), msg);
+	I_DebugStr.DisplayText("\nTServer::PrintGuid() %s=%s\n", guidString.c_str(), msg);
 }
 
 ostream& operator<<(ostream& stream, TServer& info)

@@ -14,7 +14,7 @@ void TServer::Msg(T_PACKET& pSendUser)
 		string recvMsg;
 		RecvStream >> tGuid;
 		RecvStream >> recvMsg;
-		I_DebugStr.DisplayText("Message:%s\r\n", recvMsg.c_str());
+		I_DebugStr.DisplayText("\nTServer::Msg() Message:%s\r\n", recvMsg.c_str());
 
 		TUserListItor iter;
 		for (iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
@@ -43,6 +43,6 @@ void TServer::AckChatName(T_PACKET& pSendUser)
 	memcpy(&PacketMsg.msg[pPacket->ph.len - PACKET_HEADER_SIZE], buffer, strlen(buffer));
 	PacketMsg.ph.len += (uint16_t)strlen(buffer);
 
-	I_DebugStr.DisplayText("Message:%s\r\n", PacketMsg.msg);
+	I_DebugStr.DisplayText("\nTServer::AckChatName() Message:%s\n", PacketMsg.msg);
 	Broadcast(PacketMsg);
 }

@@ -34,7 +34,7 @@ void TServer::MoveAction(T_PACKET& pSendUser)
 		UPACKET* pPacket = &(pSendUser.packet);
 		TPACKET_USER_POSITION* pData = (TPACKET_USER_POSITION*)pPacket->msg;
 
-		I_DebugStr.DisplayText("TServer::MoveAction() POS->%d:%d,%d:%d\n", pData->user_idx, pData->direction, pData->posX, pData->posY);
+		I_DebugStr.DisplayText("\nTServer::MoveAction() POS->%d:%d,%d:%d\n", pData->user_idx, pData->direction, pData->posX, pData->posY);
 		TUserListItor iter;
 		for (iter = m_UserList.begin(); iter != m_UserList.end(); iter++)
 		{
@@ -79,7 +79,7 @@ void TServer::SpawnCharacter(T_PACKET& pSendUser)
 void TServer::SyncCharacters(T_PACKET& pSendUser)
 {
 	{
-		//I_DebugStr.DisplayText("TServer::SyncCharacters() PACKET_SYNC_CHARACTER Start\n");	
+		//I_DebugStr.DisplayText("\nTServer::SyncCharacters() PACKET_SYNC_CHARACTER Start\n");	
 		TSynchronize sync(this);
 		
 		string msg(pSendUser.packet.msg, pSendUser.packet.ph.len - PACKET_HEADER_SIZE);

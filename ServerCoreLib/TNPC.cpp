@@ -17,7 +17,7 @@ void TNPC::SendAttack(TCharacter& pDest)
 	data << pDest;
 	std::stringstream stream = MakePacket(PACKET_ATTACK_MONSTER, data);
 	I_Server.Broadcast(stream);
-	I_DebugStr.DisplayText("TNPC::SendAttack()[%s]\n", "PACKET_ATTACK_MONSTER");
+	I_DebugStr.DisplayText("\nTNPC::SendAttack()[%s]\n", "PACKET_ATTACK_MONSTER");
 }
 void TNPC::MoveTo(TCharacter& target)
 {
@@ -198,7 +198,7 @@ void TNPCManager::SyncNPC()
 		std::this_thread::sleep_for(1s);
 	});
 	t.detach();
-	I_DebugStr.DisplayText("[%s]\n", "PACKET_SYNC_MONSTER");
+	I_DebugStr.DisplayText("\nTNPCManager::SyncNPC() [%s]\n", "PACKET_SYNC_MONSTER");
 }
 void TNPCManager::ResetTargetPoint()
 {

@@ -71,7 +71,7 @@ void	TDebugString::T_ERROR(bool bPrint)
 
 		if (bPrint)
 		{
-			I_DebugStr.DisplayText("TDebugString::T_ERROR() WSASend : %s\n", (char*)lpMsgBuf);
+			I_DebugStr.DisplayText("\nTDebugString::T_ERROR() WSASend : %s\n", (char*)lpMsgBuf);
 		}
 		else
 		{

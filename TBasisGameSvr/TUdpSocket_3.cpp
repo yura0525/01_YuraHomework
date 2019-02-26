@@ -75,7 +75,7 @@ bool TUdpSocket_3::Run()
 			break;
 		}
 		buf[retval] = 0;
-		I_DebugStr.DisplayText("Message:%s", buf);
+		I_DebugStr.DisplayText("\nTUdpSocket_3::Run() Message:%s\n", buf);
 
 		// 송신자는 멀티캐스트 그룹에 가입할 필요가 없으나
 		// 이곳에서는 다시 받기 위해서 가입하였다.

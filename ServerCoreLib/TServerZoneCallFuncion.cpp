@@ -23,7 +23,7 @@ void TServer::ReqZoneEntry(T_PACKET& pSendUser)
 		BroadcastNewPlayer(tChar);
 		pSendUser.pUser->m_ConnectType = CONNECT_TYPE::eGAMEPLAYING;
 	}
-	I_DebugStr.DisplayText("TServer::ReqZoneEntry() PACKET_ZONE_ENTRY_REQ\n");
+	I_DebugStr.DisplayText("\nTServer::ReqZoneEntry() PACKET_ZONE_ENTRY_REQ\n");
 }
 void TServer::AckZoneEntry(T_PACKET& pSendUser)
 {
@@ -33,7 +33,7 @@ void TServer::AckZoneEntry(T_PACKET& pSendUser)
 		stringstream stream(MakePacket(PACKET_ZONE_TARGET_REQ, data));
 		SendPacket(pSendUser.pUser, stream);
 	}
-	I_DebugStr.DisplayText("TServer::AckZoneEntry() PACKET_ZONE_TARGET_REQ\n");
+	I_DebugStr.DisplayText("\nTServer::AckZoneEntry() PACKET_ZONE_TARGET_REQ\n");
 }
 
 void TServer::RecvZoneTargetPoint(T_PACKET& pSendUser)
@@ -54,5 +54,5 @@ void TServer::RecvZoneTargetPoint(T_PACKET& pSendUser)
 		m_NPCMgr.Add(tp.vPosition);
 	}
 	m_NPCMgr.SyncNPC();
-	I_DebugStr.DisplayText("TServer::RecvZoneTargetPoint() PACKET_ZONE_TARGET_ACK\n");
+	I_DebugStr.DisplayText("\nTServer::RecvZoneTargetPoint() PACKET_ZONE_TARGET_ACK\n");
 }
